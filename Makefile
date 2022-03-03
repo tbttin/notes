@@ -1,17 +1,25 @@
 PARSER := /usr/bin/pandoc
 
-markdowns := $(wildcard */*.md)
-pdfs      := $(markdowns:%.md=%.pdf)
-rm        := /usr/bin/rm --force --
+markdowns   := $(wildcard */*.md)
+out_dir     := output
+pdf_dir     := $(out_dir)/pdf
+pdf_targets := $(addprefix $(pdf_dir)/, $(markdowns:%.md=%.pdf))
+topic_dirs  := $(sort $(dir $(pdf_targets)))
+mkdir       := @/usr/bin/mkdir --parents
+rm          := @/usr/bin/rm --force --recursive --verbose --
 
-all: $(pdfs)
+all: $(pdf_targets)
 
-%.pdf: %.md
+# Order-only prerequisite. Automatic variables beat me. Any better ideas?
+$(pdf_dir)/%.pdf: %.md | $(topic_dirs)
 	$(PARSER) $< -o $@
 
+$(topic_dirs):
+	$(mkdir) $@
+
 clean-pdf:
-	$(rm) $(pdfs)
+	$(rm) $(pdf_dir)/*
 
 .PHONY: all clean-pdf
 
-$(info $(patsubst %.pdf,out/%,$(pdfs)))
+# $(info $(topic_dirs))
