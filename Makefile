@@ -1,4 +1,5 @@
 PARSER := /usr/bin/pandoc
+PFLAGS := --from=commonmark
 
 markdowns   := $(wildcard */*.md)
 out_dir     := output
@@ -12,7 +13,7 @@ all: $(pdf_targets)
 
 # Order-only prerequisite. Automatic variables beat me. Any better ideas?
 $(pdf_dir)/%.pdf: %.md | $(topic_dirs)
-	$(PARSER) $< -o $@
+	$(PARSER) $(PFLAGS) -o $@ -- $<
 
 $(topic_dirs):
 	$(mkdir) $@
