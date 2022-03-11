@@ -17,3 +17,17 @@ Given a specification of a solution, not an algorithm to follow
 
 # Makefile
 
+# Note taking
+
+Reading wiki.vim docs
+
+- Fast workflow
+  + Open index.md file quickly (hotkey or short alias)
+  + Search note quickly
+    * Search and load results into buffers, search in buffers
+- Pages? Short pages?
+- Care about note structures? Note subdirectories?
+  + Use proper name
+  + Pages? What pages?
+
+- Note then clean/rinse and link to your knowledge or existed notes or internet
