@@ -1,3 +1,8 @@
+*Contents*
+* [[#Block quotations]]
+* [[#Verbatim (code) blocks]]
+* [[#Line blocks]]
+
 # Headings
 
 There are two kinds of headings: Setext (`=` and `-`) and ATX (`#`).
@@ -120,7 +125,11 @@ There are two kinds of headings: Setext (`=` and `-`) and ATX (`#`).
           qsort (filter (>= x) xs)
       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-      See also `--list-highlight-languages`
+      See also
+      `--list-highlight-languages`,
+      `--list-input-formats`,
+      `--list-output-formats`,
+      `--list-extensions`
 
       The `.numberLines` (or `number-lines`) will cause the lines of the code block to be numbered,
       starting with 1 or the value of `startFrom` attribute.
@@ -173,10 +182,11 @@ Regular/fenced code blocks must be separated from surrounding text by blank line
 
   Inline formatting (such as emphasis) is allowed in the content, but not block-level formatting (such as block quotes or lists).
 
-  This syntax is borrowed from [reStructuredText][]
-
-  [reStructuredText]: https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#line-blocks "reStructuredText docs"
+  This syntax is borrowed from **[reStructuredText]**
 
   **TODO**:
     - How to fix indentation after line blocks?
     - Can we put these in a list item?
+
+  [reStructuredText]: https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#line-blocks "reStructuredText docs"
+
