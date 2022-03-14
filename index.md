@@ -17,6 +17,14 @@ Given a specification of a solution, not an algorithm to follow
 
 # Makefile
 
+# Arch linux package management
+
+- [makepkg](arch-package-managament/makepkg.md)
+
+- [pacman](arch-package-managament/pacman.md)
+
+- [namcap](arch-package-managament/namcap.md)
+
 # Note taking
 
 Reading wiki.vim docs
