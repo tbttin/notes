@@ -1,12 +1,3 @@
----
-layout: notes
-title: Problem Formulation
-math: true
-part: true
----
-## Problem formulation
-Given a specification of a solution, not an algorithm to follow
-
 # Markdowns
 
 - [Standard syntax](markdowns/syntax.md)
@@ -16,6 +7,8 @@ Given a specification of a solution, not an algorithm to follow
 - [CommonMark Spec 0.30](markdowns/commonmark-spec.md)
 
 # Makefile
+
+Comming soon...
 
 # Arch linux package management
 

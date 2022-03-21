@@ -96,12 +96,12 @@ Tabs will be expanded to four spaces when it help to define block structures
 
 # Blocks and inlines
 
-- Blocks are structural elements like paragraphs, block quotations, lists, headings,
-rules, and code blocks.
+- Blocks are structural elements like paragraphs, block quotations, lists,
+  headings, rules, and code blocks.
 
   Some blocks (like block quotes and list items) contain other blocks; others
-(like headings and paragraphs) contain inline content-text, links, emphasized
-text, images, code spans, and so on.
+  (like headings and paragraphs) contain inline content-text, links, emphasized
+  text, images, code spans, and so on.
 
 ## Precedence
 
@@ -188,8 +188,7 @@ How to achive them?
     ....bar
   ```
 
-  And indented code can occur immediately before and after other kinds of
-blocks
+  And indented code can occur immediately before and after other kinds of blocks
 
   ```
     # Heading
@@ -245,7 +244,7 @@ blocks
 
 # Container blocks
 
-- A container block is a block that has other blocks as its contents. Tow basic
+- A container block is a block that has other blocks as its contents. Two basic
   kind of container blocks:
 
   + Blockquotes
@@ -263,7 +262,8 @@ blocks
     > Bar
 
   ```
-- Indented code block in a block quote: **five spaces** after `>`s:
+- Indented code block in a block quote: `>`'s one space + indented code's four
+  spaces:
 
   ```
     >.....code
@@ -271,15 +271,116 @@ blocks
     >....not.code
   ```
 
+- Blank lines can not separate block quotes. So:
+
+  ```
+    > Foo
+    >
+    > Bar
+  ```
+
 ## List items
+
+1. Basic
+
+   The spaces of indentation after the list marker determine how much relative
+   indentation is needed. It depends on how the list item is embedded in other
+   constructions.
+
+   + WTF is [that](https://spec.commonmark.org/0.30/#example-259)?
+
+2. Item start with indented code
+
+3. Item start with a blank line
+
+4. Indentation
+
+5. Laziness
+
+6. That's all
+
+- A list may be the first block in a list item:
+
+  ```
+    - - Sublist
+  ```
 
 ### Motivation
 
+- John Gruber's Markdown spec
+
+- The four-spaces rules
+
 ## Lists
+
+- Lose list vs. tight list
+
+  A list is loose if any of its constituent list items are separated by blank
+  lines, or if any of its constituent list items directly contain two
+  block-level elements with a blank line between them. Otherwise a list is
+  tight. (The difference in HTML output is that paragraphs in a loose list are
+  wrapped in <p> tags, while paragraphs in a tight list are not.)
+
+- **Lists > paragraphs**
+
+  ```
+    Paragraphs
+    - List
+    - List
+  ```
+
+- To separate consecutive lists of same type, or to separate a list from
+  indented code block we use a blank HTML comment:
+
+  ```
+    -   foo
+
+        code
+
+    -   foo
+
+    <!-- -->
+
+        code
+  ```
 
 # Inlines
 
 ## Code spans
+
+- Backtick string is a string of one or more backticks:
+
+  ```
+    `
+  ```
+
+  or
+
+  ```
+    ``
+  ```
+
+- A coode span begin with a backtick string and ends with a backtick string
+  of equal length.
+
+  * Line endings are converted to spaces
+  * Spaces striping
+    + Striping conditions
+
+  ```
+    `` foo ` bar ``
+  ```
+
+- Code span backicks have higher precedence than any other inline constructs
+  exept HTML tags and autolinks.
+
+- Code spans, HTML tags and autolinks have the same precedence.
+
+- Note, opening and closing backtick string need to be equal in length:
+
+  ```
+    `foo ``bar``
+  ```
 
 ## Emphasis and strong emphasis
 
