@@ -1,5 +1,9 @@
 PARSER := /usr/bin/pandoc
-PFLAGS := --from=commonmark
+PFLAGS :=\
+	 --variable=colorlinks\
+	 --toc\
+	 --number-sections\
+	 --from=commonmark
 
 markdowns   := $(wildcard */*.md)
 out_dir     := output
