@@ -27,6 +27,7 @@
 * [[#Container blocks]]
     * [[#Container blocks#Block quotes|Block quotes]]
     * [[#Container blocks#List items|List items]]
+        * [[#Container blocks#List items#Rules that define list items|Rules that define list items]]
         * [[#Container blocks#List items#Motivation|Motivation]]
     * [[#Container blocks#Lists|Lists]]
 * [[#Inlines]]
@@ -72,11 +73,11 @@ How many questions can I answer?
 
 - Blank line.
 
-- ASCII punctuation chars (all in ASCII except alpha-numeric, control chars).
+- ASCII punctuation chars (all ASCII characters except alpha-numeric and control chars).
 
 ## Tabs
 
-- Tabs will be expanded to spaces (a tabstop of **four** characters) *only*
+- Tabs will be expanded to spaces (a tabstop of *four* characters) **only**
   when it help to define block structures.
 
 - Why no space in [here](ttps://spec.commonmark.org/0.30/#example-2)?
@@ -99,10 +100,10 @@ How many questions can I answer?
   + Why six?
 
     ```
-      (> + first tab) -> tabstop = 3 spaces, but minus 1 >'s = 2 spaces
-      second tab      -> tabstop = 4 spaces
+      (> + 1st tab) -> tabstop = 3 spaces, but minus 1 >'s = 2 spaces left
+      second tab    -> tabstop = 4 spaces
 
-      => total spaces = 6 spaces
+      => total spaces = 6
     ```
 
 ## Insecure characters
@@ -137,7 +138,7 @@ How many questions can I answer?
 
   + Code blocks
 
-- Some blocks like block quotes and list items contain other blocks (container
+- Some blocks like *block quotes* and *list items* contain other blocks (container
   blocks).
 
 - Others like headings and paragraphs contain inline content-text, links,
@@ -245,7 +246,7 @@ How many questions can I answer?
     ===
   ```
 
-- The underlining can be **any** length:
+- The underlining can be any length:
 
   ```
     Foo
@@ -342,10 +343,10 @@ How to get them?
 
 ## Fenced code blocks
 
-- **Code fence** is a sequence of at least three backtick (`` ` ``) or tilde (`~`)
+- `Code fence` is a sequence of at least three backtick (`` ` ``) or tilde (`~`)
   characters (tildes and backticks can not be mixed).
 
-- The line with opening code fence may optionally followed by **info string**.
+- The line with opening code fence may optionally followed by `info string`.
 
   + Info string usages?
 
@@ -383,17 +384,17 @@ How to get them?
 
 - Link reference definition consists of:
 
-  + *Link label* [[#Inlines#Links#Inline links|Inline links]].
+  + `ink label`[[#Inlines#Links#Inline links|Inline links]].
 
   + Followed by a colon (`:`).
 
   + Optional spaces or tabs (including up to one line ending).
 
-  + *Link destination*.
+  + `ink destination`
 
   + Optional spaces or tabs (including up to one line ending).
 
-  + Optional *link title* [[#Inlines#Links#Inline links|Inline links]].
+  + Optional `ink title` [[#Inlines#Links#Inline links|Inline links]].
 
     * Must be separated from link destination by spaces or tabs.
 
@@ -433,7 +434,7 @@ How to get them?
 - Initial and final spaces in every line will be striped (paragraph's raw content are parsed as
   inlines).
 
-  + So paragraphs that ends with two or more spaces will not end with a *hard line break*.
+  + So paragraphs that ends with two or more spaces will not end with a `hard line break`.
 
 - **Again**, paragraphs > indented code blocks (any amount of space):
 
@@ -445,7 +446,7 @@ How to get them?
 
 ## Blank lines
 
-It play one role in determining whether a list is *tight* or *loose*.
+It play one role in determining whether a list is `tight` or `loose`.
 
 # Container blocks
 
@@ -460,7 +461,7 @@ It play one role in determining whether a list is *tight* or *loose*.
 
 ## Block quotes
 
-- *Block quote marker*: `>` character and an optional space of indentation.
+- `Block quote marker`: `>` character and an optional space of indentation.
 
 - Two style of block quotes:
 
@@ -478,10 +479,10 @@ It play one role in determining whether a list is *tight* or *loose*.
       Bar
     ```
 
-- *Paragraph continuation text* is text that will be parsed as part of the
+- `Paragraph continuation text` is text that will be parsed as part of the
   content of a paragraph, but does not occur at the beginning of the paragraph.
 
-- We have a *laziness continuation line* in this case:
+- We have a `laziness continuation line` in this case:
 
   ```
     > Foo
@@ -510,8 +511,8 @@ It play one role in determining whether a list is *tight* or *loose*.
 
   ```
     >.>.> Quote
-    >.> Quote
-    Quote
+    >.> Same level quote
+    Same level quote
   ```
 
 - **Notice**, indented code block in a block quote: `>`'s one space + indented code's four
@@ -525,47 +526,153 @@ It play one role in determining whether a list is *tight* or *loose*.
 
 ## List items
 
-1. Basic
+- `List makers` (must be followed by at least one space or tab):
 
-   The spaces of indentation after the list marker determine how much relative
-   indentation is needed. It depends on how the list item is embedded in other
-   constructions.
+  + Unordered list (bullet list): `-`, `+`, and `*`.
 
-   + WTF is [that](https://spec.commonmark.org/0.30/#example-259)?
+  + Order list: a sequent of 1-9 digits (`0-9`) followed by either `.` or `)`.
 
-2. Item start with indented code
+### Rules that define list items
 
-3. Item start with a blank line
+1. Basic case:
 
-4. Indentation
+   - Whatever you are, *first*, be come a list item!
 
-5. Laziness
+     ```
+       -..List item
+       ..Not a list item
+       ...List item
+       ...>.Quoted list item
+       .......Indented code list item
+     ```
 
-6. That's all
+   - The spaces of indentation after the list marker determine how much
+   *relative* indentation is needed. It depends on how the list item is
+   embedded in other constructions.
 
-- A list may be the first block in a list item:
+     ```
+       ...>.>.-...List item
+       >>
+       >>.....List item (5 spaces after the 2nd block quote marker)
+     ```
 
-  ```
-    - - Sublist
-  ```
+     but:
+
+     ```
+       >>.-.List item
+       >>
+       ..>..>..Not a list item (2 space is not enough)
+     ```
+
+2. Item start with indented code:
+
+   ```
+     -.....Indented code
+     ...List item paragraph
+     ......more code
+   ```
+
+3. Item start with a blank line:
+
+   - Here are some example of non-empty lists:
+
+     ```
+       -
+       ..List item
+       -
+       ..~~~
+       ..bar
+       ..~~~
+       -
+       ......code
+     ```
+
+   - When the list items start with a blank line, the number of spaces following
+   the list marker does not change the required indentation:
+
+     ```
+       -...
+       ..List item
+     ```
+
+   - More than one blank line does break a list:
+
+     ```
+       -
+
+       ..Not a list item
+     ```
+
+4. Indentation:
+
+   ```
+     .-..A.paragraph
+     ....with.two.lines
+
+     ........indented.code
+     ....>.A.block.code
+   ```
+
+5. Laziness:
+
+   - Example:
+
+     ```
+       .-..A paragraph
+       ..of
+       three lines
+       ....> But, quote
+       ........Indented code
+     ```
+
+     Because of `paragraph continuation text`?
+
+     The unindented lines are called `lazy continuation line`s.
+
+   - Laziness can work in nested structures:
+
+     ```
+       >.-.>.Blockquote
+       >.continue.here
+       and.here
+       >.-.>.here.too
+       >>.Not.in.the.list
+     ```
+
+6. That's all. Nothing that is not counted as a list item by rules #1-5 counts
+   as a list item.
+
+   - A list may be the first block in a list item:
+
+     ```
+       -.-.Sublist
+     ```
 
 ### Motivation
 
-- John Gruber's Markdown spec
+- John Gruber's Markdown spec.
 
-- The four-spaces rules
+- The `four-spaces rules`.
 
 ## Lists
 
-- Lose list vs. tight list
+- A list is a sequent of one or more `list item`s of the same type.
 
-  A list is loose if any of its constituent list items are separated by blank
-  lines, or if any of its constituent list items directly contain two
-  block-level elements with a blank line between them. Otherwise a list is
-  tight. (The difference in HTML output is that paragraphs in a loose list are
-  wrapped in <p> tags, while paragraphs in a tight list are not.)
+- The `start number` of an `ordered list` is determined by the list number of
+  its initial list item.
 
-- **Lists > paragraphs**
+- A list is `loose` when:
+
+  + Any of its constituent list items are separated by blank lines, or
+
+  + If any of its constituent list items directly contain two block-level
+    elements with a blank line between them.
+
+- Otherwise a list is `tight`. (The difference in HTML output is that paragraphs
+  in a loose list are wrapped in `<p>` tags, while paragraphs in a tight list are
+  not.)
+
+- **Lists > paragraphs**:
 
   ```
     Paragraphs
@@ -573,54 +680,141 @@ It play one role in determining whether a list is *tight* or *loose*.
     - List
   ```
 
+  The `principle of uniformity`: if a chunk of text has a certain meaning, it
+  will continue to have the same meaning when put into a container block (such
+  as a list item or blockquote).
+
+  + *Exception*: to solve of unwanted list in paragraphs with hard-wrap numerals, only lists
+  starting with `1` can interrupt paragraphs:
+
+    ```
+      The number of windows in my house is
+      14. The number of doors is 6.
+      1. This is a list!
+    ```
+
 - To separate consecutive lists of same type, or to separate a list from
   indented code block we use a blank HTML comment:
 
   ```
-    -   foo
+    -...foo
 
-        code
+    ....notcode
 
-    -   foo
+    -...foo
 
     <!-- -->
 
-        code
+    ....code
+  ```
+
+- List items need not to be indented to the same level:
+
+  ```
+    -.a
+    .-.b
+    ..-.c
+    ...-.d
+    ..-.e
+    .-.f
+    -.g
+  ```
+
+  However, list items may not preceded by more than three spaces of
+  indentation:
+
+  ```
+    -.a
+    .-.b
+    ..-.c
+    ...-.d
+    ....-.paragraph continuation line of previous line
+
+    ....-.just indented code
+  ```
+
+- This is a `loose list`, because there is a blank line between the list items:
+
+  ```
+    - a
+    - b
+
+    - c
+  ```
+
+- This is a `loose list`, even though there are no blank line between the
+  items, because one of the items directly contain two block-level elements
+  with a blank line between them:
+
+  ```
+    -.a
+    -.b
+
+    ..c
+    -.d
+  ```
+
+- This is a tight list contain a loose list:
+
+  ```
+    -.a
+    ..-.b
+
+    ....c
+    -.d
   ```
 
 # Inlines
 
+- Inlines are parsed sequentially left to right (in left-to-right languages).
+
 ## Code spans
 
-- Backtick string is a string of one or more backticks:
+- `Backtick string` is a string of one or more backtick characters (`` ` ``)
+  that is neither preceded nor followed by a backtick.
+
+- A code span begins with a backtick string and ends with a backtick string
+  of *equal length*:
 
   ```
-    `
+    `normal text here ``code here``
   ```
 
-  or
+  Wen backtick string is not close by a matching backtick string, we just have
+  literal backticks.
+
+- Content normalization:
+
+  + Line endings are converted to spaces.
+
+  + Spaces striping:
+
+    * The stripping happens only if space is on both sides of the string.
+
+    * Only one space is stripped (each side).
+
+- Backslash escapes do not work in code spans:
 
   ```
-    ``
-  ```
-
-- A code span begin with a backtick string and ends with a backtick string
-  of equal length.
-
-  + Line endings are converted to spaces
-
-  + Spaces striping
-
-    + Striping conditions
-
-  ```
-    `` foo ` bar ``
+    `foo \`bar` 
   ```
 
 - Code span backticks have higher precedence than any other inline constructs
   except HTML tags and autolinks.
 
-- Code spans, HTML tags and autolinks have the same precedence.
+- Code spans, HTML tags and autolinks have the same precedence:
+  
+  This is a code:
+
+  ```
+    `<a href="`">`
+  ```
+
+  But this is a HTML tag:
+
+  ```
+    <a href="`">`
+  ```
 
 - Note, opening and closing backtick string need to be equal in length:
 
@@ -630,10 +824,9 @@ It play one role in determining whether a list is *tight* or *loose*.
 
 ## Emphasis and strong emphasis
 
-- Nested emphasises
+- Nested emphasises:
 
-  ```
-    ***strong emph***
+    ***strong and emph***
 
     ***strong** in emph*
 
@@ -642,13 +835,38 @@ It play one role in determining whether a list is *tight* or *loose*.
     **in strong *emph***
 
     *in emph **strong***
-  ```
 
-- `**` means **strong**
+- `**` means **strong**.
 
-- `***` means one *em* and one **strong**
+- `***` means one *em* and one **strong**.
 
-- Note rule 15, rule 16 and rule 17
+- `Delimiter run` is either:
+
+  + A sequence of one or more `*` characters that is not preceded or followed
+    by a non-backslash-escaped `*` character *or*
+
+  + A sequence of one or more `_` characters that is not preceded or followed
+    by a non-backslash-escaped `_` character.
+
+- `Left-flanking delimiter run` is a delimiter run that is:
+
+  1. Not followed by *Unicode whitespace* **and**
+
+  2. + Not followed by *Unicode punctuation character* **or**
+  
+     + Followed by a *Unicode punctuation character* **and** preceded by a
+       *Unicode whitespace* or a *Unicode punctuation character*.
+
+- `Right-flanking delimiter run` is a delimiter run that is:
+
+  1. Not preceded by *Unicode white space* **and**
+
+  2. + Not preceded by a *Unicode punctuation character* **or**
+
+     + Preceded by a *Unicode punctuation character* **and** followed by a
+       *Unicode whitespace* or a *Unicode punctuation character*.
+
+- Note rule #15, #16 and #17.
 
 ## Links
 
@@ -686,7 +904,7 @@ It play one role in determining whether a list is *tight* or *loose*.
 
 - Three kinds of reference links:
 
-  + Full: **link text** follow immediately by a **link label**
+  + Full: `link text` follow immediately by a `link label`
 
   + Collapsed
 
