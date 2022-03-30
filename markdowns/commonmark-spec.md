@@ -384,17 +384,17 @@ How to get them?
 
 - Link reference definition consists of:
 
-  + `ink label`[[#Inlines#Links#Inline links|Inline links]].
+  + `Link label`. For more detail: [[#Inlines#Links#Reference links|Reference links]]
 
   + Followed by a colon (`:`).
 
   + Optional spaces or tabs (including up to one line ending).
 
-  + `ink destination`
+  + `Link destination`
 
   + Optional spaces or tabs (including up to one line ending).
 
-  + Optional `ink title` [[#Inlines#Links#Inline links|Inline links]].
+  + Optional `link title` [[#Inlines#Links#Inline links|Inline links]].
 
     * Must be separated from link destination by spaces or tabs.
 
@@ -796,14 +796,14 @@ It play one role in determining whether a list is `tight` or `loose`.
 - Backslash escapes do not work in code spans:
 
   ```
-    `foo \`bar` 
+    `foo \`bar`
   ```
 
 - Code span backticks have higher precedence than any other inline constructs
   except HTML tags and autolinks.
 
 - Code spans, HTML tags and autolinks have the same precedence:
-  
+
   This is a code:
 
   ```
@@ -853,7 +853,7 @@ It play one role in determining whether a list is `tight` or `loose`.
   1. Not followed by *Unicode whitespace* **and**
 
   2. + Not followed by *Unicode punctuation character* **or**
-  
+
      + Followed by a *Unicode punctuation character* **and** preceded by a
        *Unicode whitespace* or a *Unicode punctuation character*.
 
@@ -866,17 +866,121 @@ It play one role in determining whether a list is `tight` or `loose`.
      + Preceded by a *Unicode punctuation character* **and** followed by a
        *Unicode whitespace* or a *Unicode punctuation character*.
 
-- Note rule #15, #16 and #17.
+- This is not emphasis:
+
+  ```
+   *(*foo
+  ```
+
+  But this is (em in em):
+
+  ```
+    *(*foo*)*
+  ```
+
+- This is strong in em:
+
+  ```
+    *foo**bar**baz*
+  ```
+
+  Note that in the preceding case, the interpretation (3 ems)
+
+  ```
+    <p><em>foo</em><em>bar<em></em>baz</em></p>
+  ```
+
+  **is precluded by the condition that a delimiter that can both open and
+  close (like the * after foo) cannot form emphasis if the sum of the lengths
+  of the delimiter runs containing the opening and closing delimiters is a
+  multiple of 3 unless both lengths are multiples of 3.**
+
+- When the lengths of the interior closing and opening delimiter runs are both
+  multiples of 3, though, they can match to create emphasis:
+
+  ```
+    foo***bar***baz
+  ```
+
+  is just one em and one strong.
+
+  ```
+    foo******bar*********baz
+  ```
+
+  is triple strongs:
+
+  ```
+    <p>foo<strong><strong><strong>bar</strong></strong></strong>***baz</p>
+  ```
+
+- Note when delimiters do not match evently, Rule 11 determines the the excess
+  literal `*` characters will appear ouside of the emphasis, rather than
+  inside:
+
+  ```
+    **foo* <=> <p>*<em>foo</em></p>
+  ```
+
+  Why this
+
+  ```
+    **foo ** is <p>**foo bar **</p>
+  ```
+
+  but not this `*foo bar *`?
+
+- Rule 15:
+
+  ```
+    *foo _bar* baz_ <=> <p><em>foo _bar</em> baz_</p>
+  ```
+
+- Note rule #16 and #17.
 
 ## Links
 
+- A `link text` consists of a sequence of zero or more inline elements enclosed
+  by square brackets (`[` and `]`).
+
+- A `link destinition` consists of:
+
+  + A sequence of *zero* or more characters between `<` and `>` that contains no
+    line endings and unescaped `<` or `>` **or**
+
+  + A nonempty sequence of characters that does not start with `<`, does not
+    include space characters, and includes parentheses only if they are
+    backslash-escaped or in balanced pairs.
+
+- A `link title` consists of either:
+
+  + A sequence of zero or more characters between *straight* double-quote
+    characters (`"`), including a `"` character only if it backslash-escaped
+    itselt, **or**
+
+  + A sequence of zero or more characters between *straight* single-quote
+    characters (`'`), including a `'` character only if it backslash-escaped
+    itselt, **or**
+
+  + A sequence of zero or more characters between *matching* parenthesis
+    characters (`(...)`), including a `(` or `)` character only if they are
+    backslash-escaped.
+
+  Link titles can span multiple lines, but may not contain a blank line.
+
 ### Inline links
 
-- Link label
+- `Inline link` consists of an *optional* `link text` followed *immediately* by a left
+  parenthesis (`(`), an *optional* `link destination`, an *optional* `link title` and
+  a right parenthesis (`)`).
 
-- Link title
+  These four components may be separated by spaces or tabs up to one line
+  ending.
 
-- Link destination can contain spaces and brackets (but not line endings) when
+  If both link destination and link title are present they must be separated by
+  spaces or tabs up to one line ending.
+
+- Link destination can contain spaces (but not line endings) and brackets when
   it enclose in pointy brackets (`<>`):
 
   ```
@@ -884,7 +988,14 @@ It play one role in determining whether a list is `tight` or `loose`.
     [link](</my)uri>)
   ```
 
-- Image as a link:
+- Because link titles often parsed as destination, if we try to omit link
+  destination and keep link title, unexpected result will happened:
+
+  ```
+    [foo]("title")
+  ```
+
+- Link texts may contain inline content (emphasises, image, .etc):
 
   ```
     [![moon](moon.jpg)](/uri)
@@ -900,30 +1011,140 @@ It play one role in determining whether a list is `tight` or `loose`.
 
 ### Reference links
 
-[[#Leaf blocks#Link reference definitions|Link reference definitions]]
+- Three kinds of reference link:
 
-- Three kinds of reference links:
-
-  + Full: `link text` follow immediately by a `link label`
+  + Full
 
   + Collapsed
 
   + Shortcut
 
-- Consecutive spaces, tabs, and line endings are treated as one space
+1. - `Full reference link` consists of `link text` *immediately* followed by a
+   `link label` that *match* `link reference definition` elsewhere in
+   documentation.
+
+     ```
+       [foo][bar]
+
+       [bar]: /url "title"
+     ```
+
+   - `Link label` begins with left bracket (`[`) and ends with first right bracket
+     (`]`) that is not backslash-escaped. Between these brackets there must be at
+     least one character that is not space, tab or line ending.
+
+   - Label normalization:
+
+     + Strip off the opening and closing brackets.
+
+     + Perform *Unicode case fold*.
+
+     + Strip leading and trailing spaces, tabs, line endings.
+
+     + Collapse consecutive internal spaces, tabs and line endings to a single space.
+
+2. `Collapsed reference link` consists of *link label* that matches *link
+   reference definition* elsewhere in document, followed by a string `[]`.
+
+   **The contents of first link label are parsed as inlines, which are used as
+   link's text.** Thus, `[foo][]` is equivalent to `[foo][foo]`.
+
+   ```
+     [foo][]
+
+     [foo]: /url 'title'
+   ```
+
+3. `Shortcut reference link` consists of *link label* that matches *link
+   reference definition* elsewhere in document and is not followed by a string
+   `[]` or a link label.
+
+   **The contents of first link label are parsed as inlines, which are used as
+   link's text.** Thus, `[foo]` and  `[foo][]` are equivalent to `[foo][foo]`.
+
+   ```
+     [foo]
+
+     [foo]: /url 'title'
+   ```
+
+- Full and compact references take precedence over shortcut references:
 
   ```
-    [Foo
-    ..Bar]:./url
+    [foo][bar]
 
-    [Bar][Foo.Bar]
+    [foo]: /url1
+    [bar]: /the-chosen-one-url
+  ```
+
+  Inline link also take precedence:
+
+  ```
+    [foo]()
+    [foo](not a url)
+
+    [foo]: /not-the-chosen-one
+  ```
+
+- In the following case `[bar][baz]` is parsed as a reference, `[foo]` as
+  normal text. Because `[baz]` is defined:
+
+  ```
+    [foo][bar][baz]
+
+    [bax]: /url
+  ```
+
+- Here, though, `[foo][bar]` is parsed as a reference, since `[bar]` is defined:
+
+  ```
+    [foo][bar][baz]
+
+    [baz]: /url1
+    [bar]: /url2
+  ```
+
+- Here `[foo]` is not parsed as a shortcut reference, because it is followed by a
+  link label (even though `[bar]` is not defined):
+
+  ```
+    [foo][bar][baz]
+
+    [baz]: /url1
+    [foo]: /url2
   ```
 
 ## Images
 
+- Syntax for images is like syntax for links, with one difference. Instead of
+  link text we have `image description` (`alt` attribute of `<img>` tag).
+
+- The rules for image description are the same as for link text. Except:
+
+  +  Image destination starts with `![` and ends with `]`.
+
+  +  An image description may contain links.
+
+- Note that only plain string content of image description be used (`alt="foo
+  bar"` in bellow):
+
+  ```
+    ![foo [bar](/url1)](/url2)
+  ```
+
+  But in `link reference definition` the must match:
+
+  ```
+    ![*foo* bar]
+
+    [*foo* bar]: /image-url "title"
+  ```
+
 ## Autolinks
 
-- Spaces are not allowed in autolinks
+- Autolinks are absolute URIs and email addresses enclose in side `<` and `>`.
+
+- Spaces are not allowed in autolinks.
 
 ## Raw HTML
 
