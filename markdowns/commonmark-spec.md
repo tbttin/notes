@@ -138,10 +138,10 @@ How many questions can I answer?
 
   + Code blocks
 
-- Some blocks like *block quotes* and *list items* contain other blocks (container
-  blocks).
+- Some blocks like *block quotes* and *list items* can contain other blocks
+  (container blocks).
 
-- Others like headings and paragraphs contain inline content-text, links,
+- Others like `headings` and `paragraphs` contain `inline` content-text, links,
   emphasized text, images, code spans, and so on.
 
 ## Precedence
@@ -185,7 +185,7 @@ How many questions can I answer?
     ....***
   ```
 
-- **Thematic breaks > list item indicators**
+- **Thematic breaks > list item indicators**:
 
   ```
     * Foo
@@ -200,6 +200,15 @@ How many questions can I answer?
   ```
 
 ## ATX headings
+
+- ```
+  #      Level one heading
+  ##     Level two heading
+  ###    Level three heading
+  ####   Level four heading
+  #####  Level five heading
+  ###### Level six heading
+  ```
 
 - At least one space is required between `#` character and heading content.
 
@@ -224,11 +233,12 @@ How many questions can I answer?
 ## Setext headings
 
 - Setext heading indicators:
+
   + Level one heading: `=`.
 
   + Level two heading: `-`.
 
-- **Paragraphs > setext headings**. So we use blank lines
+- **Paragraphs > setext headings**. So we use blank lines:
 
   ```
     Foo *bar*
@@ -263,21 +273,25 @@ How many questions can I answer?
     > Foo
     ---
   ```
-  is a thematic break outside block quote.
+
+  `---` is a **thematic break** outside the block quote.
 
   ```
     > Foo
+    bar
     ===
   ```
-  `===` is part of the paragraph inside block quote.
+
+  `===` is **part of the paragraph** inside the block quote.
 
   ```
     - Foo
     ---
   ```
-  is a thematic break outside the list.
 
-- Again, **setext headings > thematic breaks**
+  `---` is a **thematic break** outside the list.
+
+- Again, **setext headings > thematic breaks**:
 
   ```
     Bleh bleh
@@ -306,7 +320,13 @@ How to get them?
 
 ## Indented code blocks
 
-- **List item ownership > code block indentations**
+- An `indented code block` is composed of one or more `indented chunks`
+  separated by blank lines.
+
+- An indented chunk is a sequence of non-blank lines, each preceded by four or
+  more spaces of indentation.
+
+- **List item ownership > code block indentations**:
 
   ```
     ..-.List
@@ -338,17 +358,17 @@ How to get them?
 
   ```
     ....Foo
-    Bar
+    ...Bar
   ```
 
 ## Fenced code blocks
 
-- `Code fence` is a sequence of at least three backtick (`` ` ``) or tilde (`~`)
-  characters (tildes and backticks can not be mixed).
+- `Code fence` is a sequence of at least three consecutive backtick characters
+  (`` ` ``) or tildes (`~`) (tildes and backticks can not be mixed).
 
 - The line with opening code fence may optionally followed by `info string`.
 
-  + Info string usages?
+  + The info string usages?
 
 - The closing code fence line must have the same type as the opening code fence
   (tildes or backticks), and at least as many as backticks or tildes as the
@@ -382,7 +402,8 @@ How to get them?
 
 ## Link reference definitions
 
-- Link reference definition consists of:
+- Link reference definition (`[foo]: https://www.google.com "google.com"`)
+  consists of:
 
   + `Link label`. For more detail: [[#Inlines#Links#Reference links|Reference links]]
 
@@ -390,20 +411,13 @@ How to get them?
 
   + Optional spaces or tabs (including up to one line ending).
 
-  + `Link destination`
+  + `Link destination`.
 
   + Optional spaces or tabs (including up to one line ending).
 
-  + Optional `link title` [[#Inlines#Links#Inline links|Inline links]].
-
-    * Must be separated from link destination by spaces or tabs.
-
-    * Link title can expand over multiple lines but it can not contain a blank
-    line.
+  + Optional `link title`. For more detail: [[#Inlines#Links|Links]]
 
   + No further character may occur.
-
-  `[foo]: https://www.google.com "Visit google.com"`
 
 - Link reference definitions can come either *before* or *after* the links that use
   them.
@@ -446,7 +460,7 @@ How to get them?
 
 ## Blank lines
 
-It play one role in determining whether a list is `tight` or `loose`.
+- It play one role in determining whether a list is `tight` or `loose`.
 
 # Container blocks
 
@@ -457,11 +471,12 @@ It play one role in determining whether a list is `tight` or `loose`.
 
   + List items.
 
-- Lists are meta-containers for list items.
+- Lists are `meta-container`s for list items.
 
 ## Block quotes
 
-- `Block quote marker`: `>` character and an optional space of indentation.
+- `Block quote marker` consists of `>` character and an optional space of
+  indentation.
 
 - Two style of block quotes:
 
@@ -521,7 +536,7 @@ It play one role in determining whether a list is `tight` or `loose`.
   ```
     >.....code
 
-    >....not.code
+    >....not code
   ```
 
 ## List items
@@ -568,7 +583,7 @@ It play one role in determining whether a list is `tight` or `loose`.
 
    ```
      -.....Indented code
-     ...List item paragraph
+     ..List item paragraph
      ......more code
    ```
 
@@ -588,14 +603,14 @@ It play one role in determining whether a list is `tight` or `loose`.
      ```
 
    - When the list items start with a blank line, the number of spaces following
-   the list marker does not change the required indentation:
+   the list marker does *not* change the required indentation:
 
      ```
        -...
        ..List item
      ```
 
-   - More than one blank line does break a list:
+   - More than one blank line *does* break a list:
 
      ```
        -
@@ -606,11 +621,11 @@ It play one role in determining whether a list is `tight` or `loose`.
 4. Indentation:
 
    ```
-     .-..A.paragraph
-     ....with.two.lines
+     .-..A paragraph
+     ....with two lines
 
-     ........indented.code
-     ....>.A.block.code
+     ........indented code
+     ....>.A block code
    ```
 
 5. Laziness:
@@ -633,10 +648,10 @@ It play one role in determining whether a list is `tight` or `loose`.
 
      ```
        >.-.>.Blockquote
-       >.continue.here
-       and.here
-       >.-.>.here.too
-       >>.Not.in.the.list
+       >.continue here
+       and here
+       >.-.>.here too
+       >>.Not in the list
      ```
 
 6. That's all. Nothing that is not counted as a list item by rules #1-5 counts
@@ -1150,12 +1165,43 @@ It play one role in determining whether a list is `tight` or `loose`.
 
 ## Hard line breaks
 
-- A line ending (not in code span or HTML tag) that is preceded by two ore more
-  spaces and does not occur at the end of a block.
+- A line ending (not in a code span or HTML tag) that is preceded by two or
+  more spaces and does not occur at the end of a block is parsed as a hard line
+  break (rendered in HTML as a `<br />` tag):
+
+- For a more visible alternative, a backslash before the `line ending` may be
+  used instead of two or more spaces:
+
+  ```
+    foo\
+    bar
+  ```
+
+- More than two spaces can be used:
+
+  ```
+    foo.............
+    bar
+  ```
 
 ## Soft line breaks
 
+- A regular line ending (not in a code span or HTML tag) that is not preceded
+  by two or more spaces or a backslash is parsed as a softbreak.
+
+  ```
+    foo
+    bar
+  ```
+
 ## Textual content
+
+- Any characters not given an interpretation by the above rules will be parsed
+  as plain textual content.
+
+  ```
+    hello $.;'there
+  ```
 
 # Appendix: A parsing strategy
 
