@@ -8,7 +8,7 @@
 
 # Makefile
 
-Comming soon...
+- [GNU makefile](makefiles/gnu-makefile.md)
 
 # Arch linux package management
 
