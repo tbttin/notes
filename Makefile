@@ -6,7 +6,7 @@ PFLAGS :=\
 	 --from=commonmark
 
 markdowns   := $(wildcard */*.md)
-out_dir     := output
+out_dir     := notes-output
 pdf_dir     := $(out_dir)/pdf
 pdf_targets := $(addprefix $(pdf_dir)/, $(markdowns:%.md=%.pdf))
 topic_dirs  := $(sort $(dir $(pdf_targets)))
@@ -28,3 +28,4 @@ clean-pdf:
 .PHONY: all clean-pdf
 
 # $(info $(topic_dirs))
+
