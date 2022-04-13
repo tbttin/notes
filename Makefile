@@ -1,9 +1,10 @@
-PARSER := /usr/bin/pandoc
-PFLAGS :=\
-	 --variable=colorlinks\
-	 --toc\
-	 --number-sections\
-	 --from=commonmark
+PARSER    := /usr/bin/pandoc
+PFLAGS    :=\
+	    --variable=colorlinks\
+	    --toc\
+	    --number-sections\
+	    --from=commonmark
+MAKEFLAGS += --no-builtin-rules --no-builtin-variables
 
 markdowns   := $(wildcard */*.md)
 out_dir     := notes-output
