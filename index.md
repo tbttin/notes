@@ -20,15 +20,27 @@
 
 # Note taking
 
-Reading wiki.vim docs
+## Reading wiki.vim docs
 
-- Fast workflow
-  + Open index.md file quickly (hotkey or short alias)
-  + Search note quickly
-    * Search and load results into buffers, search in buffers
+- Fast workflow.
+
+  + Open index.md file quickly (hotkey or short alias).
+
+  + Jump to *link destinition* then `gf`. `CTRL-^` to switch back.
+
+  + Search note quickly.
+
+    * Search and load results into buffers, search in buffers.
+
+    * Quickfix list.
+
 - Pages? Short pages?
+
 - Care about note structures? Note subdirectories?
-  + Use proper name
+
+  + Use proper name.
+
   + Pages? What pages?
 
-- Note then clean/rinse and link to your knowledge or existed notes or internet
+- Note then clean/rinse and link to your knowledge or existed notes or
+  internet.
