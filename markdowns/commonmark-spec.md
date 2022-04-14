@@ -1,55 +1,5 @@
 [CommonMark Spec Version 0.30 (2021-06-19)](https://spec.commonmark.org/0.30/)
 
-*Contents*
-* [[#Introduction]]
-    * [[#Introduction#What is Markdown?|What is Markdown?]]
-    * [[#Introduction#Why is a spec needed?|Why is a spec needed?]]
-    * [[#Introduction#About this document|About this document]]
-* [[#Preliminaries]]
-    * [[#Preliminaries#Characters and lines|Characters and lines]]
-    * [[#Preliminaries#Tabs|Tabs]]
-    * [[#Preliminaries#Insecure characters|Insecure characters]]
-    * [[#Preliminaries#Backslash escapes|Backslash escapes]]
-    * [[#Preliminaries#Entity and numeric character references|Entity and numeric character references]]
-* [[#Blocks and inlines]]
-    * [[#Blocks and inlines#Precedence|Precedence]]
-    * [[#Blocks and inlines#Container blocks and leaf blocks|Container blocks and leaf blocks]]
-* [[#Leaf blocks]]
-    * [[#Leaf blocks#Thematic breaks|Thematic breaks]]
-    * [[#Leaf blocks#ATX headings|ATX headings]]
-    * [[#Leaf blocks#Setext headings|Setext headings]]
-    * [[#Leaf blocks#Indented code blocks|Indented code blocks]]
-    * [[#Leaf blocks#Fenced code blocks|Fenced code blocks]]
-    * [[#Leaf blocks#HTML blocks|HTML blocks]]
-    * [[#Leaf blocks#Link reference definitions|Link reference definitions]]
-    * [[#Leaf blocks#Paragraphs|Paragraphs]]
-    * [[#Leaf blocks#Blank lines|Blank lines]]
-* [[#Container blocks]]
-    * [[#Container blocks#Block quotes|Block quotes]]
-    * [[#Container blocks#List items|List items]]
-        * [[#Container blocks#List items#Rules that define list items|Rules that define list items]]
-        * [[#Container blocks#List items#Motivation|Motivation]]
-    * [[#Container blocks#Lists|Lists]]
-* [[#Inlines]]
-    * [[#Inlines#Code spans|Code spans]]
-    * [[#Inlines#Emphasis and strong emphasis|Emphasis and strong emphasis]]
-    * [[#Inlines#Links|Links]]
-        * [[#Inlines#Links#Inline links|Inline links]]
-        * [[#Inlines#Links#Reference links|Reference links]]
-    * [[#Inlines#Images|Images]]
-    * [[#Inlines#Autolinks|Autolinks]]
-    * [[#Inlines#Raw HTML|Raw HTML]]
-    * [[#Inlines#Hard line breaks|Hard line breaks]]
-    * [[#Inlines#Soft line breaks|Soft line breaks]]
-    * [[#Inlines#Textual content|Textual content]]
-* [[#Appendix: A parsing strategy]]
-    * [[#Appendix: A parsing strategy#Overview|Overview]]
-    * [[#Appendix: A parsing strategy#Phase 1: block structure|Phase 1: block structure]]
-    * [[#Appendix: A parsing strategy#Phase 2: inline structure|Phase 2: inline structure]]
-        * [[#Appendix: A parsing strategy#Phase 2: inline structure#An algorithm for parsing nested emphasis and links|An algorithm for parsing nested emphasis and links]]
-            * [[#Appendix: A parsing strategy#Phase 2: inline structure#An algorithm for parsing nested emphasis and links#*look for link or image*|*look for link or image*]]
-            * [[#Appendix: A parsing strategy#Phase 2: inline structure#An algorithm for parsing nested emphasis and links#*process emphasis*|*process emphasis*]]
-
 # Introduction
 
 ## What is Markdown?
@@ -100,7 +50,7 @@ How many questions can I answer?
   + Why six?
 
     ```
-      (> + 1st tab) -> tabstop = 3 spaces, but minus 1 >'s = 2 spaces left
+      (> + 1st tab) -> tabstop = 3 spaces; minus >'s space -> 2 spaces left
       second tab    -> tabstop = 4 spaces
 
       => total spaces = 6
@@ -405,7 +355,7 @@ How to get them?
 - Link reference definition (`[foo]: https://www.google.com "google.com"`)
   consists of:
 
-  + `Link label`. For more detail: [[#Inlines#Links#Reference links|Reference links]]
+  + `Link label`.
 
   + Followed by a colon (`:`).
 
@@ -415,7 +365,7 @@ How to get them?
 
   + Optional spaces or tabs (including up to one line ending).
 
-  + Optional `link title`. For more detail: [[#Inlines#Links|Links]]
+  + Optional `link title`.
 
   + No further character may occur.
 
