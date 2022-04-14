@@ -6,12 +6,12 @@ PFLAGS    := --variable=colorlinks\
 MAKEFLAGS += --no-builtin-rules\
 	     --no-builtin-variables
 
-markdowns   := $(wildcard */*.md)
 out_dir     := notes-output
 pdf_dir     := $(out_dir)/pdf
-pdf_targets := $(addprefix $(pdf_dir)/, $(markdowns:%.md=%.pdf))
+markdowns   := $(wildcard */*.md)
+pdf_targets := $(addprefix $(pdf_dir)/,$(markdowns:%.md=%.pdf))
 topic_dirs  := $(sort $(dir $(pdf_targets)))
-mkdir       := @/usr/bin/mkdir --parents
+mkdir       := @/usr/bin/mkdir --parents --
 rm          := @/usr/bin/rm --force --recursive --verbose --
 
 all: $(pdf_targets)
@@ -24,7 +24,7 @@ $(topic_dirs):
 	$(mkdir) $@
 
 clean-pdf:
-	$(rm) $(pdf_dir)/*
+	$(rm) $(pdf_dir)
 
 .PHONY: all clean-pdf
 
