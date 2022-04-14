@@ -26,7 +26,9 @@ $(topic_dirs):
 clean-pdf:
 	$(rm) $(pdf_dir)
 
-.PHONY: all clean-pdf
+clean: clean-pdf
+
+.PHONY: all clean-pdf clean
 
 # $(info $(topic_dirs))
 
