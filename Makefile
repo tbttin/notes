@@ -16,8 +16,8 @@ rm          := @/usr/bin/rm --force --recursive --verbose --
 
 all: $(pdf_targets)
 
-# Order-only prerequisite. Automatic variables beat me. Any better ideas?
-$(pdf_dir)/%.pdf: %.md | $(topic_dirs)
+.SECONDEXPANSION:
+$(pdf_dir)/%.pdf: %.md | $$(@D)/
 	$(PARSER) $(PFLAGS) -o $@ -- $<
 
 $(topic_dirs):
