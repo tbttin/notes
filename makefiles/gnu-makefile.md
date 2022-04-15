@@ -7,20 +7,38 @@
 - A `rule` looks like this:
 
   ```
-    target ... : prerequisites ...
+    targets : prerequisites
             recipe
             ...
-            ...
+  ```
+
+  or like this:
+
+  ```
+    targets : prerequisites ; recipe
+            recipe
+	    ...
   ```
 
   Remember to put one tab character (or `.RECIPEPREFIX` value) at the beginning
   of every recipe line!
 
+- A target is out of date when it does not exist or if it is older than any
+  prerequisites.
+
 ## A Simple Makefile
 ## How make Processes a Makefile
 
-- The `default goal` is the first target (not targets whose names start with
-  `.`) or the `.DEFAULTGOAL` value.
+- The `default goal` is the *first target* of the *first rule* in the *first
+  makefile* (not targets whose names start with `.`) or the *`.DEFAULTGOAL`
+  value*.
+
+  Exceptions:
+
+  + A target starting with a period is not a default unless it contains one or
+    more slashes, `/`, as well.
+
+  + A target that defines a *pattern rule* has no effect on the default goal.
 
 - *Automatically generated C program*s made by **Bison** and **Yacc**.
 
@@ -60,10 +78,10 @@
 
 ### Splitting Long Lines
 
-- `Physical line`s is a single line ending with a newline (regardless of
+- *Physical line*s is a single line ending with a newline (regardless of
   whether it is escaped).
 
-- `Logical line`s being a complete statement including all escaped newlines up
+- *Logical line*s being a complete statement including all escaped newlines up
   to the first non-escaped newline.
 
 - Outside of recipe lines, backslash/newlines are *converted* into a single space
@@ -112,7 +130,7 @@
 - For compatibility with some other `make` implementations, `sinclude` is
   another name for `-include`.
 
-## The Variable MAKEFILES
+## The Variable `MAKEFILES`
 
 - If the environment variable `MAKEFILES` is defined, `make` considers its
   value as a list of names (separated by whitespace) of additional makefiles to
@@ -135,7 +153,7 @@
 - Prevent update makefiles: specify the makefiles as goals in the command line
   as well as specifying them as makefiles.
 
-  Thus, '`make -f mfile -n mfile foo`' would read the makefile `mfile`, print
+  Thus, `make -f mfile -n mfile foo` would read the makefile `mfile`, print
   the recipe needed to update it without actually running it, and then print
   the recipe needed to update `foo` without running that.
 
@@ -171,7 +189,7 @@
 
 ## How make Reads a Makefile
 
-- GNU `make` does its work in *two distinct phases*.
+- GNU `make` does its work in *two* distinct phases.
 
 - During the *first phase*:
 
@@ -283,8 +301,8 @@
 
   ```
 
-  The above makefile results in the definition of a target '`target`' with
-  prerequisites '`echo`' and '`built`', as if the makefile contained `target:
+  The above makefile results in the definition of a target `target` with
+  prerequisites `echo` and `built`, as if the makefile contained `target:
   echo built`, rather than a rule with a recipe:
 
   ```makefile
@@ -334,6 +352,33 @@
 
 - Evaluation of automatic variables during the secondary expansion phase.
 
+- Secondary expansion of:
+
+  + Explicit rules.
+
+    * `$$@` evaluate to the file name of the target.
+
+    * When the target is an archive member, `$$%` evaluate to the target member
+      name.
+
+    * `$$<` variable evaluates to the *first prerequisite* in the *first rule*
+      for this target.
+
+    * `$$^` (without repetitions) and `$$+` (with repetitions) evaluate to the
+      list of all prerequisites of rules *that have already appeared* for the
+      same target.
+
+    * The variables `$$?` and `$$*` are not available and expand to the empty
+      string.
+
+  + Static pattern rules.
+
+    * `$$*` variable is set to the *pattern stem*.
+
+    * `$$?` is not available and expand to the empty string.
+
+  + Implicit rules in the same fashion as static pattern rules.
+
 # Writing Rules
 
 ## Rule Example
@@ -342,37 +387,200 @@
 
 ## Types of Prerequisites
 
+- Two types of prerequisites of GNU `make`:
+
+  + Normal prerequisites such as described in the previous section. It impose:
+
+    * An order in which recipes will be invoked: prerequisites' recipes then
+      targets'.
+
+    * A dependency relationship (when targets are out-dated).
+
+  + *Order-only* prerequisites:
+
+    ```makefile
+      targets : normal-prerequisites | order-only prerequisites
+    ```
+
+    * Impose a specific ordering on the rules to be invoked *without* forcing
+      the target to be updated if one of those rules is executed.
+
 ## Using Wildcard Characters in File Names
+
+- The wildcard characters in make are `*`, `?` and `[…]`, the same as in
+  the Bourne shell.
+
+- Wildcard expansion is performed by make automatically in *target*s and in
+  *prerequisite*s.
+
+  In recipes, the shell is responsible for wildcard expansion.
+
+  In other contexts, wildcard expansion happens only if you request it
+  explicitly with the `wildcard` function.
 
 ### Wildcard Examples
 
 ### Pitfalls of Using Wildcards
 
-### The Function wildcard
+- Wildcard expansion base on existing filenames. But what if you delete all
+  these files?
+
+- When a wildcard matches no files, it is left as it is, so then foo will
+  depend on the oddly-named file `*.o`.
+
+### The Function `wildcard`
+
+- If no existing file name matches a pattern, then that pattern is omitted from
+  the output of the `wildcard` function.
 
 ## Searching Directories for Prerequisites
 
-### VPATH: Search Path for All Prerequisites
+### VPATH: Search Path for All Prerequisites (general search)
 
-### The vpath Directive
+- `make` uses `VPATH` as a search list for both *prerequisite*s and *target*s of
+  rules (if they do not exist in current directory).
+
+- In the `VPATH` variable, directory names are separated by colons or blanks.
+
+### The `vpath` Directive (selective search)
+
+- There are three forms of the vpath directive:
+
+  + `vpath pattern directories`
+
+    Specify the search path directories for file names that match *pattern*.
+
+    A `vpath` pattern is a string containing a '%' character.
+
+    The search path, directories, is a list of directories to be searched,
+    separated by colons (semi-colons on MS-DOS and MS-Windows) or blanks, just
+    like the search path used in the VPATH variable.
+
+  + `vpath pattern`
+
+    Clear out the search path associated with pattern.
+
+  + `vpath`
+
+    Clear all search paths previously specified with vpath directives.
 
 ### How Directory Searches are Performed
 
+- GNU `make` directory search algorithm.
+
+- Use `GPATH` variable to use a simpler algorithm of other versions of `make`.
+
 ### Writing Recipes with Directory Search
+
+- Write them with *automatic variable*s.
 
 ### Directory Search and Implicit Rules
 
 ### Directory Search for Link Libraries
 
+- When a prerequisite's name has the form `-lname`, make handles it specially
+  by searching for the file `libname.so`, and, if it is not found, for the file
+  `libname.a` in:
+
+  + The current directory,
+
+  + The directories specified by matching `vpath` search paths and the `VPATH`
+    search path,
+
+  + And then in the directories `/lib`, `/usr/lib`, and `prefix/lib` (normally
+    `/usr/local/lib`).
+
+- For example, if there is a `/usr/lib/libcurses.a` library on your system (and
+  no `/usr/lib/libcurses.so` file), then
+
+    ```makefile
+    foo : foo.c -lcurses
+	    cc $^ -o $@
+    ```
+
+  would cause the command `cc foo.c /usr/lib/libcurses.a -o foo` to be executed
+  when foo is older than `foo.c` or than `/usr/lib/libcurses.a`.
+
+- The default value for `.LIBPATTERNS` is `lib%.so lib%.a`, which provides the
+  default behavior described above.
+
+  You can turn off link library expansion completely by setting this variable
+  to an empty value.
+
 ## Phony Targets
+
+- There are two reasons to use a phony target:
+
+  + To avoid a conflict with a file of the same name.
+
+  + To improve performance (the implicit rule search is skipped for `.PHONY`
+    targets).
+
+- Phony targets are also useful in conjunction with recursive invocations of
+  `make`.
+
+  A loop in recipe method is suck:
+
+  + The loop will continue to build the rest of the directories even when one
+    fails (`-k` option makes shell exit code handling suck).
+
+  + We cannot take advantage of `make`s ability to build targets in parallel,
+    since *there is only one rule*.
+
+- The *phony* sub-directories way:
+
+  ```makefile
+
+    SUBDIRS = foo bar baz
+
+    .PHONY: subdirs $(SUBDIRS)
+
+    subdirs: $(SUBDIRS)
+
+    $(SUBDIRS):
+            $(MAKE) -C $@
+
+    foo: baz
+  ```
 
 ## Rules without Recipes or Prerequisites
 
+- If a rule has no prerequisites or recipe, and the target of the rule is a
+  *nonexistent file*, then make imagines this target to have been updated
+  whenever its rule is run.
+
+  This implies that all targets depending on this one will always have their
+  recipe run.
+
+- An example will illustrate this:
+
+    ```makefile
+      clean: FORCE
+              rm $(objects)
+      FORCE:
+    ```
+
+- Using `.PHONY` is more explicit and more efficient.
+
 ## Empty Target Files to Record Events
 
+- The *empty target* is a variant of the *phony target*.
+
+  ```makefile
+    print: foo.c bar.c
+	    lpr -p $?
+	    touch print
+  ```
 ## Special Built-in Target Names
 
 ## Multiple Targets in a Rule
+
+- When an explicit rule has multiple targets they can be treated in one of two
+  possible ways:
+
+  + As independent targets.
+
+  + As grouped targets.
 
 ## Multiple Rules for One Target
 
