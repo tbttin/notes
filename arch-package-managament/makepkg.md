@@ -13,7 +13,7 @@
 - `makepkg` frequently used cases and explanations:
 
   ```bash
-    makepkg --cleanbuild --syncdeps --force --iinstall [--clean]
+  makepkg --cleanbuild --syncdeps --force --iinstall [--clean]
   ```
 
   + Clean `${srcdir}` (`man PKGBUILD.5`) before build.
@@ -29,12 +29,12 @@
 - Generate/update checksums:
   
   ```bash
-    makepkg --geninteg >> PKGBUILD
+  makepkg --geninteg >> PKGBUILD
   ```
 
   or
 
   ```bash
-    updpkgsums
+  updpkgsums
   ```
 

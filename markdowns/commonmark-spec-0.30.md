@@ -50,10 +50,10 @@ How many questions can I answer?
   + Why six?
 
     ```
-      (> + 1st tab) -> tabstop = 3 spaces; minus >'s space -> 2 spaces left
-      second tab    -> tabstop = 4 spaces
+    (> + 1st tab) -> tabstop = 3 spaces; minus >'s space -> 2 spaces left
+    second tab    -> tabstop = 4 spaces
 
-      => total spaces = 6
+    => total spaces = 6
     ```
 
 ## Insecure characters
@@ -101,8 +101,8 @@ How many questions can I answer?
   two items:
 
   ```markdown
-    - `one
-    - two`
+  - `one
+  - two`
   ```
 
 ## Container blocks and leaf blocks
@@ -121,31 +121,31 @@ How many questions can I answer?
 
 - **Setext headings > thematic breaks** WHEN (between paragraphs, anything else?):
 
-  ```makrdown
-    Foo
-    ---
-    bar
+  ```markdown
+  Foo
+  ---
+  bar
   ```
 
   but indented code blocks can not break paragraphs:
 
-  ```makrdown
-    Foo
-    ....***
+  ```markdown
+  Foo
+  ....***
   ```
 
 - **Thematic breaks > list item indicators**:
 
-  ```makrdown
-    * Foo
-    ***
-    * Bar
+  ```markdown
+  * Foo
+  ***
+  * Bar
   ```
 
-  ```makrdown
-    - Foo
-    ***
-    - Bar
+  ```markdown
+  - Foo
+  ***
+  - Bar
   ```
 
 ## ATX headings
@@ -153,32 +153,32 @@ How many questions can I answer?
 - Six levels:
 
   ```markdown
-    #      Level one heading
-    ##     Level two heading
-    ###    Level three heading
-    ####   Level four heading
-    #####  Level five heading
-    ###### Level six heading
+  #      Level one heading
+  ##     Level two heading
+  ###    Level three heading
+  ####   Level four heading
+  #####  Level five heading
+  ###### Level six heading
   ```
 
 - At least one space is required between `#` character and heading content.
 
-  ```makrdown
-    #5 bolt
+  ```markdown
+  #5 bolt
 
-    #hastag
+  #hastag
   ```
 
 - **ATX headings > paragraphs** too. But again, indented code does not:
 
   ```markdown
-    foo
-    ...# bar
+  foo
+  ...# bar
   ```
 
-  ```makrdown
-    foo
-    ....# bar
+  ```markdown
+  foo
+  ....# bar
   ```
 
 ## Setext headings
@@ -191,73 +191,73 @@ How many questions can I answer?
 
 - **Paragraphs > setext headings**. So we use blank lines:
 
-  ```makrdown
-    Foo *bar*
-    =========
+  ```markdown
+  Foo *bar*
+  =========
 
-    Foo *bar*
-    ---------
+  Foo *bar*
+  ---------
   ```
 
 - The content of the header may span to more than one line:
 
-  ```makrdown
-    Foo *bar
-    baz*
-    ===
+  ```markdown
+  Foo *bar
+  baz*
+  ===
   ```
 
 - The underlining can be any length:
 
-  ```makrdown
-    Foo
-    --------------------
+  ```markdown
+  Foo
+  --------------------
 
-    Foo
-    =
+  Foo
+  =
   ```
 
 - Setext headings underline can not be a `lazy continuation line` in block quote
   and list item:
 
-  ```makrdown
-    > Foo
-    ---
+  ```markdown
+  > Foo
+  ---
   ```
 
   `---` is a **thematic break** outside the block quote.
 
-  ```makrdown
-    > Foo
-    bar
-    ===
+  ```markdown
+  > Foo
+  bar
+  ===
   ```
 
   `===` is **part of the paragraph** inside the block quote.
 
-  ```makrdown
-    - Foo
-    ---
+  ```markdown
+  - Foo
+  ---
   ```
 
   `---` is a **thematic break** outside the list.
 
 - Again, **setext headings > thematic breaks**:
 
-  ```makrdown
-    Bleh bleh
-    ---
+  ```markdown
+  Bleh bleh
+  ---
   ```
 
 **Compatibility note**: Most existing Markdown implementations do not allow the
 text of setext headings to span multiple lines. But there is no consensus about
 how to interpret:
 
-  ```makrdown
-    Foo
-    bar
-    ----
-    baz
+  ```markdown
+  Foo
+  bar
+  ----
+  baz
   ```
 
 One can find four different interpretations:
@@ -279,37 +279,37 @@ How to get them?
 
 - **List item ownership > code block indentations**:
 
-  ```makrdown
-    ..-.List
+  ```markdown
+  ..-.List
 
-    ....List item
+  ....List item
   ```
 
 - **Indented code blocks < paragraphs**. (This allows hanging indents and the
   like):
 
-  ```makrdown
-    Foo
-    ....bar
+  ```markdown
+  Foo
+  ....bar
   ```
 
   And indented code can occur immediately before and after other kinds of blocks:
 
-  ```makrdown
-    # Heading
-    ....foo
-    Heading
-    ------
-    ....foo
-    ----
+  ```markdown
+  # Heading
+  ....foo
+  Heading
+  ------
+  ....foo
+  ----
   ```
 
 - Any non-blank line with less than four spaces of indentation will break a code
   block
 
-  ```makrdown
-    ....Foo
-    ...Bar
+  ```markdown
+  ....Foo
+  ...Bar
   ```
 
 ## Fenced code blocks
@@ -331,22 +331,22 @@ How to get them?
 
   use different code fence type:
 
-  ~~~~makrdown
-    ```
-      code
-      ~~~
-      code
-    ```
+  ~~~~markdown
+  ```
+    code
+    ~~~
+    code
+  ```
   ~~~~
 
   or longer code fence:
 
   ``````markdown
-    ~~~~
-      code
-      ~~~
-      code
-    ~~~~
+  ~~~~
+    code
+    ~~~
+    code
+  ~~~~
   ``````
 
 ## HTML blocks
@@ -370,26 +370,26 @@ How to get them?
 
   + No further character may occur.
 
-- Link reference definitions can come either *before* or *after* the links that use
-  them.
+- Link reference definitions can come either *before* or *after* the links that
+  use them.
 
 - We can use angle brackets to specify an empty link destination:
 
-  ```makrdown
-    [foo]: <>
+  ```markdown
+  [foo]: <>
 
-    [foo]
+  [foo]
   ```
 
 - If there are several matching definitions, the *first* one takes precedence.
 
 - **Link reference definitions < paragraphs**:
 
-  ```makrdown
-    Foo
-    [bar]: /baz
+  ```markdown
+  Foo
+  [bar]: /baz
 
-    [bar]
+  [bar]
   ```
 
 ## Paragraphs
@@ -403,10 +403,10 @@ How to get them?
 
 - **Again**, paragraphs > indented code blocks (any amount of space):
 
-  ```makrdown
-    aaa
-    .........bbb
-    ..................ccc
+  ```markdown
+  aaa
+  .........bbb
+  ..................ccc
   ```
 
 ## Blank lines
@@ -433,16 +433,16 @@ How to get them?
 
   + Basic case:
 
-    ```makrdown
-      > Foo
-      > Bar
+    ```markdown
+    > Foo
+    > Bar
     ```
 
   + Laziness:
 
-    ```makrdown
-      > Foo
-      Bar
+    ```markdown
+    > Foo
+    Bar
     ```
 
 - `Paragraph continuation text` is text that will be parsed as part of the
@@ -450,44 +450,44 @@ How to get them?
 
 - We have a `laziness continuation line` in this case:
 
-  ```makrdown
-    > Foo
-    ....- Bar
+  ```markdown
+  > Foo
+  ....- Bar
   ```
 
 - Block quotes can interrupt paragraphs:
 
-  ```makrdown
-    Foo
-    > Bar
+  ```markdown
+  Foo
+  > Bar
 
-  ```makrdown
+  ```
 
 - Blank lines will separate block quotes. So, to get two paragraphs in one
   block quote:
 
-  ```makrdown
-    > Foo
-    >
-    > Bar
+  ```markdown
+  > Foo
+  >
+  > Bar
   ```
 
 - Any number of initial `>`s can be omitted on a continuation line of a nested
   block quote:
 
-  ```makrdown
-    >.>.> Quote
-    >.> Same level quote
-    Same level quote
+  ```markdown
+  >.>.> Quote
+  >.> Same level quote
+  Same level quote
   ```
 
 - **Notice**, indented code block in a block quote: `>`'s one space + indented code's four
   spaces:
 
-  ```makrdown
-    >.....code
+  ```markdown
+  >.....code
 
-    >....not code
+  >....not code
   ```
 
 ## List items
@@ -504,91 +504,91 @@ How to get them?
 
    - Whatever you are, *first*, be come a list item!
 
-     ```makrdown
-       -..List item
-       ..Not a list item
-       ...List item
-       ...>.Quoted list item
-       .......Indented code list item
+     ```markdown
+     -..List item
+     ..Not a list item
+     ...List item
+     ...>.Quoted list item
+     .......Indented code list item
      ```
 
    - The spaces of indentation after the list marker determine how much
-   *relative* indentation is needed. It depends on how the list item is
-   embedded in other constructions.
+     *relative* indentation is needed. It depends on how the list item is
+     embedded in other constructions.
 
-     ```makrdown
-       ...>.>.-...List item
-       >>
-       >>.....List item (5 spaces after the 2nd block quote marker)
+     ```markdown
+     ...>.>.-...List item
+     >>
+     >>.....List item (5 spaces after the 2nd block quote marker)
      ```
 
      but:
 
-     ```makrdown
-       >>.-.List item
-       >>
-       ..>..>..Not a list item (2 space is not enough)
+     ```markdown
+     >>.-.List item
+     >>
+     ..>..>..Not a list item (2 space is not enough)
      ```
 
 2. Item start with indented code:
 
-   ```makrdown
-     -.....Indented code
-     ..List item paragraph
-     ......more code
+   ```markdown
+   -.....Indented code
+   ..List item paragraph
+   ......more code
    ```
 
 3. Item start with a blank line:
 
    - Here are some example of non-empty lists:
 
-     ```makrdown
-       -
-       ..List item
-       -
-       ..~~~
-       ..bar
-       ..~~~
-       -
-       ......code
+     ```markdown
+     -
+     ..List item
+     -
+     ..~~~
+     ..bar
+     ..~~~
+     -
+     ......code
      ```
 
-   - When the list items start with a blank line, the number of spaces following
-   the list marker does *not* change the required indentation:
+   - When the list items start with a blank line, the number of spaces
+     following the list marker does *not* change the required indentation:
 
-     ```makrdown
-       -...
-       ..List item
+     ```markdown
+     -...
+     ..List item
      ```
 
    - More than one blank line *does* break a list:
 
-     ```makrdown
-       -
+     ```markdown
+     -
 
-       ..Not a list item
+     ..Not a list item
      ```
 
 4. Indentation:
 
-   ```makrdown
-     .-..A paragraph
-     ....with two lines
+   ```markdown
+   .-..A paragraph
+   ....with two lines
 
-     ........indented code
-     ....>.A block code
+   ........indented code
+   ....>.A block code
    ```
 
 5. Laziness:
 
    - Example:
 
-     ```makrdown
-       .-..A paragraph
-       ..of
-       three lines
-       ....> But, quote
-       ........Indented code
+     ```markdown
+     .-..A paragraph
+     ..of
+     three lines
+     ....> But, quote
+     ........Indented code
      ```
 
      Because of `paragraph continuation text`?
@@ -597,12 +597,12 @@ How to get them?
 
    - Laziness can work in nested structures:
 
-     ```makrdown
-       >.-.>.Blockquote
-       >.continue here
-       and here
-       >.-.>.here too
-       >>.Not in the list
+     ```markdown
+     >.-.>.Blockquote
+     >.continue here
+     and here
+     >.-.>.here too
+     >>.Not in the list
      ```
 
 6. That's all. Nothing that is not counted as a list item by rules #1-5 counts
@@ -610,8 +610,8 @@ How to get them?
 
    - A list may be the first block in a list item:
 
-     ```makrdown
-       -.-.Sublist
+     ```markdown
+     -.-.Sublist
      ```
 
 ### Motivation
@@ -640,10 +640,10 @@ How to get them?
 
 - **Lists > paragraphs**:
 
-  ```makrdown
-    Paragraphs
-    - List
-    - List
+  ```markdown
+  Paragraphs
+  - List
+  - List
   ```
 
   The `principle of uniformity`: if a chunk of text has a certain meaning, it
@@ -653,81 +653,81 @@ How to get them?
   + *Exception*: to solve of unwanted list in paragraphs with hard-wrap numerals, only lists
   starting with `1` can interrupt paragraphs:
 
-    ```makrdown
-      The number of windows in my house is
-      14. The number of doors is 6.
-      1. This is a list!
+    ```markdown
+    The number of windows in my house is
+    14. The number of doors is 6.
+    1. This is a list!
     ```
 
 - To separate consecutive lists of same type, or to separate a list from
   indented code block we use a blank HTML comment:
 
-  ```makrdown
-    -...foo
+  ```markdown
+  -...foo
 
-    ....notcode
+  ....notcode
 
-    -...foo
+  -...foo
 
-    <!-- -->
+  <!-- -->
 
-    ....code
+  ....code
   ```
 
 - List items need not to be indented to the same level:
 
-  ```makrdown
-    -.a
-    .-.b
-    ..-.c
-    ...-.d
-    ..-.e
-    .-.f
-    -.g
+  ```markdown
+  -.a
+  .-.b
+  ..-.c
+  ...-.d
+  ..-.e
+  .-.f
+  -.g
   ```
 
   However, list items may not preceded by more than three spaces of
   indentation:
 
-  ```makrdown
-    -.a
-    .-.b
-    ..-.c
-    ...-.d
-    ....-.paragraph continuation line of previous line
+  ```markdown
+  -.a
+  .-.b
+  ..-.c
+  ...-.d
+  ....-.paragraph continuation line of previous line
 
-    ....-.just indented code
+  ....-.just indented code
   ```
 
 - This is a `loose list`, because there is a blank line between the list items:
 
-  ```makrdown
-    - a
-    - b
+  ```markdown
+  - a
+  - b
 
-    - c
+  - c
   ```
 
 - This is a `loose list`, even though there are no blank line between the
   items, because one of the items directly contain two block-level elements
   with a blank line between them:
 
-  ```makrdown
-    -.a
-    -.b
+  ```markdown
+  -.a
+  -.b
 
-    ..c
-    -.d
+  ..c
+  -.d
   ```
 
 - This is a tight list contain a loose list:
 
-  ```makrdown
-    -.a
-    ..-.b
+  ```markdown
+  -.a
+  ..-.b
 
-    ....c
-    -.d
+  ....c
+  -.d
   ```
 
 # Inlines
@@ -742,8 +742,8 @@ How to get them?
 - A code span begins with a backtick string and ends with a backtick string
   of *equal length*:
 
-  ```makrdown
-    `normal text here ``code here``
+  ```markdown
+  `normal text here ``code here``
   ```
 
   Wen backtick string is not close by a matching backtick string, we just have
@@ -761,8 +761,8 @@ How to get them?
 
 - Backslash escapes do not work in code spans:
 
-  ```makrdown
-    `foo \`bar`
+  ```markdown
+  `foo \`bar`
   ```
 
 - Code span backticks have higher precedence than any other inline constructs
@@ -772,20 +772,20 @@ How to get them?
 
   This is a code:
 
-  ```makrdown
-    `<a href="`">`
+  ```markdown
+  `<a href="`">`
   ```
 
   But this is a HTML tag:
 
-  ```makrdown
-    <a href="`">`
+  ```markdown
+  <a href="`">`
   ```
 
 - Note, opening and closing backtick string need to be equal in length:
 
-  ```makrdown
-    `foo ``bar``
+  ```markdown
+  `foo ``bar``
   ```
 
 ## Emphasis and strong emphasis
@@ -834,26 +834,26 @@ How to get them?
 
 - This is not emphasis:
 
-  ```makrdown
-   *(*foo
+  ```markdown
+ *(*foo
   ```
 
   But this is (em in em):
 
-  ```makrdown
-    *(*foo*)*
+  ```markdown
+  *(*foo*)*
   ```
 
 - This is strong in em:
 
-  ```makrdown
-    *foo**bar**baz*
+  ```markdown
+  *foo**bar**baz*
   ```
 
   Note that in the preceding case, the interpretation (3 ems)
 
-  ```makrdown
-    <p><em>foo</em><em>bar<em></em>baz</em></p>
+  ```markdown
+  <p><em>foo</em><em>bar<em></em>baz</em></p>
   ```
 
   **is precluded by the condition that a delimiter that can both open and
@@ -864,42 +864,42 @@ How to get them?
 - When the lengths of the interior closing and opening delimiter runs are both
   multiples of 3, though, they can match to create emphasis:
 
-  ```makrdown
-    foo***bar***baz
+  ```markdown
+  foo***bar***baz
   ```
 
   is just one em and one strong.
 
-  ```makrdown
-    foo******bar*********baz
+  ```markdown
+  foo******bar*********baz
   ```
 
   is triple strongs:
 
-  ```makrdown
-    <p>foo<strong><strong><strong>bar</strong></strong></strong>***baz</p>
+  ```markdown
+  <p>foo<strong><strong><strong>bar</strong></strong></strong>***baz</p>
   ```
 
 - Note when delimiters do not match evently, Rule 11 determines the the excess
   literal `*` characters will appear ouside of the emphasis, rather than
   inside:
 
-  ```makrdown
-    **foo* <=> <p>*<em>foo</em></p>
+  ```markdown
+  **foo* <=> <p>*<em>foo</em></p>
   ```
 
   Why this
 
-  ```makrdown
-    **foo ** is <p>**foo bar **</p>
+  ```markdown
+  **foo ** is <p>**foo bar **</p>
   ```
 
   but not this `*foo bar *`?
 
 - Rule 15:
 
-  ```makrdown
-    *foo _bar* baz_ <=> <p><em>foo _bar</em> baz_</p>
+  ```markdown
+  *foo _bar* baz_ <=> <p><em>foo _bar</em> baz_</p>
   ```
 
 - Note rule #16 and #17.
@@ -949,28 +949,28 @@ How to get them?
 - Link destination can contain spaces (but not line endings) and brackets when
   it enclose in pointy brackets (`<>`):
 
-  ```makrdown
-    [link](</my uri>)
-    [link](</my)uri>)
+  ```markdown
+  [link](</my uri>)
+  [link](</my)uri>)
   ```
 
 - Because link titles often parsed as destination, if we try to omit link
   destination and keep link title, unexpected result will happened:
 
-  ```makrdown
-    [foo]("title")
+  ```markdown
+  [foo]("title")
   ```
 
 - Link texts may contain inline content (emphasises, image, .etc):
 
-  ```makrdown
-    [![moon](moon.jpg)](/uri)
+  ```markdown
+  [![moon](moon.jpg)](/uri)
   ```
 
 - **Link texts > emphasis grouping**:
 
-  ```makrdown
-    *[foo*](/uri)
+  ```markdown
+  *[foo*](/uri)
   ```
 
 - But **link texts < code spans, autolinks, raw HTML tags**
@@ -989,10 +989,10 @@ How to get them?
    `link label` that *match* `link reference definition` elsewhere in
    documentation.
 
-     ```makrdown
-       [foo][bar]
+     ```markdown
+     [foo][bar]
 
-       [bar]: /url "title"
+     [bar]: /url "title"
      ```
 
    - `Link label` begins with left bracket (`[`) and ends with first right bracket
@@ -1015,10 +1015,10 @@ How to get them?
    **The contents of first link label are parsed as inlines, which are used as
    link's text.** Thus, `[foo][]` is equivalent to `[foo][foo]`.
 
-   ```makrdown
-     [foo][]
+   ```markdown
+   [foo][]
 
-     [foo]: /url 'title'
+   [foo]: /url 'title'
    ```
 
 3. `Shortcut reference link` consists of *link label* that matches *link
@@ -1028,56 +1028,56 @@ How to get them?
    **The contents of first link label are parsed as inlines, which are used as
    link's text.** Thus, `[foo]` and  `[foo][]` are equivalent to `[foo][foo]`.
 
-   ```makrdown
-     [foo]
+   ```markdown
+   [foo]
 
-     [foo]: /url 'title'
+   [foo]: /url 'title'
    ```
 
 - Full and compact references take precedence over shortcut references:
 
-  ```makrdown
-    [foo][bar]
+  ```markdown
+  [foo][bar]
 
-    [foo]: /url1
-    [bar]: /the-chosen-one-url
+  [foo]: /url1
+  [bar]: /the-chosen-one-url
   ```
 
   Inline link also take precedence:
 
-  ```makrdown
-    [foo]()
-    [foo](not a url)
+  ```markdown
+  [foo]()
+  [foo](not a url)
 
-    [foo]: /not-the-chosen-one
+  [foo]: /not-the-chosen-one
   ```
 
 - In the following case `[bar][baz]` is parsed as a reference, `[foo]` as
   normal text. Because `[baz]` is defined:
 
-  ```makrdown
-    [foo][bar][baz]
+  ```markdown
+  [foo][bar][baz]
 
-    [bax]: /url
+  [bax]: /url
   ```
 
 - Here, though, `[foo][bar]` is parsed as a reference, since `[bar]` is defined:
 
-  ```makrdown
-    [foo][bar][baz]
+  ```markdown
+  [foo][bar][baz]
 
-    [baz]: /url1
-    [bar]: /url2
+  [baz]: /url1
+  [bar]: /url2
   ```
 
 - Here `[foo]` is not parsed as a shortcut reference, because it is followed by a
   link label (even though `[bar]` is not defined):
 
-  ```makrdown
-    [foo][bar][baz]
+  ```markdown
+  [foo][bar][baz]
 
-    [baz]: /url1
-    [foo]: /url2
+  [baz]: /url1
+  [foo]: /url2
   ```
 
 ## Images
@@ -1094,16 +1094,16 @@ How to get them?
 - Note that only plain string content of image description be used (`alt="foo
   bar"` in bellow):
 
-  ```makrdown
-    ![foo [bar](/url1)](/url2)
+  ```markdown
+  ![foo [bar](/url1)](/url2)
   ```
 
   But in `link reference definition` the must match:
 
-  ```makrdown
-    ![*foo* bar]
+  ```markdown
+  ![*foo* bar]
 
-    [*foo* bar]: /image-url "title"
+  [*foo* bar]: /image-url "title"
   ```
 
 ## Autolinks
@@ -1123,16 +1123,16 @@ How to get them?
 - For a more visible alternative, a backslash before the `line ending` may be
   used instead of two or more spaces:
 
-  ```makrdown
-    foo\
-    bar
+  ```markdown
+  foo\
+  bar
   ```
 
 - More than two spaces can be used:
 
-  ```makrdown
-    foo.............
-    bar
+  ```markdown
+  foo.............
+  bar
   ```
 
 ## Soft line breaks
@@ -1140,9 +1140,9 @@ How to get them?
 - A regular line ending (not in a code span or HTML tag) that is not preceded
   by two or more spaces or a backslash is parsed as a softbreak.
 
-  ```makrdown
-    foo
-    bar
+  ```markdown
+  foo
+  bar
   ```
 
 ## Textual content
@@ -1150,8 +1150,8 @@ How to get them?
 - Any characters not given an interpretation by the above rules will be parsed
   as plain textual content.
 
-  ```makrdown
-    hello $.;'there
+  ```markdown
+  hello $.;'there
   ```
 
 # Appendix: A parsing strategy
