@@ -2,54 +2,73 @@
 ## How to Read This Manual
 ## Problems and Bugs
 # An Introduction to Makefiles
+
+- This chapter is about a simple makefile that descripes how to compile and
+  link a text editor which consists of eight C source files and three header
+  files.
+
 ## What a Rule Looks Like
 
 - A `rule` looks like this:
 
-  ```
-    targets : prerequisites
-            recipe
-            ...
+  ```makefile
+  targets : prerequisites
+          recipe
+          ...
   ```
 
   or like this:
 
-  ```
-    targets : prerequisites ; recipe
-            recipe
-            ...
+  ```makefile
+  targets : prerequisites ; recipe
+          recipe
+          ...
   ```
 
-  Remember to put one tab character (or `.RECIPEPREFIX` value) at the beginning
-  of every recipe line!
+  Remember to put one *tab character* (or the value `.RECIPEPREFIX` variable)
+  at the beginning of every recipe line!
 
-- A target is out of date when it does not exist or if it is older than any
+- A `target` is *out of date* when it does not exist or if it is older than any
   prerequisites.
 
 ## A Simple Makefile
 ## How make Processes a Makefile
 
-- The `default goal` is the *first target* of the *first rule* in the *first
-  makefile* (not targets whose names start with `.`) or the *`.DEFAULTGOAL`
+- The `default goal` is the *first target* (not targets whose names start with
+  `.`) of the *first rule* in the *first makefile* or the *`.DEFAULTGOAL`
   value*.
 
-  Exceptions:
+  You can override this rule by using command line to specify a goal:
+
+  ```bash
+  $ make foo
+  ```
+
+- The exceptions of the above rule:
 
   + A target starting with a period is not a default unless it contains one or
     more slashes, `/`, as well.
 
   + A target that defines a *pattern rule* has no effect on the default goal.
 
-- *Automatically generated C program*s made by **Bison** and **Yacc**.
+- `make` would update *automatically generated* C programs, such as those made
+  by Bison or Yacc, by their own rule.
 
 ## Variables Make Makefiles Simpler
 ## Letting make Deduce the Recipes
 
-- `Implicit rule`s:
+- `make` has an *implicit rule* for updating a `.o` file from a correspondingly
+  named `.c` file using a `cc -c` command:
+
+  ```bash
+  $ cc -c -o main.o main.c
+  ```
+
+  Therefore, `.c` files can be omitted from the prerequisites.
 
   ```makefile
-    main.o : defs.h
-    utils.o : utils.h
+  main.o : defs.h
+  utils.o : utils.h
   ```
 
 ## Another Style of Makefile
@@ -93,14 +112,14 @@
   backslash/newline:
 
   ```makefile
-    var := one$\
-           word
+  var := one$\
+         word
   ```
 
   After `make` remove backslash/newline and condenses the following space:
 
   ```makefile
-    var := one$ word
+  var := one$ word
   ```
 
   Because the variable '$ ' which does not exist, and so it will expand to
@@ -114,7 +133,7 @@
 ## Including Other Makefiles
 
 ```makefile
-  include foo *.mk $(bar)
+include foo *.mk $(bar)
 ```
 
 - If an included makefile cannot be found in any of these directories, a
@@ -164,20 +183,20 @@
   `GNUmakefile` that contains:
 
   ```makefile
-    foo:
-            frobnicate > foo
+  foo:
+          frobnicate > foo
 
-    %: force
-            @$(MAKE) -f Makefile $@
-    force: ;
+  %: force
+          @$(MAKE) -f Makefile $@
+  force: ;
   ```
 
   Then,
 
-  ```sh
-    $ make foo
+  ```bash
+  $ make foo
 
-    $ make bar
+  $ make bar
   ```
 
 - The rule specifies a prerequisite `force`, to guarantee that the recipe will
@@ -217,40 +236,40 @@
 - Variable assignment:
 
   ```makefile
-    immediate   = deferred
-    immediate  ?= deferred
-    immediate  := immediate
-    immediate ::= immediate
-    immediate  += deferred or immediate
-    immediate  != immediate
+  immediate   = deferred
+  immediate  ?= deferred
+  immediate  := immediate
+  immediate ::= immediate
+  immediate  += deferred or immediate
+  immediate  != immediate
 
-    define immediate
-      deferred
-    endef
+  define immediate
+    deferred
+  endef
 
-    define immediate =
-      deferred
-    endef
+  define immediate =
+    deferred
+  endef
 
-    define immediate ?=
-      deferred
-    endef
+  define immediate ?=
+    deferred
+  endef
 
-    define immediate :=
-      immediate
-    endef
+  define immediate :=
+    immediate
+  endef
 
-    define immediate ::=
-      immediate
-    endef
+  define immediate ::=
+    immediate
+  endef
 
-    define immediate +=
-      deferred or immediate
-    endef
+  define immediate +=
+    deferred or immediate
+  endef
 
-    define immediate !=
-      immediate
-    endef
+  define immediate !=
+    immediate
+  endef
   ```
 
   For the append operator '+=', the right-hand side is considered immediate if
@@ -273,8 +292,8 @@
   A rule is always expanded the same way, regardless of the form:
 
   ```makefile
-    immediate : immediate ; deferred
-            deferred
+  immediate : immediate ; deferred
+          deferred
   ```
 
 ## How Makefiles Are Parsed
@@ -283,21 +302,21 @@
   rule, *if it is one line long*. This will work:
 
   ```makefile
-    myrule = target : ; echo built
+  myrule = target : ; echo built
 
-    $(myrule)
+  $(myrule)
   ```
 
 - However, this will not work because `make` does not re-split lines after it
   has expanded them:
 
   ```makefile
-    define myrule
-    target:
-            echo built
-    endef
+  define myrule
+  target:
+          echo built
+  endef
 
-    $(myrule)
+  $(myrule)
 
   ```
 
@@ -306,7 +325,7 @@
   echo built`, rather than a rule with a recipe:
 
   ```makefile
-    target: echo built
+  target: echo built
   ```
 
   Newlines still present in a line after expansion is complete are ignored as
@@ -325,29 +344,29 @@
 - Variables or functions escaping:
 
   ```makefile
-    .SECONDEXPANSION:
-    varone := $$(escaped_variable)
-    vartwo := $$(escaped_function foo,bar)
+  .SECONDEXPANSION:
+  varone := $$(escaped_variable)
+  vartwo := $$(escaped_function foo,bar)
   ```
 
 - Secondary expansion example:
 
   ```makefile
-    .SECONDEXPANSION:
-    AVAR = top
-    onefile: $(AVAR)
-    twofile: $$(AVAR)
-    AVAR = bottom
+  .SECONDEXPANSION:
+  AVAR = top
+  onefile: $(AVAR)
+  twofile: $$(AVAR)
+  AVAR = bottom
   ```
 
 - They will become even stronger when combine with *automatic variable*s:
 
   ```makefile
-    .SECONDEXPANSION:
-    main_OBJS := main.o try.o test.o
-    lib_OBJS := lib.o api.o
+  .SECONDEXPANSION:
+  main_OBJS := main.o try.o test.o
+  lib_OBJS := lib.o api.o
 
-    main lib: $$($$@_OBJS)
+  main lib: $$($$@_OBJS)
   ```
 
 - Evaluation of automatic variables during the secondary expansion phase.
@@ -399,7 +418,7 @@
   + *Order-only* prerequisites:
 
     ```makefile
-      targets : normal-prerequisites | order-only prerequisites
+    targets : normal-prerequisites | order-only prerequisites
     ```
 
     * Impose a specific ordering on the rules to be invoked *without* forcing
@@ -494,8 +513,8 @@
   no `/usr/lib/libcurses.so` file), then
 
     ```makefile
-    foo : foo.c -lcurses
-            cc $^ -o $@
+  foo : foo.c -lcurses
+          cc $^ -o $@
     ```
 
   would cause the command `cc foo.c /usr/lib/libcurses.a -o foo` to be executed
@@ -531,16 +550,16 @@
 
   ```makefile
 
-    SUBDIRS = foo bar baz
+  SUBDIRS = foo bar baz
 
-    .PHONY: subdirs $(SUBDIRS)
+  .PHONY: subdirs $(SUBDIRS)
 
-    subdirs: $(SUBDIRS)
+  subdirs: $(SUBDIRS)
 
-    $(SUBDIRS):
-            $(MAKE) -C $@
+  $(SUBDIRS):
+          $(MAKE) -C $@
 
-    foo: baz
+  foo: baz
   ```
 
 ## Rules without Recipes or Prerequisites
@@ -555,9 +574,9 @@
 - An example will illustrate this:
 
     ```makefile
-      clean: FORCE
-              rm $(objects)
-      FORCE:
+    clean: FORCE
+            rm $(objects)
+    FORCE:
     ```
 
 - Using `.PHONY` is more explicit and more efficient.
@@ -567,9 +586,9 @@
 - The *empty target* is a variant of the *phony target*.
 
   ```makefile
-    print: foo.c bar.c
-            lpr -p $?
-            touch print
+  print: foo.c bar.c
+          lpr -p $?
+          touch print
   ```
 ## Special Built-in Target Names
 
@@ -583,8 +602,8 @@
     * Standard target separator, `:`, define independent targets.
 
       ```makefile
-        bigoutput littleoutput : text.g
-                generate text.g -$(subst output,,$@) > $@
+      bigoutput littleoutput : text.g
+              generate text.g -$(subst output,,$@) > $@
       ```
 
   + As grouped targets.
@@ -604,10 +623,10 @@
       the targets.
 
       ```makefile
-        foo bar biz &: baz boz
-                echo $^ > foo
-                echo $^ > bar
-                echo $^ > biz
+      foo bar biz &: baz boz
+              echo $^ > foo
+              echo $^ > bar
+              echo $^ > biz
       ```
 
     * Caution must be used if relying on `$@` variable in the recipe of a
@@ -644,8 +663,8 @@
   each object file, but plain `make` will not:
 
   ```makefile
-    extradeps=
-    $(objects) : $(extradeps)
+  extradeps=
+  $(objects) : $(extradeps)
   ```
 
 ## Static Pattern Rules
@@ -660,9 +679,9 @@
 - Here is the syntax of a static pattern rule:
 
   ```makefile
-    targets …: target-pattern: prereq-patterns …
-            recipe
-            …
+  targets …: target-pattern: prereq-patterns …
+          recipe
+          …
   ```
 
   The `targets` list specifies the targets that the rule applies to.
@@ -679,8 +698,8 @@
 - Another example shows how to use `$*` in static pattern rules:
 
   ```makefile
-    bigoutput littleoutput : %output : text.g
-            generate text.g -$* > $@
+  bigoutput littleoutput : %output : text.g
+          generate text.g -$* > $@
   ```
 
 ### Static Pattern Rules versus Implicit Rules (#NOPE, #REVIEW)
