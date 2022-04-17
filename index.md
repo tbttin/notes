@@ -4,7 +4,7 @@
 
 - [Pandoc's flavored Markdown](markdowns/pandoc-flavored.md)
 
-- [CommonMark Spec 0.30](markdowns/commonmark-spec.md)
+- [CommonMark Spec 0.30](markdowns/commonmark-spec-0.30.md)
 
 # Makefile
 
