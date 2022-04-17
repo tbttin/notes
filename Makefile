@@ -3,7 +3,8 @@ PFLAGS    := --from=commonmark\
 	     --number-sections\
 	     --toc\
 	     --variable=colorlinks\
-	     --highlight-style=tango
+	     --highlight-style=tango\
+	     --columns=79
 MAKEFLAGS += --no-builtin-rules\
 	     --no-builtin-variables
 
