@@ -10,7 +10,7 @@ out_dir     := notes-output
 pdf_dir     := $(out_dir)/pdf
 markdowns   := $(wildcard */*.md)
 pdf_targets := $(addprefix $(pdf_dir)/,$(markdowns:%.md=%.pdf))
-topic_dirs  := $(sort $(dir $(pdf_targets)))
+pdf_subdirs := $(sort $(dir $(pdf_targets)))
 mkdir       := @/usr/bin/mkdir --parents --
 rm          := @/usr/bin/rm --force --recursive --verbose --
 
@@ -20,7 +20,7 @@ all: $(pdf_targets)
 $(pdf_dir)/%.pdf: %.md | $$(@D)/
 	$(PARSER) $(PFLAGS) -o $@ -- $<
 
-$(topic_dirs):
+$(pdf_subdirs):
 	$(mkdir) $@
 
 clean-pdf:
@@ -30,5 +30,6 @@ clean: clean-pdf
 
 .PHONY: all clean-pdf clean
 
-# $(info $(topic_dirs))
+# Debugging makefile
+# $(info $(pdf_subdirs))
 
