@@ -59,4 +59,6 @@
     sed --expression 's/^#Server/Server/' --expression '/^#/d' |
     rankmirrors -n 6 - > mirrorlist &
   ```
+# Log file
 
+- Pacman log file can be found in `/var/log/pacman.log`.
