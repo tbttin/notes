@@ -1,8 +1,9 @@
 PARSER    := /usr/bin/pandoc
-PFLAGS    := --variable=colorlinks\
-	     --toc\
+PFLAGS    := --from=commonmark\
 	     --number-sections\
-	     --from=commonmark
+	     --toc\
+	     --variable=colorlinks\
+	     --highlight-style=tango
 MAKEFLAGS += --no-builtin-rules\
 	     --no-builtin-variables
 
