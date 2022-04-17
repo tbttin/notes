@@ -1,6 +1,6 @@
 # Markdowns
 
-- [Standard syntax](markdowns/syntax.md)
+- [John Gruber's markdown](markdowns/john-grubers-markdown.md)
 
 - [Pandoc's flavored Markdown](markdowns/pandoc-flavored.md)
 
@@ -44,3 +44,4 @@
 
 - Note then clean/rinse and link to your knowledge or existed notes or
   internet.
+
