@@ -17,7 +17,7 @@
   ```
     targets : prerequisites ; recipe
             recipe
-	    ...
+            ...
   ```
 
   Remember to put one tab character (or `.RECIPEPREFIX` value) at the beginning
@@ -495,7 +495,7 @@
 
     ```makefile
     foo : foo.c -lcurses
-	    cc $^ -o $@
+            cc $^ -o $@
     ```
 
   would cause the command `cc foo.c /usr/lib/libcurses.a -o foo` to be executed
@@ -568,8 +568,8 @@
 
   ```makefile
     print: foo.c bar.c
-	    lpr -p $?
-	    touch print
+            lpr -p $?
+            touch print
   ```
 ## Special Built-in Target Names
 
@@ -580,15 +580,138 @@
 
   + As independent targets.
 
+    * Standard target separator, `:`, define independent targets.
+
+      ```makefile
+        bigoutput littleoutput : text.g
+                generate text.g -$(subst output,,$@) > $@
+      ```
+
   + As grouped targets.
+
+    * Instead of independent targets you have a recipe that generates/updates
+      multiple files from *a single invocation*.
+
+    * A grouped target rule uses the separator `&:` (the `&` here is used to
+      imply "all").
+
+    * When make builds any one of the grouped targets, it understands that all
+      the other targets in the group are also created as a result of the
+      invocation of the recipe.
+
+      Furthermore, if only some of the grouped targets are out of date or
+      missing `make` will realize that running the recipe will update all of
+      the targets.
+
+      ```makefile
+        foo bar biz &: baz boz
+                echo $^ > foo
+                echo $^ > bar
+                echo $^ > biz
+      ```
+
+    * Caution must be used if relying on `$@` variable in the recipe of a
+      grouped target rule.
+
+    * A grouped target rule *must* include a recipe.
+
+      A grouped target may also appear in *independent* target rule definitions
+      that do not have recipes.
+
+      If a grouped target appears in either an independent target rule or in
+      another grouped target rule with a recipe, the latter recipe will replace
+      the former recipe.
+
+      The target will be removed from the previous group and appear only in the
+      new group.
+
+      If you would like a target to appear in multiple groups, then you must
+      use the *double-colon grouped target* separator, `&::`.
 
 ## Multiple Rules for One Target
 
+- All the prerequisites mentioned in all the rules are merged into one list of
+  prerequisites for the target.
+
+- If more than one rule gives a recipe for the same file, `make` uses the last
+  one given and prints an error message.
+
+- Occasionally it is useful to have the same target invoke multiple recipes
+  which are defined in different parts of your makefile; you can use
+  *double-colon rules* for this.
+
+- The command `make extradeps=foo.h` will consider `foo.h` as a prerequisite of
+  each object file, but plain `make` will not:
+
+  ```makefile
+    extradeps=
+    $(objects) : $(extradeps)
+  ```
+
 ## Static Pattern Rules
+
+- They are more general than ordinary rules with multiple targets because the
+  targets do not have to have identical prerequisites.
+
+- Their prerequisites must be *analogous*, but not necessarily *identical*.
 
 ### Syntax of Static Pattern Rules
 
-### Static Pattern Rules versus Implicit Rules
+- Here is the syntax of a static pattern rule:
+
+  ```makefile
+    targets …: target-pattern: prereq-patterns …
+            recipe
+            …
+  ```
+
+  The `targets` list specifies the targets that the rule applies to.
+
+  Each target is matched against the *target-pattern* to extract a part of the
+  target name, called the *stem*.
+
+  The prerequisite names for each target are made by substituting the stem for
+  the `%` in each *prerequisite pattern*.
+
+- Each target specified must match the target pattern; a warning is issued for
+  each target that does not (use `filter` function).
+
+- Another example shows how to use `$*` in static pattern rules:
+
+  ```makefile
+    bigoutput littleoutput : %output : text.g
+            generate text.g -$* > $@
+  ```
+
+### Static Pattern Rules versus Implicit Rules (#NOPE, #REVIEW)
+
+- The difference is in how `make` decides *when* the rule applies.
+
+- An implicit rule *can* apply to any target that matches its pattern, but it
+  *does* apply only when the target has no recipe otherwise specified, and only
+  when the prerequisites can be found.
+
+  If more than one implicit rule appears applicable, only one applies; the
+  choice depends on the order of rules.
+
+- By contrast, a static pattern rule applies to the precise list of targets
+  that you specify in the rule. It cannot apply to any other target and it
+  invariably does apply to each of the targets specified.
+
+  If two conflicting rules apply, and both have recipes, that's an error.
+
+- The static pattern rule can be better than an implicit rule for these
+  reasons:
+
+  + You may wish to override the usual implicit rule for a few files whose
+    names cannot be categorized syntactically but can be given in an explicit
+    list.
+
+  + If you cannot be sure of the precise contents of the directories you are
+    using, you may not be sure which other irrelevant files might lead `make`
+    to use the wrong implicit rule. The choice might depend on the order in
+    which the implicit rule search is done. With static pattern rules, there is
+    no uncertainty: each rule applies to precisely the targets specified.
 
 ## Double-Colon Rules
 
