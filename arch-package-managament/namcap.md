@@ -1,10 +1,12 @@
-- Mistakes checking:
+- Packaging mistakes checking:
 
-  ```
+  ```bash
     namcap PKGBUILD
   ```
-  Or:
 
-  ```
+  or:
+
+  ```bash
     namcap pkgname-pkgver.pkg.tar.zst
   ```
+
