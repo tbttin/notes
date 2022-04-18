@@ -6,11 +6,11 @@
 
 - [CommonMark Spec 0.30](markdowns/commonmark-spec-0.30.md)
 
-# Makefile
+# Makefiles
 
 - [GNU makefile](makefiles/gnu-makefile.md)
 
-# Arch linux package management
+# Arch Linux package management
 
 - [makepkg](arch-package-managament/makepkg.md)
 
@@ -24,15 +24,19 @@
 
 - Fast workflow.
 
-  + Open index.md file quickly (hotkey or short alias).
+  + Open `index.md` file quickly (hotkey or alias).
 
-  + Jump to *link destinition* then `gf`. `CTRL-^` to switch back.
+  + Jump to *link destinition* then `gf`.
+
+    * `CTRL-^` to switch back.
+
+    * `:bf` or `:b1` always switch to `index.md`.
 
   + Search note quickly.
 
     * Search and load results into buffers, search in buffers.
 
-    * Quickfix list.
+    * Quickfix lists.
 
 - Pages? Short pages?
 
