@@ -2,7 +2,7 @@
 
 - [John Gruber's markdown](markdowns/john-grubers-markdown.md)
 
-- [Pandoc's flavored Markdown](markdowns/pandoc-flavored.md)
+- [Pandoc's flavored Markdown](markdowns/pandocs-flavored-markdown.md)
 
 - [CommonMark Spec 0.30](markdowns/commonmark-spec-0.30.md)
 
