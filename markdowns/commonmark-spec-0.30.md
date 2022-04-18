@@ -45,12 +45,12 @@ How many questions can I answer?
 
 - Two tabs after `>`. Why two spaces in [here](https://spec.commonmark.org/0.30/#example-6)?
 
-  + Six spaces inside block quote = indented code block + two space.
+  + Six spaces inside block quote = indented code block + internal two spaces.
 
   + Why six?
 
     ```
-    (> + 1st tab) -> tabstop = 3 spaces; minus >'s space -> 2 spaces left
+    (> + 1st tab) -> tabstop = 3 spaces; minus >'s space = 2 spaces
     second tab    -> tabstop = 4 spaces
 
     => total spaces = 6
@@ -60,7 +60,7 @@ How many questions can I answer?
 
 ## Backslash escapes
 
-- When/What does it work? When/What does it not work?
+- When/what *does* it work? When/what does it *not* work?
 
   + ASCII punctuation characters.
 
@@ -68,13 +68,13 @@ How many questions can I answer?
 
   + Backslash at the end of line is a hard break.
 
-  + Code blocks, code spans, autolinks, or raw HTML
+  + Code blocks, code spans, autolinks, or raw HTML.
 
 ## Entity and numeric character references
 
 # Blocks and inlines
 
-- Blocks are structural elements like:
+- *Block*s are structural elements like:
 
   + Paragraphs
 
@@ -88,17 +88,17 @@ How many questions can I answer?
 
   + Code blocks
 
-- Some blocks like *block quotes* and *list items* can contain other blocks
-  (container blocks).
+- Some blocks like *block quote*s and *list item*s can contain other blocks.
 
-- Others like `headings` and `paragraphs` contain `inline` content-text, links,
-  emphasized text, images, code spans, and so on.
+- Others like *heading*s and *paragraph*s contain *inline* content: text,
+  links, emphasized text, images, code spans, and so on.
 
 ## Precedence
 
 - **Blocks > inlines** - indicators of block structures always take precedence
-  over indicators of inline structures. So the following example is a list of
-  two items:
+  over indicators of inline structures.
+
+  So the following example is a list of two items:
 
   ```markdown
   - `one
@@ -119,7 +119,8 @@ How many questions can I answer?
 
 - Three or more matching of `-`, `_` or `=` characters.
 
-- **Setext headings > thematic breaks** WHEN (between paragraphs, anything else?):
+- **Setext headings > thematic breaks** when (between paragraphs, anything
+  else?):
 
   ```markdown
   Foo
@@ -225,7 +226,7 @@ How many questions can I answer?
   ---
   ```
 
-  `---` is a **thematic break** outside the block quote.
+  `---` is a *thematic break* outside the block quote.
 
   ```markdown
   > Foo
@@ -233,14 +234,14 @@ How many questions can I answer?
   ===
   ```
 
-  `===` is **part of the paragraph** inside the block quote.
+  `===` is *part of the paragraph* inside the block quote.
 
   ```markdown
   - Foo
   ---
   ```
 
-  `---` is a **thematic break** outside the list.
+  `---` is a *thematic break* outside the list.
 
 - Again, **setext headings > thematic breaks**:
 
@@ -415,8 +416,9 @@ How to get them?
 
 # Container blocks
 
-- A container block is a block that has other blocks as its contents. Two basic
-  kind of container blocks:
+- A container block is a block that has other blocks as its contents.
+
+- Two basic kind of container blocks:
 
   + Block quotes.
 
@@ -426,7 +428,7 @@ How to get them?
 
 ## Block quotes
 
-- `Block quote marker` consists of `>` character and an optional space of
+- `Block quote marker` consists of `>` character and an *optional* space of
   indentation.
 
 - Two style of block quotes:
@@ -481,8 +483,8 @@ How to get them?
   Same level quote
   ```
 
-- **Notice**, indented code block in a block quote: `>`'s one space + indented code's four
-  spaces:
+- **Notice**, indented code block in a block quote: *five spaces* (`>`'s one
+  space + indented code's four spaces):
 
   ```markdown
   >.....code
@@ -492,7 +494,7 @@ How to get them?
 
 ## List items
 
-- `List makers` (must be followed by at least one space or tab):
+- `List maker`s (*must* be followed by at least one space or tab):
 
   + Unordered list (bullet list): `-`, `+`, and `*`.
 
@@ -519,7 +521,7 @@ How to get them?
      ```markdown
      ...>.>.-...List item
      >>
-     >>.....List item (5 spaces after the 2nd block quote marker)
+     >>.....List item (5 spaces after the 2nd >)
      ```
 
      but:
@@ -625,7 +627,13 @@ How to get them?
 - A list is a sequent of one or more `list item`s of the same type.
 
 - The `start number` of an `ordered list` is determined by the list number of
-  its initial list item.
+  its initial list item:
+
+  ```markdown
+  3. Foo
+  4. Bar
+  5. Baz
+  ```
 
 - A list is `loose` when:
 
@@ -739,7 +747,7 @@ How to get them?
 - `Backtick string` is a string of one or more backtick characters (`` ` ``)
   that is neither preceded nor followed by a backtick.
 
-- A code span begins with a backtick string and ends with a backtick string
+- A `code span` begins with a backtick string and ends with a backtick string
   of *equal length*:
 
   ```markdown
@@ -768,9 +776,9 @@ How to get them?
 - Code span backticks have higher precedence than any other inline constructs
   except HTML tags and autolinks.
 
-- Code spans, HTML tags and autolinks have the same precedence:
+- Code spans, HTML tags and autolinks have the same precedence.
 
-  This is a code:
+  So, this is a code:
 
   ```markdown
   `<a href="`">`
@@ -804,7 +812,7 @@ How to get them?
 
 - `**` means **strong**.
 
-- `***` means one *em* and one **strong**.
+- `***` means *one em* and **one strong**.
 
 - `Delimiter run` is either:
 
@@ -835,16 +843,16 @@ How to get them?
 - This is not emphasis:
 
   ```markdown
- *(*foo
+  *(*foo
   ```
 
-  But this is (em in em):
+  But this is (*em* in *em*):
 
   ```markdown
   *(*foo*)*
   ```
 
-- This is strong in em:
+- This is **strong** in *em*:
 
   ```markdown
   *foo**bar**baz*

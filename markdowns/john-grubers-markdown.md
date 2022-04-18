@@ -1,53 +1,66 @@
 # HTML
 
-- Separate block-level HTML elements with blank lines	
+- Separate block-level HTML elements with a blank line.
 
 # List
 
-- Unordered list
-  - Asterisks
-  - Pluses
-  - Hypens
-- Ordered list
-  - Numbers followed by `.`s
-  - Numbers followed by `/`s
-- Items separate by blank lines = each wraped `<p>` tags
+- Unordered list:
+
+  + Asterisks.
+
+  + Pluses.
+
+  + Hyphens.
+
+- Ordered list.
+
+  + Numbers followed by `.`s.
+
+  + Numbers followed by `/`s.
+
+- Items separate by blank lines = each wrapped `<p>` tags.
+
 - Items may consist multi paragraphs, each subsequent paragraph must be
-  indented by enther 4 spaces or 1 tab
-  - Hanging indent is recommended
-- Blockquote's > determiners need to be indented
-- Code block inside list item needs to be indented twice (8 spaces or 2 tabs)
+  indented by either 4 spaces or 1 tab.
+
+  + Hanging indent is recommended.
+
+- Blockquote's > determiners need to be indented.
+
+- Code block inside list item needs to be indented twice (8 spaces or 2 tabs).
 
 # Code blocks
 
-- Indent every line of the block by 4 spaces or 1 tab
+- Indent every line of the block by 4 spaces or 1 tab.
 
 # Links
 
-- Inline links
+- Inline links.
 
-  This is `[an example](http://example.com/ "Title")` inline link.
+  This is `[an example](http://example.com/ "Title")` of inline link.
 
-- Reference links
+- Reference links.
+
   + Example:
 
-    This is `[an example] [id]` reference-style link.  
+    This is `[an example] [id]` reference-style link.
     `[id]: http://example.com/  "Optional Title Here"`
 
   + Link definition names may consist of letters, numbers, spaces and
     punctuation - but they are _not_ case sensitive.
 
-  + Implicit link name
+  + Implicit link name.
 
-    Visit `[Daring Fireball][]` for more information.  
+    Visit `[Daring Fireball][]` for more information.
     `[Daring Fireball]: http://daringfireball.net/`
 
-- _Link titles_ can be enclosed in double quotes, single quotes or parentheses
+- _Link titles_ can be enclosed in double quotes, single quotes or parentheses.
+
 - The link URL may, optionaly, be surround by **angle brackets**:
 
   `[id]: <http://example.com/>  "Optional Title Here"`
 
-- "Automatic" links
+- "Automatic" links:
 
   ```
   <http://example.com/>
@@ -64,9 +77,9 @@ _single underscores_
 
 __double underscores__
 
-***tripple asterisks***
+***triple asterisks***
 
-___tripple underscores___
+___triple underscores___
 
 # Code {#code}
 

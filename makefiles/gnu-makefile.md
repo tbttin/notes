@@ -35,8 +35,8 @@
 ## How make Processes a Makefile
 
 - The `default goal` is the *first target* (not targets whose names start with
-  `.`) of the *first rule* in the *first makefile* or the *`.DEFAULTGOAL`
-  value*.
+  *dot*, `.`) of the *first rule* in the *first makefile* or the
+  *`.DEFAULTGOAL` value*.
 
   You can override this rule by using command line to specify a goal:
 
@@ -78,22 +78,22 @@
 
 - Makefile contain five kinds of things:
 
-  + Explicit rules.
+  1. Explicit rules.
 
-  + Implicit rules.
+  2. Implicit rules.
 
-  + Variable definitions.
+  3. Variable definitions.
 
-  + Directives.
+  4. Directives.
 
-    * Reading other makefiles.
+     + Reading other makefiles.
 
-    * Deciding (based on the values of variables) whether to use or ignore a
-      part of the makefile.
+     + Deciding (based on the values of variables) whether to use or ignore a
+       part of the makefile.
 
-    * Defining a variable from a verbatim string containing multiple lines.
+     + Defining a variable from a verbatim string containing multiple lines.
 
-  + Comments.
+  5. Comments.
 
 ### Splitting Long Lines
 
@@ -116,14 +116,15 @@
          word
   ```
 
-  After `make` remove backslash/newline and condenses the following space:
+  After `make` removes the backslash/newline and condenses the following line
+  into a single space:
 
   ```makefile
   var := one$ word
   ```
 
-  Because the variable '$ ' which does not exist, and so it will expand to
-  the empty string (`oneword`).
+  Because the variable '`$ `' which does not exist, and so it will expand to
+  the empty string ('`oneword`').
 
 ## What Name to Give Your Makefile
 
