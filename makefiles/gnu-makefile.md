@@ -1,12 +1,24 @@
+# ABOUT THIS NOTE
+
+- This is a **shortened** version of [GNU
+  `make` manual](https://www.gnu.org/software/make/manual/make.html).
+
+- This note is created by me who know a little basic of `make` and `makefile`
+  and for someone who at least at the same level.
+
+- But it's still very basic. I'll try keep the information detail as much as
+  possible.
+
+- Why i create this note?
+
+  + Learning `make`.
+
+  + Referencing.
+
 # Overview of make
 ## How to Read This Manual
 ## Problems and Bugs
 # An Introduction to Makefiles
-
-- This chapter is about a simple makefile that descripes how to compile and
-  link a text editor which consists of eight C source files and three header
-  files.
-
 ## What a Rule Looks Like
 
 - A `rule` looks like this:
@@ -25,8 +37,8 @@
           ...
   ```
 
-  Remember to put one *tab character* (or the value `.RECIPEPREFIX` variable)
-  at the beginning of every recipe line!
+  Remember to put one *tab* character (or the value `.RECIPEPREFIX` variable)
+  at the beginning of every `recipe` line!
 
 - A `target` is *out of date* when it does not exist or if it is older than any
   prerequisites.
@@ -64,19 +76,52 @@
   $ cc -c -o main.o main.c
   ```
 
-  Therefore, `.c` files can be omitted from the prerequisites.
+  Therefore, `.c` files can be omitted from the prerequisites, provided we omit
+  the recipe:
 
   ```makefile
+  objects = main.o kbd.o command.o display.o \
+            insert.o search.o files.o utils.o
+
+  edit : $(objects)
+          cc -o edit $(objects)
+
   main.o : defs.h
-  utils.o : utils.h
+  kbd.o : defs.h command.h
+  command.o : defs.h command.h
+  display.o : defs.h buffer.h
+  insert.o : defs.h buffer.h
+  search.o : defs.h buffer.h
+  files.o : defs.h buffer.h command.h
+  utils.o : defs.h
+
+  .PHONY : clean
+  clean :
+          rm edit $(objects)
   ```
 
 ## Another Style of Makefile
+
+- In this style of makefile, you group entries by their prerequisites instead
+  of by their targets:
+
+  ```makefile
+  objects = main.o kbd.o command.o display.o \
+            insert.o search.o files.o utils.o
+
+  edit : $(objects)
+          cc -o edit $(objects)
+
+  $(objects) : defs.h
+  kbd.o command.o files.o : command.h
+  display.o insert.o search.o files.o : buffer.h
+  ```
+
 ## Rules for Cleaning the Directory
 # Writing Makefiles
 ## What Makefiles Contain
 
-- Makefile contain five kinds of things:
+- Makefiles contain five kinds of things:
 
   1. Explicit rules.
 
@@ -97,27 +142,35 @@
 
 ### Splitting Long Lines
 
+- Makefiles use a "line-based" syntax in which the newline character is special
+  and marks the end of a statement.
+
+  GNU `make` has no limit on the length of a statement line, up to the amount
+  of memory in your computer.
+
 - *Physical line*s is a single line ending with a newline (regardless of
   whether it is escaped).
 
 - *Logical line*s being a complete statement including all escaped newlines up
   to the first non-escaped newline.
 
-- Outside of recipe lines, backslash/newlines are *converted* into a single space
-  character.
+- *Outside of recipe line*s, backslash/newline**s** are converted into a
+  *single space* character.
 
-- All whitespace around the backslash/newline is *condensed* into a single space.
+  Then all whitespace around the backslash/newline is condensed into a *single
+  space*.
 
-- **Splitting without adding whitespace**: dollar sign/backslash/newline instead of
-  backslash/newline:
+- *Splitting without adding whitespace*: dollar sign/backslash/newline instead
+  of backslash/newline:
 
   ```makefile
   var := one$\
+         \
          word
   ```
 
-  After `make` removes the backslash/newline and condenses the following line
-  into a single space:
+  After `make` removes the backslash/newline and condenses the following
+  line[s] into a single space:
 
   ```makefile
   var := one$ word
@@ -129,23 +182,40 @@
 ## What Name to Give Your Makefile
 
 - By default, when `make` looks for the makefile, it tries the following names,
-  in order: `GNUmakefile`, `makefile` and `Makefile`.
+  in order: `GNUmakefile` (specific to GNU `make`), `makefile` and `Makefile`
+  (recommended).
+
+- If you use more than one `-f` or `--file` option, you can specify several
+  makefiles. All the makefiles are effectively *concatenated* in the *order*
+  specified.
 
 ## Including Other Makefiles
 
-```makefile
-include foo *.mk $(bar)
-```
+- Include directive syntax:
+
+  ```makefile
+  include foo *.mk $(bar)
+  ```
+
+  Extra spaces are allowed and ignored at the beginning of the line, but the
+  first character must not be a tab (or the value of `.RECIPEPREFIX`)
+
+- If the specified name does not start with a slash, and the file is not found
+  in the current directory, several other directories are searched:
+
+  + First, any directories you have specified with the `-I` or `--include-dir`
+    option are searched.
+
+  + Then the following directories (if they exist) are searched, in this order:
+    `prefix/include` (normally `/usr/local/include`) `/usr/gnu/include`,
+    `/usr/local/include`, `/usr/include`.
 
 - If an included makefile cannot be found in any of these directories, a
   warning message is generated, but it is not an immediately fatal error;
   processing of the makefile containing the `include` continues.
 
   Once it has finished reading makefiles, `make` will try to *remake* any that
-  are out of date or don't exist.
-
-  Only after it has tried to find a way to remake a makefile and failed, will
-  `make` diagnose the missing makefile as a fatal error.
+  are out of date or don't exist (if `make` failed it's a fatal error).
 
 - For compatibility with some other `make` implementations, `sinclude` is
   another name for `-include`.
@@ -154,18 +224,32 @@ include foo *.mk $(bar)
 
 - If the environment variable `MAKEFILES` is defined, `make` considers its
   value as a list of names (separated by whitespace) of additional makefiles to
-  be read before the others.
+  be read *before* the others.
+
+  This works much like the `include` directive: various directories are searched
+  for those files (see Including Other Makefiles).
+
+  In addition, the default goal is never taken from one of these makefiles (or
+  any makefile included by them) and it is not an error if the files listed in
+  MAKEFILES are not found.
 
 - The main use of `MAKEFILES` is in communication between recursive invocations
   of `make`.
 
 ## How Makefiles Are Remade
 
-- After reading in all makefiles `make` will consider each as a goal target and
-  attempt to update it (explicit or implicit rules).
+- After reading in all makefiles `make` will consider each as a *goal target*
+  and attempt to update it (via explicit or implicit rules).
+
+  After all makefiles have been **checked**, if any have actually been
+  **changed**, make starts with a **clean slate** and reads all the makefiles
+  over again?
 
 - Prevent implicit rule look-up: you can write an explicit rule with the
   makefile as the target, and an empty recipe.
+
+- `make` will not attempt to remake makefiles which are specified as targets of
+  a double-colon rule with a recipe but no prerequisites (cos of infinite loop).
 
 - The `-t` (or `--touch`), `-q` (or `--question`) and `-n` (or `--just-print`)
   do not prevent updating makefiles.
@@ -203,101 +287,124 @@ include foo *.mk $(bar)
 - The rule specifies a prerequisite `force`, to guarantee that the recipe will
   be run even if the target file already exists.
 
-  We give the `force` target an empty recipe to prevent `make` from searching for
-  an implicit rule to build it-otherwise it would apply the same match-anything
-  rule to force itself and create a prerequisite loop!
+  We give the `force` target an empty recipe to prevent `make` from searching
+  for an implicit rule to build it-otherwise it would apply the same
+  match-anything rule to force itself and create a prerequisite loop!
 
-## How make Reads a Makefile
+## How `make` Reads a Makefile
 
-- GNU `make` does its work in *two* distinct phases.
+- GNU `make` does its work in *two* distinct phases:
 
-- During the *first phase*:
+  1. During the *first phase*:
 
-  + Reads all the makefiles, included makefiles.
+     + Reads all the makefiles, included makefiles.
 
-  + Internalizes all the variables and implicit and explicit rules.
+     + Internalizes all the variables and implicit and explicit rules.
 
-  + Builds a dependency graph of all the targets and theirs prerequisites.
+     + Builds a dependency graph of all the targets and theirs prerequisites.
 
-- During the *second phase*, `make` use this internalized data to determine which
-  targets need to be updated and run the recipes necessary to update them.
+  2. During the *second phase*, `make` use this internalized data to determine
+     which targets need to be updated and run the recipes necessary to update
+     them.
 
 - It's important to understand this two-phase approach because it has a direct
   impact on how variable and function expansion happens.
 
 - We say that expansion is *immediate* if it happens during the first phase:
-  `make` will expand that part of the construct as the makefile is parsed.
+  `make` will expand that part of the construct as the makefile is *parsed*.
 
   We say that expansion is *deferred* if it is not immediate.
 
-- Expansion of a deferred construct part is delayed until the expansion is
-  used: either when it is referenced in an immediate context, or when it is
+- Expansion of a *deferred* construct part is delayed until the expansion is
+  *used*: either when it is referenced in an immediate context, or when it is
   needed during the second phase.
 
-- Variable assignment:
+1. Variable assignment:
 
-  ```makefile
-  immediate   = deferred
-  immediate  ?= deferred
-  immediate  := immediate
-  immediate ::= immediate
-  immediate  += deferred or immediate
-  immediate  != immediate
+   ```makefile
+   immediate   = deferred
+   immediate  ?= deferred
+   immediate  := immediate
+   immediate ::= immediate
+   immediate  += deferred or immediate
+   immediate  != immediate
 
-  define immediate
-    deferred
-  endef
+   define immediate
+     deferred
+   endef
 
-  define immediate =
-    deferred
-  endef
+   define immediate =
+     deferred
+   endef
 
-  define immediate ?=
-    deferred
-  endef
+   define immediate ?=
+     deferred
+   endef
 
-  define immediate :=
-    immediate
-  endef
+   define immediate :=
+     immediate
+   endef
 
-  define immediate ::=
-    immediate
-  endef
+   define immediate ::=
+     immediate
+   endef
 
-  define immediate +=
-    deferred or immediate
-  endef
+   define immediate +=
+     deferred or immediate
+   endef
 
-  define immediate !=
-    immediate
-  endef
-  ```
+   define immediate !=
+     immediate
+   endef
+   ```
 
-  For the append operator '+=', the right-hand side is considered immediate if
-  the variable was previously set as a simple variable (':=' or '::='), and
-  deferred otherwise.
+   For the append operator '+=', the right-hand side is considered immediate if
+   the variable was previously set as a simple variable (':=' or '::='), and
+   deferred otherwise.
 
-- Conditional directives:
+2. Conditional directives:
 
-  + Conditional directives are parsed immediately.
+   + Conditional directives are parsed immediately.
 
-  + Automatic variables cannot be used in conditional directives, as automatic
-    variables are not set until the recipe for that rule is invoked.
+   + Automatic variables cannot be used in conditional directives, as automatic
+     variables are not set until the recipe for that rule is invoked.
 
-  + If you need to use automatic variables in a conditional directive you must
-    move the condition into the recipe and use shell conditional syntax
-    instead.
+   + If you need to use automatic variables in a conditional directive you must
+     move the condition into the recipe and use shell conditional syntax
+     instead.
 
-- Rule definition:
+3. Rule definition:
 
-  A rule is always expanded the same way, regardless of the form:
+   A rule is always expanded the same way, regardless of the form:
 
-  ```makefile
-  immediate : immediate ; deferred
-          deferred
-  ```
+   ```makefile
+   immediate : immediate ; deferred
+           deferred
+   ```
+
+   This is true for explicit rules, pattern rules, suffix rules, static pattern
+   rules, and simple prerequisite definitions.
 
 ## How Makefiles Are Parsed
+
+- GNU `make` parses makefiles line-by-line. Parsing proceeds using the following steps:
+
+  1. Read in a full logical line, including backslash-escaped lines (see
+     Splitting Long Lines).
+
+  2. Remove comments (see What Makefiles Contain).
+
+  3. If the line begins with the recipe prefix character and we are in a rule
+     context, add the line to the current recipe and read the next line (see
+     Recipe Syntax).
+
+  4. Expand elements of the line which appear in an immediate expansion context
+     (see How make Reads a Makefile).
+
+  5. Scan the line for a separator character, such as ‘:’ or ‘=’, to determine
+     whether the line is a macro assignment or a rule (see Recipe Syntax).
+
+  6. Internalize the resulting operation and read the next line.
 
 - An important consequence of this is that a macro can expand to an entire
   rule, *if it is one line long*. This will work:
@@ -323,11 +430,7 @@ include foo *.mk $(bar)
 
   The above makefile results in the definition of a target `target` with
   prerequisites `echo` and `built`, as if the makefile contained `target:
-  echo built`, rather than a rule with a recipe:
-
-  ```makefile
-  target: echo built
-  ```
+  echo built`, rather than a rule with a recipe.
 
   Newlines still present in a line after expansion is complete are ignored as
   normal whitespace.
@@ -427,7 +530,7 @@ include foo *.mk $(bar)
 
 ## Using Wildcard Characters in File Names
 
-- The wildcard characters in make are `*`, `?` and `[…]`, the same as in
+- The wildcard characters in make are `*`, `?` and `[...]`, the same as in
   the Bourne shell.
 
 - Wildcard expansion is performed by make automatically in *target*s and in
@@ -680,9 +783,9 @@ include foo *.mk $(bar)
 - Here is the syntax of a static pattern rule:
 
   ```makefile
-  targets …: target-pattern: prereq-patterns …
+  targets ... : target-pattern: prereq-patterns ...
           recipe
-          …
+          ...
   ```
 
   The `targets` list specifies the targets that the rule applies to.
