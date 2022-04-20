@@ -18,6 +18,10 @@
 
 - [namcap](arch-package-managament/namcap.md)
 
+# Vims
+
+- [tips and tricks](vims/favourite-tips-n-tricks.md)
+
 # Note taking
 
 ## Reading wiki.vim docs
@@ -26,7 +30,7 @@
 
   + Open `index.md` file quickly (hotkey or alias).
 
-  + Jump to *link destinition* then `gf`.
+  + Jump to *link destinition* (move to the line, `$`, and back) then `gf`.
 
     * `CTRL-^` to switch back.
 
