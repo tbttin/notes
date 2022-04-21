@@ -1,10 +1,12 @@
 PARSER    := /usr/bin/pandoc
+# Try groff?
 PFLAGS    := --from=commonmark\
-	     --number-sections\
-	     --toc\
+	     --columns=79\
 	     --variable=colorlinks\
 	     --highlight-style=tango\
-	     --columns=79
+	     --number-sections\
+	     --toc
+	     # --to=ms
 MAKEFLAGS += --no-builtin-rules\
 	     --no-builtin-variables
 
@@ -33,5 +35,5 @@ clean: clean-pdf
 .PHONY: all clean-pdf clean
 
 # Debugging makefile
-# $(info $(markdowns))
+# $(info '$(var)')
 
