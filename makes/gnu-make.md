@@ -3,17 +3,19 @@
 - This is a **shortened** version of [GNU
   `make` manual](https://www.gnu.org/software/make/manual/make.html).
 
-- This note is created by me who know a little basic of `make` and `makefile`
-  and for someone who at least at the same level.
+- This note is created by me, for me who know a little basic about `make` and
+  for someone who at least at the same level.
 
-- But it's still very basic. I'll try keep the information detail as much as
+  But, it's still very basic. I'll try keep the information detail as much as
   possible.
 
-- Why i create this note?
+- Why I create this note?
 
   + Learning `make`.
 
-  + Referencing.
+  + Note for myself for reference purpose.
+
+  + Sharing.
 
 # Overview of make
 ## How to Read This Manual
@@ -21,47 +23,10 @@
 # An Introduction to Makefiles
 ## What a Rule Looks Like
 
-- A `rule` looks like this:
-
-  ```makefile
-  targets : prerequisites
-          recipe
-          ...
-  ```
-
-  or like this:
-
-  ```makefile
-  targets : prerequisites ; recipe
-          recipe
-          ...
-  ```
-
-  Remember to put one *tab* character (or the value `.RECIPEPREFIX` variable)
-  at the beginning of every `recipe` line!
-
-- A `target` is *out of date* when it does not exist or if it is older than any
-  prerequisites.
+See ## Rule Syntax.
 
 ## A Simple Makefile
 ## How make Processes a Makefile
-
-- The `default goal` is the *first target* (not targets whose names start with
-  *dot*, `.`) of the *first rule* in the *first makefile* or the
-  *`.DEFAULTGOAL` value*.
-
-  You can override this rule by using command line to specify a goal:
-
-  ```bash
-  $ make foo
-  ```
-
-- The exceptions of the above rule:
-
-  + A target starting with a period is not a default unless it contains one or
-    more slashes, `/`, as well.
-
-  + A target that defines a *pattern rule* has no effect on the default goal.
 
 - `make` would update *automatically generated* C programs, such as those made
   by Bison or Yacc, by their own rule.
@@ -142,7 +107,7 @@
 
 ### Splitting Long Lines
 
-- Makefiles use a "line-based" syntax in which the newline character is special
+- Makefiles use a *line-based* syntax in which the newline character is special
   and marks the end of a statement.
 
   GNU `make` has no limit on the length of a statement line, up to the amount
@@ -198,7 +163,7 @@
   ```
 
   Extra spaces are allowed and ignored at the beginning of the line, but the
-  first character must not be a tab (or the value of `.RECIPEPREFIX`)
+  first character must *not* be a tab (or the value of `.RECIPEPREFIX`)
 
 - If the specified name does not start with a slash, and the file is not found
   in the current directory, several other directories are searched:
@@ -215,7 +180,7 @@
   processing of the makefile containing the `include` continues.
 
   Once it has finished reading makefiles, `make` will try to *remake* any that
-  are out of date or don't exist (if `make` failed it's a fatal error).
+  are out of date or don't exist (now, if `make` failed it's a fatal error).
 
 - For compatibility with some other `make` implementations, `sinclude` is
   another name for `-include`.
@@ -227,7 +192,7 @@
   be read *before* the others.
 
   This works much like the `include` directive: various directories are searched
-  for those files (see Including Other Makefiles).
+  for those files (see above, ## Including Other Makefiles).
 
   In addition, the default goal is never taken from one of these makefiles (or
   any makefile included by them) and it is not an error if the files listed in
@@ -290,6 +255,8 @@
   We give the `force` target an empty recipe to prevent `make` from searching
   for an implicit rule to build it-otherwise it would apply the same
   match-anything rule to force itself and create a prerequisite loop!
+
+  See ## Rules without Recipes or Prerequisites.
 
 ## How `make` Reads a Makefile
 
@@ -358,9 +325,9 @@
    endef
    ```
 
-   For the append operator '+=', the right-hand side is considered immediate if
-   the variable was previously set as a simple variable (':=' or '::='), and
-   deferred otherwise.
+   For the append operator '`+=`', the right-hand side is considered immediate
+   if the variable was previously set as a simple variable ('`:=`' or '`::=`'),
+   and deferred otherwise.
 
 2. Conditional directives:
 
@@ -415,7 +382,7 @@
   $(myrule)
   ```
 
-- However, this will not work because `make` does not re-split lines after it
+- However, this will *not* work because `make` does not re-split lines after it
   has expanded them:
 
   ```makefile
@@ -428,9 +395,11 @@
 
   ```
 
-  The above makefile results in the definition of a target `target` with
-  prerequisites `echo` and `built`, as if the makefile contained `target:
-  echo built`, rather than a rule with a recipe.
+  It is equivalent to:
+
+  ```makefile
+  target: echo built
+  ```
 
   Newlines still present in a line after expansion is complete are ignored as
   normal whitespace.
@@ -439,13 +408,15 @@
   function: this causes the `make` parser to be run on the results of the
   expanded macro.
 
-
 ## Secondary Expansion
 
 - GNU `make` works in two distinct phases: a read-in phase and a target-update
   phase.
 
-- Variables or functions escaping:
+  GNU `make` also has the ability to enable a second expansion of the
+  *prerequisite*s (only) for some or all targets defined in the makefile.
+
+- An example of escaped variables and functions:
 
   ```makefile
   .SECONDEXPANSION:
@@ -475,51 +446,110 @@
 
 - Evaluation of automatic variables during the secondary expansion phase.
 
-- Secondary expansion of:
+- Secondary expansion and the different types of rule definitions:
 
-  + Explicit rules.
+  + **Explicit rules**.
 
-    * `$$@` evaluate to the file name of the target.
+    * `$$@` evaluates to the file name of the target.
 
-    * When the target is an archive member, `$$%` evaluate to the target member
-      name.
+    * `$$%` evaluates to the target member name when the target is an archive
+      member.
 
     * `$$<` variable evaluates to the *first prerequisite* in the *first rule*
       for this target.
 
-    * `$$^` (without repetitions) and `$$+` (with repetitions) evaluate to the
+    * `$$+` (with repetitions) and `$$^` (without repetitions) evaluate to the
       list of all prerequisites of rules *that have already appeared* for the
       same target.
 
     * The variables `$$?` and `$$*` are not available and expand to the empty
       string.
 
-  + Static pattern rules.
+    This example will help illustrate these behaviors:
 
-    * `$$*` variable is set to the *pattern stem*.
+    ```makefile
+    .SECONDEXPANSION:
 
-    * `$$?` is not available and expand to the empty string.
+    foo: foo.1 bar.1 $$< $$^ $$+    # line #1
 
-  + Implicit rules in the same fashion as static pattern rules.
+    foo: foo.2 bar.2 $$< $$^ $$+    # line #2
+
+    foo: foo.3 bar.3 $$< $$^ $$+    # line #3
+    ```
+
+    * `line #1`: all three variables (`$$<`, `$$^`, and `$$+`) expand to the
+      empty string (current rule's excluded).
+
+    * `line #2`: `foo.1`, `foo.1 bar.1`, and `foo.1 bar.1` respectively.
+
+    * `line #3`: `foo.1`, `foo.1 bar.1 foo.2 bar.2`, and `foo.1 bar.1 foo.2 bar.2
+      foo.1 foo.1 bar.1 foo.1 bar.1` respectively.
+
+  + **Static pattern rules** are identical to those for *explicit rules*, with
+    one exception:
+
+    * `$$*` variable is set to the pattern *stem*.
+
+  + **Implicit rules** in the same fashion as *static pattern rules*.
 
 # Writing Rules
+
+- The `default goal` is the *first target* (not targets whose names start with
+  *dot*, `.`) of the *first rule* in the *first makefile* or the `.DEFAULTGOAL`
+  value.
+
+  Of course, you can override this rule by using command line to specify a
+  goal:
+
+  ```bash
+  $ make foo
+  ```
+
+- There are two exceptions of the above rule:
+
+  + A target starting with a period is not a default unless it contains one or
+    more slashes, `/`, as well.
+
+  + A target that defines a *pattern rule* has no effect on the default goal.
 
 ## Rule Example
 
 ## Rule Syntax
 
+- A `rule` looks like this:
+
+  ```makefile
+  targets : prerequisites
+          recipe
+          ...
+  ```
+
+  or like this:
+
+  ```makefile
+  targets : prerequisites ; recipe
+          recipe
+          ...
+  ```
+
+  Remember to put one *tab* character (or the value `.RECIPEPREFIX` variable)
+  at the beginning of every `recipe` line!
+
+- A `target` is *out of date* when it does not exist or if it is older than any
+  prerequisites.
+
 ## Types of Prerequisites
 
 - Two types of prerequisites of GNU `make`:
 
-  + Normal prerequisites such as described in the previous section. It impose:
+  + *Normal prerequisite*s such as described in the previous section. It impose:
 
-    * An order in which recipes will be invoked: prerequisites' recipes then
-      targets'.
+    * An **order** in which recipes will be invoked: prerequisites' recipes,
+      then targets'.
 
     * A dependency relationship (when targets are out-dated).
 
-  + *Order-only* prerequisites:
+  + *Order-only prerequisite*s:
 
     ```makefile
     targets : normal-prerequisites | order-only prerequisites
@@ -533,53 +563,67 @@
 - The wildcard characters in make are `*`, `?` and `[...]`, the same as in
   the Bourne shell.
 
-- Wildcard expansion is performed by make automatically in *target*s and in
-  *prerequisite*s.
+  And, of course, `~` expansion is supported too.
 
-  In recipes, the shell is responsible for wildcard expansion.
+- Wildcard expansion is performed by make *automatically* in targets and in
+  prerequisites.
 
-  In other contexts, wildcard expansion happens only if you request it
+- In recipes, the shell is responsible for wildcard expansion.
+
+- In other contexts, wildcard expansion happens only if you request it
   explicitly with the `wildcard` function.
 
 ### Wildcard Examples
 
 ### Pitfalls of Using Wildcards
 
-- Wildcard expansion base on existing filenames. But what if you delete all
+- Wildcard expansion base on *existing* filenames. But what if you delete all
   these files?
 
-- When a wildcard matches no files, it is left as it is, so then foo will
-  depend on the oddly-named file `*.o`.
+- When a wildcard matches no files, it is left as it is, so then `foo` will
+  depend on the oddly-named file `*.o`:
+
+  ```makefile
+  objects = *.o
+
+  foo : $(objects)
+          cc -o foo $(CFLAGS) $(objects)
+  ```
 
 ### The Function `wildcard`
 
-- If no existing file name matches a pattern, then that pattern is omitted from
-  the output of the `wildcard` function.
+- Wildcard expansion does not normally take place when a variable is set, or
+  inside the arguments of a function, we use `wildcard` function.
+
+- If no existing file name matches a pattern, then that pattern is *omitted*
+  from the output of the `wildcard` function.
 
 ## Searching Directories for Prerequisites
 
-### VPATH: Search Path for All Prerequisites (general search)
+- When you redistribute the files among directories, you do not need to change
+  the individual rules, just the search paths.
+
+### `VPATH`: Search Path for All Prerequisites (general search)
 
 - `make` uses `VPATH` as a search list for both *prerequisite*s and *target*s of
-  rules (if they do not exist in current directory).
+  rules (when they do not exist in current directory).
 
-- In the `VPATH` variable, directory names are separated by colons or blanks.
+- In the `VPATH` variable, directory names are separated by *colons* or
+  *blanks*.
 
 ### The `vpath` Directive (selective search)
 
-- There are three forms of the vpath directive:
+- There are three forms of the `vpath` directive:
 
-  + `vpath pattern directories`
+  + `vpath` *`pattern`* *`directories`*
 
-    Specify the search path directories for file names that match *pattern*.
+    Specify the search path `directories` for file names that match *pattern*.
 
-    A `vpath` pattern is a string containing a '%' character.
-
-    The search path, directories, is a list of directories to be searched,
+    The search path, *directories*, is a list of directories to be searched,
     separated by colons (semi-colons on MS-DOS and MS-Windows) or blanks, just
-    like the search path used in the VPATH variable.
+    like the search path used in the `VPATH` variable.
 
-  + `vpath pattern`
+  + `vpath` *`pattern`*
 
     Clear out the search path associated with pattern.
 
@@ -587,17 +631,58 @@
 
     Clear all search paths previously specified with vpath directives.
 
+- A `vpath` `pattern` is a string containing a '`%`' character.
+
+  The `%` character matching any sequence of *zero* or more characters.
+
+- When a prerequisite fails to exist in the current directory, if the *pattern*
+  in a `vpath` directive matches the name of the prerequisite file, then the
+  *directories* in that directive are searched just like (and *before*) the
+  directories in the `VPATH` variable.
+
 ### How Directory Searches are Performed
 
-- GNU `make` directory search algorithm.
+- The algorithm `make` uses to decide whether to *keep* or *abandon* a path
+  found via directory search is as follows:
+
+  1. If a target file does not exist at the path specified in the makefile,
+     directory search is performed.
+
+  2. If the directory search is successful, that path is kept and this file is
+     tentatively stored as the target.
+
+  3. All prerequisites of this target are examined using this same method.
+
+  4. After processing the prerequisites, the target may or may not need to be
+     rebuilt:
+
+     1. If the target does *not* need to be rebuilt, the path to the file found
+        during directory search is used for any prerequisite lists which
+        contain this target.
+
+        In short, if `make` doesn’t need to rebuild the target then you use the
+        path found via directory search.
+
+     2. If the target *does* need to be rebuilt (is out-of-date), the pathname
+        found during directory search is *thrown away*, and the target is
+        rebuilt using the file name specified in the makefile.
+
+        In short, if `make` must rebuild, then the target is rebuilt locally,
+        not in the directory found via directory search.
 
 - Use `GPATH` variable to use a simpler algorithm of other versions of `make`.
 
+  If the file does not exist, and it is found via directory search, then that
+  pathname is always used whether or not the target needs to be built.
+
 ### Writing Recipes with Directory Search
 
-- Write them with *automatic variable*s.
+- Just use *automatic variable*s in recipes (`$^`, `$@`, etc.).
 
 ### Directory Search and Implicit Rules
+
+- The search through the directories specified in `VPATH` or with `vpath` also
+  happens during consideration of implicit rules.
 
 ### Directory Search for Link Libraries
 
@@ -607,8 +692,9 @@
 
   + The current directory,
 
-  + The directories specified by matching `vpath` search paths and the `VPATH`
-    search path,
+  + The directories specified by matching `vpath` search paths and
+
+  + The `VPATH` search path,
 
   + And then in the directories `/lib`, `/usr/lib`, and `prefix/lib` (normally
     `/usr/local/lib`).
@@ -639,7 +725,7 @@
   + To improve performance (the implicit rule search is skipped for `.PHONY`
     targets).
 
-- Phony targets are also useful in conjunction with recursive invocations of
+- Phony targets are also useful in conjunction with *recursive* invocations of
   `make`.
 
   A loop in recipe method is suck:
@@ -647,13 +733,12 @@
   + The loop will continue to build the rest of the directories even when one
     fails (`-k` option makes shell exit code handling suck).
 
-  + We cannot take advantage of `make`s ability to build targets in parallel,
-    since *there is only one rule*.
+  + We cannot take advantage of `make`s ability to build targets in *parallel*,
+    since there is only one rule.
 
 - The *phony* sub-directories way:
 
   ```makefile
-
   SUBDIRS = foo bar baz
 
   .PHONY: subdirs $(SUBDIRS)
@@ -666,13 +751,17 @@
   foo: baz
   ```
 
+  Here we've also declared that the `foo` sub-directory cannot be built until
+  after the `baz` sub-directory is complete; this kind of relationship
+  declaration is particularly important when attempting *parallel* builds.
+
 ## Rules without Recipes or Prerequisites
 
-- If a rule has no prerequisites or recipe, and the target of the rule is a
-  *nonexistent file*, then make imagines this target to have been updated
+- If a rule has no prerequisites or recipe, and the target of the rule *is* a
+  nonexistent file, then make imagines this target to have been updated
   whenever its rule is run.
 
-  This implies that all targets depending on this one will always have their
+  This implies that all targets depending on this one will *always* have their
   recipe run.
 
 - An example will illustrate this:
@@ -689,6 +778,9 @@
 
 - The *empty target* is a variant of the *phony target*.
 
+- The purpose of the empty target file is to record, with its last-modification
+  time, when the rule’s recipe was last executed.
+
   ```makefile
   print: foo.c bar.c
           lpr -p $?
@@ -703,7 +795,7 @@
 
   + As independent targets.
 
-    * Standard target separator, `:`, define independent targets.
+    * The *colon* (`:`) is standard target separator.
 
       ```makefile
       bigoutput littleoutput : text.g
@@ -711,9 +803,6 @@
       ```
 
   + As grouped targets.
-
-    * Instead of independent targets you have a recipe that generates/updates
-      multiple files from *a single invocation*.
 
     * A grouped target rule uses the separator `&:` (the `&` here is used to
       imply "all").
@@ -738,18 +827,22 @@
 
     * A grouped target rule *must* include a recipe.
 
-      A grouped target may also appear in *independent* target rule definitions
-      that do not have recipes.
+      - However, targets that are members of a grouped target may also appear
+        in independent target rule definitions that do *not* have recipes.
 
-      If a grouped target appears in either an independent target rule or in
-      another grouped target rule with a recipe, the latter recipe will replace
-      the former recipe.
+      - If a grouped target appears in either an independent target rule or in
+        another grouped target rule with a recipe, you will get a warning and
+        the *latter* recipe will replace the former recipe.
 
-      The target will be removed from the previous group and appear only in the
-      new group.
+        Additionally the target will be removed from the previous group and
+        appear only in the new group.
 
-      If you would like a target to appear in multiple groups, then you must
-      use the *double-colon grouped target* separator, `&::`.
+      - If you would like a target to appear in multiple groups, then you must
+        use the *double-colon grouped target* separator, `&::`.
+
+        Grouped double-colon targets are each considered independently, and
+        each grouped double-colon rule's recipe is executed at most once, if at
+        least one of its multiple targets requires updating.
 
 ## Multiple Rules for One Target
 
@@ -773,14 +866,11 @@
 
 ## Static Pattern Rules
 
-- They are more general than ordinary rules with multiple targets because the
-  targets do not have to have identical prerequisites.
-
-- Their prerequisites must be *analogous*, but not necessarily *identical*.
+- It's just a *pattern rule* but it is limited in a list provided by `targets`.
 
 ### Syntax of Static Pattern Rules
 
-- Here is the syntax of a static pattern rule:
+- Here is the syntax of a *static pattern rule*:
 
   ```makefile
   targets ... : target-pattern: prereq-patterns ...
@@ -788,16 +878,16 @@
           ...
   ```
 
-  The `targets` list specifies the targets that the rule applies to.
+- Again, the `targets` list specifies the targets that the rule applies to.
 
-  Each target is matched against the *target-pattern* to extract a part of the
+  Each target is matched against the `target-pattern` to extract a part of the
   target name, called the *stem*.
 
   The prerequisite names for each target are made by substituting the stem for
   the `%` in each *prerequisite pattern*.
 
-- Each target specified must match the target pattern; a warning is issued for
-  each target that does not (use `filter` function).
+- Each target specified *must* match the target pattern; a warning is issued
+  for each target that does not (use `filter` function).
 
 - Another example shows how to use `$*` in static pattern rules:
 
@@ -806,24 +896,24 @@
           generate text.g -$* > $@
   ```
 
-### Static Pattern Rules versus Implicit Rules (#NOPE, #REVIEW)
+### Static Pattern Rules versus Implicit Rules
 
 - The difference is in how `make` decides *when* the rule applies.
 
-- An implicit rule *can* apply to any target that matches its pattern, but it
-  *does* apply only when the target has no recipe otherwise specified, and only
-  when the prerequisites can be found.
+  1. An implicit rule *can* apply to any target that matches its pattern, but it
+     *does* apply only when the target has no recipe otherwise specified, and
+     *only* when the prerequisites can be found.
 
-  If more than one implicit rule appears applicable, only one applies; the
-  choice depends on the order of rules.
+     If more than one implicit rule appears applicable, *only* one applies; the
+     choice depends on the *order* of rules.
 
-- By contrast, a static pattern rule applies to the precise list of targets
-  that you specify in the rule. It cannot apply to any other target and it
-  invariably does apply to each of the targets specified.
+  2. By contrast, a static pattern rule applies to the precise list of targets
+     that you specify in the rule. It cannot apply to any other target and it
+     invariably does apply to each of the targets specified.
 
-  If two conflicting rules apply, and both have recipes, that's an error.
+     If two conflicting rules apply, and both have recipes, that's an error.
 
-- The static pattern rule can be better than an implicit rule for these
+- The static pattern rule can be *better* than an implicit rule for these
   reasons:
 
   + You may wish to override the usual implicit rule for a few files whose
@@ -833,8 +923,10 @@
   + If you cannot be sure of the precise contents of the directories you are
     using, you may not be sure which other irrelevant files might lead `make`
     to use the wrong implicit rule. The choice might depend on the order in
-    which the implicit rule search is done. With static pattern rules, there is
-    no uncertainty: each rule applies to precisely the targets specified.
+    which the implicit rule search is done.
+
+    With static pattern rules, there is no uncertainty: each rule applies to
+    precisely the targets specified.
 
 ## Double-Colon Rules
 
