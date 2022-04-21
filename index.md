@@ -8,7 +8,7 @@
 
 # Makefiles
 
-- [GNU make](makes/gnu-make.md)
+- [GNU `make` manual](makes/gnu-make-manual.md)
 
 # Arch Linux package management
 
