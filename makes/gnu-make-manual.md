@@ -1,7 +1,6 @@
 # ABOUT THIS NOTE
 
-- This is a **shortened** version of [GNU
-  `make` manual](https://www.gnu.org/software/make/manual/make.html).
+- This is a **shortened** version of [GNU `make` manual].
 
 - This note is created by me, for me who know a little basic about `make` and
   for someone who at least at the same level.
@@ -17,22 +16,44 @@
 
   + Sharing.
 
-# Overview of `make`
-## How to Read This Manual
-## Problems and Bugs
-# An Introduction to Makefiles
-## What a Rule Looks Like
+# Overview of `make` {#Overview}
 
-See ## Rule Syntax.
+[#Overview]
 
-## A Simple Makefile
-## How `make` Processes a Makefile
+## How to Read This Manual (#Reading)
+
+[#Reading]
+
+## Problems and Bugs (#Bugs)
+
+[#Bugs]
+
+# An Introduction to Makefiles (#Introduction)
+
+[#Introduction]
+
+## What a Rule Looks Like (#Rule-Introduction)
+
+See #Rule-Syntax.
+
+[#Rule-Introduction]
+
+## A Simple Makefile (#Simple-Makefile)
+
+[#Simple-Makefile]
+
+## How `make` Processes a Makefile (#How-Make-Works)
 
 - `make` would update *automatically generated* C programs, such as those made
   by Bison or Yacc, by their own rule.
 
-## Variables Make Makefiles Simpler
-## Letting make Deduce the Recipes
+[#How-Make-Works]
+
+## Variables Make Makefiles Simpler (#Variables-Simplify)
+
+[#Variables-Simplify]
+
+## Letting `make` Deduce the Recipes (#make-Deduces)
 
 - `make` has an *implicit rule* for updating a `.o` file from a correspondingly
   named `.c` file using a `cc -c` command:
@@ -65,7 +86,9 @@ See ## Rule Syntax.
           rm edit $(objects)
   ```
 
-## Another Style of Makefile
+[#make-Deduces]
+
+## Another Style of Makefile (#Combine-By-Prerequisite)
 
 - In this style of makefile, you group entries by their prerequisites instead
   of by their targets:
@@ -82,9 +105,17 @@ See ## Rule Syntax.
   display.o insert.o search.o files.o : buffer.h
   ```
 
-## Rules for Cleaning the Directory
-# Writing Makefiles
-## What Makefiles Contain
+[#Combine-By-Prerequisite]
+
+## Rules for Cleaning the Directory (#Cleanup)
+
+[#Cleanup]
+
+# Writing Makefiles (#Makefiles)
+
+[#Makefiles]
+
+## What Makefiles Contain (#Makefile-Contents)
 
 - Makefiles contain five kinds of things:
 
@@ -105,7 +136,9 @@ See ## Rule Syntax.
 
   5. Comments.
 
-### Splitting Long Lines
+[#Makefile-Contents]
+
+### Splitting Long Lines (#Splitting-Lines)
 
 - Makefiles use a *line-based* syntax in which the newline character is special
   and marks the end of a statement.
@@ -144,7 +177,9 @@ See ## Rule Syntax.
   Because the variable '`$ `' which does not exist, and so it will expand to
   the empty string ('`oneword`').
 
-## What Name to Give Your Makefile
+[#Splitting-Lines]
+
+## What Name to Give Your Makefile (#Makefile-Names)
 
 - By default, when `make` looks for the makefile, it tries the following names,
   in order: `GNUmakefile` (specific to GNU `make`), `makefile` and `Makefile`
@@ -154,7 +189,9 @@ See ## Rule Syntax.
   makefiles. All the makefiles are effectively *concatenated* in the *order*
   specified.
 
-## Including Other Makefiles
+[#Makefile-Names]
+
+## Including Other Makefiles (#Include)
 
 - Include directive syntax:
 
@@ -185,13 +222,16 @@ See ## Rule Syntax.
 - For compatibility with some other `make` implementations, `sinclude` is
   another name for `-include`.
 
-## The Variable `MAKEFILES`
+[#Include]
+
+## The Variable `MAKEFILES` (#MAKEFILES-Variable)
 
 - If the environment variable `MAKEFILES` is defined, `make` considers its
   value as a list of names (separated by whitespace) of additional makefiles to
   be read *before* the others.
 
   This works much like the `include` directive: various directories are searched
+
   for those files (see above, ## Including Other Makefiles).
 
   In addition, the default goal is never taken from one of these makefiles (or
@@ -201,7 +241,9 @@ See ## Rule Syntax.
 - The main use of `MAKEFILES` is in communication between recursive invocations
   of `make`.
 
-## How Makefiles Are Remade
+[#MAKEFILES-Variable]
+
+## How Makefiles Are Remade (#Remaking-Makefiles)
 
 - After reading in all makefiles `make` will consider each as a *goal target*
   and attempt to update it (via explicit or implicit rules).
@@ -226,7 +268,9 @@ See ## Rule Syntax.
   the recipe needed to update it without actually running it, and then print
   the recipe needed to update `foo` without running that.
 
-## Overriding Part of Another Makefile
+[#Remaking-Makefiles]
+
+## Overriding Part of Another Makefile (#Overriding-Makefiles)
 
 - For example, if you have a makefile called `Makefile` that says how to make
   the target 'foo' (and other targets), you can write a makefile called
@@ -256,9 +300,12 @@ See ## Rule Syntax.
   for an implicit rule to build it-otherwise it would apply the same
   match-anything rule to force itself and create a prerequisite loop!
 
+
   See ## Rules without Recipes or Prerequisites.
 
-## How `make` Reads a Makefile
+[#Overriding-Makefiles]
+
+## How `make` Reads a Makefile (#Reading-Makefiles)
 
 - GNU `make` does its work in *two* distinct phases:
 
@@ -352,7 +399,9 @@ See ## Rule Syntax.
    This is true for explicit rules, pattern rules, suffix rules, static pattern
    rules, and simple prerequisite definitions.
 
-## How Makefiles Are Parsed
+[#Reading-Makefiles]
+
+## How Makefiles Are Parsed (#Parsing-Makefiles)
 
 - GNU `make` parses makefiles line-by-line. Parsing proceeds using the following steps:
 
@@ -408,7 +457,9 @@ See ## Rule Syntax.
   function: this causes the `make` parser to be run on the results of the
   expanded macro.
 
-## Secondary Expansion
+[#Parsing-Makefiles]
+
+## Secondary Expansion (#Secondary-Expansion)
 
 - GNU `make` works in two distinct phases: a read-in phase and a target-update
   phase.
@@ -492,7 +543,9 @@ See ## Rule Syntax.
 
   + **Implicit rules** in the same fashion as *static pattern rules*.
 
-# Writing Rules
+[#Secondary-Expansion]
+
+# Writing Rules (#Rules)
 
 - The `default goal` is the *first target* (not targets whose names start with
   *dot*, `.`) of the *first rule* in the *first makefile* or the `.DEFAULTGOAL`
@@ -512,9 +565,13 @@ See ## Rule Syntax.
 
   + A target that defines a *pattern rule* has no effect on the default goal.
 
-## Rule Example
+[#Rules]
 
-## Rule Syntax
+## Rule Example (#Rule-Example)
+
+[#Rule-Example]
+
+## Rule Syntax (#Rule-Syntax)
 
 - A `rule` looks like this:
 
@@ -539,7 +596,9 @@ See ## Rule Syntax.
 - A `target` is *out of date* when it does not exist or if it is older than any
   prerequisites.
 
-## Types of Prerequisites
+[#Rule-Syntax]
+
+## Types of Prerequisites (#Prerequisite-Types)
 
 - Two types of prerequisites of GNU `make`:
 
@@ -559,7 +618,9 @@ See ## Rule Syntax.
     * Impose a specific ordering on the rules to be invoked *without* forcing
       the target to be updated if one of those rules is executed.
 
-## Using Wildcard Characters in File Names
+[#Prerequisite-Types]
+
+## Using Wildcard Characters in File Names (#Wildcards)
 
 - The wildcard characters in make are `*`, `?` and `[...]`, the same as in
   the Bourne shell.
@@ -574,9 +635,13 @@ See ## Rule Syntax.
 - In other contexts, wildcard expansion happens only if you request it
   explicitly with the `wildcard` function.
 
-### Wildcard Examples
+[#Wildcards]
 
-### Pitfalls of Using Wildcards
+### Wildcard Examples (#Wildcard-Examples)
+
+[#Wildcard-Examples]
+
+### Pitfalls of Using Wildcards (#Wildcard-Pitfall)
 
 - Wildcard expansion base on *existing* filenames. But what if you delete all
   these files?
@@ -591,7 +656,9 @@ See ## Rule Syntax.
           cc -o foo $(CFLAGS) $(objects)
   ```
 
-### The Function `wildcard`
+[#Wildcard-Pitfall]
+
+### The Function `wildcard` (#Wildcard-Function)
 
 - Wildcard expansion does not normally take place when a variable is set, or
   inside the arguments of a function, we use `wildcard` function.
@@ -599,12 +666,16 @@ See ## Rule Syntax.
 - If no existing file name matches a pattern, then that pattern is *omitted*
   from the output of the `wildcard` function.
 
-## Searching Directories for Prerequisites
+[#Wildcard-Function]
+
+## Searching Directories for Prerequisites (#Directory-Search)
 
 - When you redistribute the files among directories, you do not need to change
   the individual rules, just the search paths.
 
-### `VPATH`: Search Path for All Prerequisites (general search)
+[#Directory-Search]
+
+### `VPATH`: Search Path for All Prerequisites (#General-Search)
 
 - `make` uses `VPATH` as a search list for both *prerequisite*s and *target*s of
   rules (when they do not exist in current directory).
@@ -612,7 +683,9 @@ See ## Rule Syntax.
 - In the `VPATH` variable, directory names are separated by *colons* or
   *blanks*.
 
-### The `vpath` Directive (selective search)
+[#General-Search]
+
+### The `vpath` Directive (#Selective-Search)
 
 - There are three forms of the `vpath` directive:
 
@@ -641,7 +714,9 @@ See ## Rule Syntax.
   *directories* in that directive are searched just like (and *before*) the
   directories in the `VPATH` variable.
 
-### How Directory Searches are Performed
+[#Selective-Search]
+
+### How Directory Searches are Performed (#Search-Algorithm)
 
 - The algorithm `make` uses to decide whether to *keep* or *abandon* a path
   found via directory search is as follows:
@@ -676,16 +751,22 @@ See ## Rule Syntax.
   If the file does not exist, and it is found via directory search, then that
   pathname is always used whether or not the target needs to be built.
 
-### Writing Recipes with Directory Search
+[#Search-Algorithm]
+
+### Writing Recipes with Directory Search (#Recipes_002fSearch)
 
 - Just use *automatic variable*s in recipes (`$^`, `$@`, etc.).
 
-### Directory Search and Implicit Rules
+[#Recipes_002fSearch]
+
+### Directory Search and Implicit Rules (#Implicit_002fSearch)
 
 - The search through the directories specified in `VPATH` or with `vpath` also
   happens during consideration of implicit rules.
 
-### Directory Search for Link Libraries
+[#Implicit_002fSearch]
+
+### Directory Search for Link Libraries (#Libraries_002fSearch)
 
 - When a prerequisite's name has the form `-lname`, make handles it specially
   by searching for the file `libname.so`, and, if it is not found, for the file
@@ -717,7 +798,9 @@ See ## Rule Syntax.
   You can turn off link library expansion completely by setting this variable
   to an empty value.
 
-## Phony Targets
+[#Libraries_002fSearch]
+
+## Phony Targets (#Phony-Targets)
 
 - There are two reasons to use a phony target:
 
@@ -756,7 +839,9 @@ See ## Rule Syntax.
   after the `baz` sub-directory is complete; this kind of relationship
   declaration is particularly important when attempting *parallel* builds.
 
-## Rules without Recipes or Prerequisites
+[#Phony-Targets]
+
+## Rules without Recipes or Prerequisites (#Force-Targets)
 
 - If a rule has no prerequisites or recipe, and the target of the rule *is* a
   nonexistent file, then make imagines this target to have been updated
@@ -775,7 +860,9 @@ See ## Rule Syntax.
 
 - Using `.PHONY` is more explicit and more efficient.
 
-## Empty Target Files to Record Events
+[#Force-Targets]
+
+## Empty Target Files to Record Events (#Empty-Targets)
 
 - The *empty target* is a variant of the *phony target*.
 
@@ -787,9 +874,13 @@ See ## Rule Syntax.
           lpr -p $?
           touch print
   ```
-## Special Built-in Target Names
+[#Empty-Targets]
 
-## Multiple Targets in a Rule
+## Special Built-in Target Names (#Special-Targets)
+
+[#Special-Targets]
+
+## Multiple Targets in a Rule (#Multiple-Targets)
 
 - When an explicit rule has multiple targets they can be treated in one of two
   possible ways:
@@ -845,7 +936,9 @@ See ## Rule Syntax.
         each grouped double-colon rule's recipe is executed at most once, if at
         least one of its multiple targets requires updating.
 
-## Multiple Rules for One Target
+[#Multiple-Targets]
+
+## Multiple Rules for One Target (#Multiple-Rules)
 
 - All the prerequisites mentioned in all the rules are merged into one list of
   prerequisites for the target.
@@ -865,11 +958,15 @@ See ## Rule Syntax.
   $(objects) : $(extradeps)
   ```
 
-## Static Pattern Rules
+[#Multiple-Rules]
+
+## Static Pattern Rules (#Static-Pattern)
 
 - It's just a *pattern rule* but it is limited in a list provided by `targets`.
 
-### Syntax of Static Pattern Rules
+[#Static-Pattern]
+
+### Syntax of Static Pattern Rules (#Static-Usage)
 
 - Here is the syntax of a *static pattern rule*:
 
@@ -897,7 +994,9 @@ See ## Rule Syntax.
           generate text.g -$* > $@
   ```
 
-### Static Pattern Rules versus Implicit Rules
+[#Static-Usage]
+
+### Static Pattern Rules versus Implicit Rules (#Static-versus-Implicit)
 
 - The difference is in how `make` decides *when* the rule applies.
 
@@ -929,7 +1028,9 @@ See ## Rule Syntax.
     With static pattern rules, there is no uncertainty: each rule applies to
     precisely the targets specified.
 
-## Double-Colon Rules
+[#Static-versus-Implicit]
+
+## Double-Colon Rules (#Double_002dColon)
 
 - When a target appears in multiple rules, all the rules must be the same type:
   all ordinary, or all double-colon.
@@ -950,14 +1051,20 @@ See ## Rule Syntax.
 - Each double-colon rule should specify a recipe; if it does not, an implicit
   rule will be used if one applies.
 
-## Generating Prerequisites Automatically
+[#Double_002dColon]
 
-# Writing Recipes in Rules
+## Generating Prerequisites Automatically (#Automatic-Prerequisites)
+
+[#Automatic-Prerequisites]
+
+# Writing Recipes in Rules (#Recipes)
 
 - Recipes in makefiles are always interpreted by `/bin/sh` unless the makefile
   specifies otherwise.
 
-## Recipe Syntax
+[#Recipes]
+
+## Recipe Syntax (#Recipe-Syntax)
 
 - Makefiles have the unusual property that there are really two distinct
   syntaxes in one file:
@@ -991,7 +1098,9 @@ See ## Rule Syntax.
      first character on the line, will be considered part of a recipe and be
      passed to the shell.
 
-### Splitting Recipe Lines
+[#Recipe-Syntax]
+
+### Splitting Recipe Lines (#Splitting-Recipe-Lines)
 
 - Both the backslash and the newline characters are *preserved* and passed to
   the shell.
@@ -1008,7 +1117,9 @@ See ## Rule Syntax.
   all : ; @echo $(HELLO)
   ```
 
-### Using Variables in Recipes
+[#Splitting-Recipe-Lines]
+
+### Using Variables in Recipes (#Variables-in-Recipes)
 
 - The expansion occurs after make has finished reading all the makefiles and
   the target is determined to be out of date.
@@ -1026,7 +1137,9 @@ See ## Rule Syntax.
           done
   ```
 
-## Recipe Echoing
+[#Variables-in-Recipes]
+
+## Recipe Echoing (#Echoing)
 
 - Normally `make` prints each line of the recipe before it is executed.
 
@@ -1038,7 +1151,9 @@ See ## Rule Syntax.
   A rule in the makefile for the special target `.SILENT` without prerequisites
   has the same effect.
 
-## Recipe Execution
+[#Echoing]
+
+## Recipe Execution (#Execution)
 
 - When it is time to execute recipes to *update a target*, they are executed by
   invoking a new sub-shell for  *each*  line of the recipe, unless the
@@ -1052,7 +1167,9 @@ See ## Rule Syntax.
           cd $(<D) && gobble $(<F) > ../$@
   ```
 
-### Using One Shell
+[#Execution]
+
+### Using One Shell (#One-Shell)
 
 - There are generally two situations where this is useful:
 
@@ -1125,7 +1242,9 @@ See ## Rule Syntax.
 - Ultimately you may need to *harden* your recipe lines to allow them to work
   with `.ONESHELL`.
 
-### Choosing the Shell
+[#One-Shell]
+
+### Choosing the Shell (#Choosing-the-Shell)
 
 - The program used as the shell is taken from the variable `SHELL`.
 
@@ -1139,7 +1258,9 @@ See ## Rule Syntax.
 
 - Choosing a Shell in DOS and Windows.
 
-## Parallel Execution
+[#Choosing-the-Shell]
+
+## Parallel Execution (#Parallel)
 
 - If the `-j` option is followed by an integer, this is the number of recipes
   to execute at once; this is called the number of *job slots*.
@@ -1165,217 +1286,599 @@ See ## Rule Syntax.
 
   By default, there is no load limit.
 
-### Output During Parallel Execution
+[#Parallel]
 
-### Input During Parallel Execution
+### Output During Parallel Execution (#Parallel-Output)
 
-## Errors in Recipes
+[#Parallel-Output]
 
-## Interrupting or Killing `make`
+### Input During Parallel Execution (#Parallel-Input)
 
-## Recursive Use of `make`
+[#Parallel-Input]
 
-### How the `MAKE` Variable Works
+## Errors in Recipes (#Errors)
 
-### Communicating Variables to a Sub-make
+[#Errors]
 
-### Communicating Options to a Sub-make
+## Interrupting or Killing `make` (#Interrupts)
 
-### The '--print-directory' Option
+[#Interrupts]
 
-## Defining Canned Recipes
+## Recursive Use of `make` (#Recursion)
 
-## Using Empty Recipes
+[#Recursion]
 
-# How to Use Variables
+### How the `MAKE` Variable Works (#MAKE-Variable)
 
-## Basics of Variable References
+[#MAKE-Variable]
 
-## The Two Flavors of Variables
+### Communicating Variables to a Sub-`make` (#Variables_002fRecursion)
 
-## Advanced Features for Reference to Variables
+[#Variables_002fRecursion]
 
-### Substitution References
+### Communicating Options to a Sub-`make` (#Options_002fRecursion)
 
-### Computed Variable Names
+[#Options_002fRecursion]
 
-## How Variables Get Their Values
+### The `--print-directory` Option (#g_t_002dw-Option)
 
-## Setting Variables
+[#g_t_002dw-Option]
 
-## Appending More Text to Variables
+## Defining Canned Recipes (#Canned-Recipes)
 
-## The override Directive
+[#Canned-Recipes]
 
-## Defining Multi-Line Variables
+## Using Empty Recipes (#Empty-Recipes)
 
-## Undefining Variables
+[#Empty-Recipes]
 
-## Variables from the Environment
+# How to Use Variables (#Using-Variables)
 
-## Target-specific Variable Values
+[#Using-Variables]
 
-## Pattern-specific Variable Values
+## Basics of Variable References (#Reference)
 
-## Suppressing Inheritance
+[#Reference]
 
-## Other Special Variables
+## The Two Flavors of Variables (#Flavors)
 
-# Conditional Parts of Makefiles
+[#Flavors]
 
-## Example of a Conditional
+## Advanced Features for Reference to Variables (#Advanced)
 
-## Syntax of Conditionals
+[#Advanced]
 
-## Conditionals that Test Flags
+### Substitution References (#Substitution-Refs)
 
-# Functions for Transforming Text
+[#Substitution-Refs]
 
-## Function Call Syntax
+### Computed Variable Names (#Computed-Names)
 
-## Functions for String Substitution and Analysis
+[#Computed-Names]
 
-## Functions for File Names
+## How Variables Get Their Values (#Values)
 
-## Functions for Conditionals
+[#Values]
 
-## The foreach Function
+## Setting Variables (#Setting)
 
-## The `file` Function
+[#Setting]
 
-## The `call` Function
+## Appending More Text to Variables (#Appending)
 
-## The `value` Function
+[#Appending]
 
-## The `eval` Function
+## The `override` Directive (#Override-Directive)
 
-## The `origin` Function
+[#Override-Directive]
 
-## The `flavor` Function
+## Defining Multi-Line Variables (#Multi_002dLine)
 
-## Functions That Control Make
+[#Multi_002dLine]
 
-## The `shell` Function
+## Undefining Variables (#Undefine-Directive)
 
-## The `guile` Function
+[#Undefine-Directive]
 
-# How to Run make
+## Variables from the Environment (#Environment)
 
-## Arguments to Specify the Makefile
+[#Environment]
 
-## Arguments to Specify the Goals
+## Target-specific Variable Values (#Target_002dspecific)
 
-## Instead of Executing Recipes
+[#Target_002dspecific]
 
-## Avoiding Recompilation of Some Files
+## Pattern-specific Variable Values (#Pattern_002dspecific)
 
-## Overriding Variables
+[#Pattern_002dspecific]
 
-## Testing the Compilation of a Program
+## Suppressing Inheritance (#Suppressing-Inheritance)
 
-## Summary of Options
+[#Suppressing-Inheritance]
 
-# Using Implicit Rules
+## Other Special Variables (#Special-Variables)
 
-## Using Implicit Rules
+[#Special-Variables]
 
-## Catalogue of Built-In Rules
+# Conditional Parts of Makefiles (#Conditionals)
 
-## Variables Used by Implicit Rules
+[#Conditionals]
 
-## Chains of Implicit Rules
+## Example of a Conditional (#Conditional-Example)
 
-## Defining and Redefining Pattern Rules
+[#Conditional-Example]
 
-### Introduction to Pattern Rules
+## Syntax of Conditionals (#Conditional-Syntax)
 
-### Pattern Rule Examples
+[#Conditional-Syntax]
 
-### Automatic Variables
+## Conditionals that Test Flags (#Testing-Flags)
 
-### How Patterns Match
+[#Testing-Flags]
 
-### Match-Anything Pattern Rules
+# Functions for Transforming Text (#Functions)
 
-### Canceling Implicit Rules
+[#Functions]
 
-## Defining Last-Resort Default Rules
+## Function Call Syntax (#Syntax-of-Functions)
 
-## Old-Fashioned Suffix Rules
+[#Syntax-of-Functions]
 
-## Implicit Rule Search Algorithm
+## Functions for String Substitution and Analysis (#Text-Functions)
 
-# Using `make` to Update Archive Files
+[#Text-Functions]
 
-## Archive Members as Targets
+## Functions for File Names (#File-Name-Functions)
 
-## Implicit Rule for Archive Member Targets
+[#File-Name-Functions]
 
-### Updating Archive Symbol Directories
+## Functions for Conditionals (#Conditional-Functions)
 
-## Dangers When Using Archives
+[#Conditional-Functions]
 
-## Suffix Rules for Archive Files
+## The `foreach` Function (#Foreach-Function)
 
-# Extending GNU `make`
+[#Foreach-Function]
 
-## GNU Guile Integration
+## The `file` Function (#File-Function)
 
-### Conversion of Guile Types
+[#File-Function]
 
-### Interfaces from Guile to `make`
+## The `call` Function (#Call-Function)
 
-### Example Using Guile in `make`
+[#Call-Function]
 
-## Loading Dynamic Objects
+## The `value` Function (#Value-Function)
 
-### The load Directive
+[#Value-Function]
 
-### How Loaded Objects Are Remade
+## The `eval` Function (#Eval-Function)
 
-### Loaded Object Interface
+[#Eval-Function]
 
-### Example Loaded Object
+## The `origin` Function (#Origin-Function)
 
-# Integrating GNU `make`
+[#Origin-Function]
 
-## Sharing Job Slots with GNU `make`
+## The `flavor` Function (#Flavor-Function)
 
-### POSIX Jobserver Interaction
+[#Flavor-Function]
 
-### Windows Jobserver Interaction
+## Functions That Control Make (#Make-Control-Functions)
 
-## Synchronized Terminal Output
+[#Make-Control-Functions]
 
-# Features of GNU `make`
+## The `shell` Function (#Shell-Function)
 
-# Incompatibilities and Missing Features
+[#Shell-Function]
 
-# Makefile Conventions
+## The `guile` Function (#Guile-Function)
 
-## General Conventions for Makefiles
+[#Guile-Function]
 
-## Utilities in Makefiles
+# How to Run `make` (#Running)
 
-## Variables for Specifying Commands
+[#Running]
 
-## DESTDIR: Support for Staged Installs
+## Arguments to Specify the Makefile (#Makefile-Arguments)
 
-## Variables for Installation Directories
+[#Makefile-Arguments]
 
-## Standard Targets for Users
+## Arguments to Specify the Goals (#Goals)
 
-## Install Command Categories
+[#Goals]
 
-# Appendix A Quick Reference
+## Instead of Executing Recipes (#Instead-of-Execution)
 
-# Appendix B Errors Generated by Make
+[#Instead-of-Execution]
 
-# Appendix C Complex Makefile Example
+## Avoiding Recompilation of Some Files (#Avoiding-Compilation)
 
-# Appendix D GNU Free Documentation License
+[#Avoiding-Compilation]
 
-# Index of Concepts
+## Overriding Variables (#Overriding)
 
-# Index of Functions, Variables, & Directives
+[#Overriding]
+
+## Testing the Compilation of a Program (#Testing)
+
+[#Testing]
+
+## Summary of Options (#Options-Summary)
+
+[#Options-Summary]
+
+# Using Implicit Rules (#Implicit-Rules)
+
+[#Implicit-Rules]
+
+## Using Implicit Rules (#Using-Implicit)
+
+[#Using-Implicit]
+
+## Catalogue of Built-In Rules (#Catalogue-of-Rules)
+
+[#Catalogue-of-Rules]
+
+## Variables Used by Implicit Rules (#Implicit-Variables)
+
+[#Implicit-Variables]
+
+## Chains of Implicit Rules (#Chained-Rules)
+
+[#Chained-Rules]
+
+## Defining and Redefining Pattern Rules (#Pattern-Rules)
+
+[#Pattern-Rules]
+
+### Introduction to Pattern Rules (#Pattern-Intro)
+
+[#Pattern-Intro]
+
+### Pattern Rule Examples (#Pattern-Examples)
+
+[#Pattern-Examples]
+
+### Automatic Variables (#Automatic-Variables)
+
+[#Automatic-Variables]
+
+### How Patterns Match (#Pattern-Match)
+
+[#Pattern-Match]
+
+### Match-Anything Pattern Rules (#Match_002dAnything-Rules)
+
+[#Match_002dAnything-Rules]
+
+### Canceling Implicit Rules (#Canceling-Rules)
+
+[#Canceling-Rules]
+
+## Defining Last-Resort Default Rules (#Last-Resort)
+
+[#Last-Resort]
+
+## Old-Fashioned Suffix Rules (#Suffix-Rules)
+
+[#Suffix-Rules]
+
+## Implicit Rule Search Algorithm (#Implicit-Rule-Search)
+
+[#Implicit-Rule-Search]
+
+# Using `make` to Update Archive Files (#Archives)
+
+[#Archives]
+
+## Archive Members as Targets (#Archive-Members)
+
+[#Archive-Members]
+
+## Implicit Rule for Archive Member Targets (#Archive-Update)
+
+[#Archive-Update]
+
+### Updating Archive Symbol Directories (#Archive-Symbols)
+
+[#Archive-Symbols]
+
+## Dangers When Using Archives (#Archive-Pitfalls)
+
+[#Archive-Pitfalls]
+
+## Suffix Rules for Archive Files (#Archive-Suffix-Rules)
+
+[#Archive-Suffix-Rules]
+
+# Extending GNU `make` (#Extending-make)
+
+[#Extending-make]
+
+## GNU Guile Integration (#Guile-Integration)
+
+[#Guile-Integration]
+
+### Conversion of Guile Types (#Guile-Types)
+
+[#Guile-Types]
+
+### Interfaces from Guile to `make` (#Guile-Interface)
+
+[#Guile-Interface]
+
+### Example Using Guile in `make` (#Guile-Example)
+
+[#Guile-Example]
+
+## Loading Dynamic Objects (#Loading-Objects)
+
+[#Loading-Objects]
+
+### The `load` Directive (#load-Directive)
+
+[#load-Directive]
+
+### How Loaded Objects Are Remade (#Remaking-Loaded-Objects)
+
+[#Remaking-Loaded-Objects]
+
+### Loaded Object Interface (#Loaded-Object-API)
+
+[#Loaded-Object-API]
+
+### Example Loaded Object (#Loaded-Object-Example)
+
+[#Loaded-Object-Example]
+
+# Integrating GNU `make` (#Integrating-make)
+
+[#Integrating-make]
+
+## Sharing Job Slots with GNU `make` (#Job-Slots)
+
+[#Job-Slots]
+
+### POSIX Jobserver Interaction (#POSIX-Jobserver)
+
+[#POSIX-Jobserver]
+
+### Windows Jobserver Interaction (#Windows-Jobserver)
+
+[#Windows-Jobserver]
+
+## Synchronized Terminal Output (#Terminal-Output)
+
+[#Terminal-Output]
+
+# Features of GNU `make` (#Features)
+
+[#Features]
+
+# Incompatibilities and Missing Features (#Missing)
+
+[#Missing]
+
+# Makefile Conventions (#Makefile-Conventions)
+
+[#Makefile-Conventions]
+
+## General Conventions for Makefiles (#Makefile-Basics)
+
+[#Makefile-Basics]
+
+## Utilities in Makefiles (#Utilities-in-Makefiles)
+
+[#Utilities-in-Makefiles]
+
+## Variables for Specifying Commands (#Command-Variables)
+
+[#Command-Variables]
+
+## `DESTDIR`: Support for Staged Installs (#DESTDIR)
+
+[#DESTDIR]
+
+## Variables for Installation Directories (#Directory-Variables)
+
+[#Directory-Variables]
+
+## Standard Targets for Users (#Standard-Targets)
+
+[#Standard-Targets]
+
+## Install Command Categories (#Install-Command-Categories)
+
+[#Install-Command-Categories]
+
+# Appendix A Quick Reference (#Quick-Reference)
+
+[#Quick-Reference]
+
+# Appendix B Errors Generated by Make (#Error-Messages)
+
+[#Error-Messages]
+
+# Appendix C Complex Makefile Example (#Complex-Makefile)
+
+[#Complex-Makefile]
+
+# Appendix D GNU Free Documentation License (#GNU-Free-Documentation-License)
+
+[#GNU-Free-Documentation-License]
+
+# Index of Concepts (#Concept-Index)
+
+[#Concept-Index]
+
+# Index of Functions, Variables, & Directives (#Name-Index)
+
+[#Name-Index]
+
+[#GNU `make` manual]: https://www.gnu.org/software/make/manual/make.html
+[#Overview]: https://www.gnu.org/software/make/manual/make.html#Overview
+[#Reading]: https://www.gnu.org/software/make/manual/make.html#Reading
+[#Bugs]: https://www.gnu.org/software/make/manual/make.html#Bugs
+[#Introduction]: https://www.gnu.org/software/make/manual/make.html#Introduction
+[#Rule-Introduction]: https://www.gnu.org/software/make/manual/make.html#Rule-Introduction
+[#Simple-Makefile]: https://www.gnu.org/software/make/manual/make.html#Simple-Makefile
+[#How-Make-Works]: https://www.gnu.org/software/make/manual/make.html#How-Make-Works
+[#Variables-Simplify]: https://www.gnu.org/software/make/manual/make.html#Variables-Simplify
+[#make-Deduces]: https://www.gnu.org/software/make/manual/make.html#make-Deduces
+[#Combine-By-Prerequisite]: https://www.gnu.org/software/make/manual/make.html#Combine-By-Prerequisite
+[#Cleanup]: https://www.gnu.org/software/make/manual/make.html#Cleanup
+[#Makefiles]: https://www.gnu.org/software/make/manual/make.html#Makefiles
+[#Makefile-Contents]: https://www.gnu.org/software/make/manual/make.html#Makefile-Contents
+[#Splitting-Lines]: https://www.gnu.org/software/make/manual/make.html#Splitting-Lines
+[#Makefile-Names]: https://www.gnu.org/software/make/manual/make.html#Makefile-Names
+[#Include]: https://www.gnu.org/software/make/manual/make.html#Include
+[#MAKEFILES-Variable]: https://www.gnu.org/software/make/manual/make.html#MAKEFILES-Variable
+[#Remaking-Makefiles]: https://www.gnu.org/software/make/manual/make.html#Remaking-Makefiles
+[#Overriding-Makefiles]: https://www.gnu.org/software/make/manual/make.html#Overriding-Makefiles
+[#Reading-Makefiles]: https://www.gnu.org/software/make/manual/make.html#Reading-Makefiles
+[#Parsing-Makefiles]: https://www.gnu.org/software/make/manual/make.html#Parsing-Makefiles
+[#Secondary-Expansion]: https://www.gnu.org/software/make/manual/make.html#Secondary-Expansion
+[#Rules]: https://www.gnu.org/software/make/manual/make.html#Rules
+[#Rule-Example]: https://www.gnu.org/software/make/manual/make.html#Rule-Example
+[#Rule-Syntax]: https://www.gnu.org/software/make/manual/make.html#Rule-Syntax
+[#Prerequisite-Types]: https://www.gnu.org/software/make/manual/make.html#Prerequisite-Types
+[#Wildcards]: https://www.gnu.org/software/make/manual/make.html#Wildcards
+[#Wildcard-Examples]: https://www.gnu.org/software/make/manual/make.html#Wildcard-Examples
+[#Wildcard-Pitfall]: https://www.gnu.org/software/make/manual/make.html#Wildcard-Pitfall
+[#Wildcard-Function]: https://www.gnu.org/software/make/manual/make.html#Wildcard-Function
+[#Directory-Search]: https://www.gnu.org/software/make/manual/make.html#Directory-Search
+[#General-Search]: https://www.gnu.org/software/make/manual/make.html#General-Search
+[#Selective-Search]: https://www.gnu.org/software/make/manual/make.html#Selective-Search
+[#Search-Algorithm]: https://www.gnu.org/software/make/manual/make.html#Search-Algorithm
+[#Recipes_002fSearch]: https://www.gnu.org/software/make/manual/make.html#Recipes_002fSearch
+[#Implicit_002fSearch]: https://www.gnu.org/software/make/manual/make.html#Implicit_002fSearch
+[#Libraries_002fSearch]: https://www.gnu.org/software/make/manual/make.html#Libraries_002fSearch
+[#Phony-Targets]: https://www.gnu.org/software/make/manual/make.html#Phony-Targets
+[#Force-Targets]: https://www.gnu.org/software/make/manual/make.html#Force-Targets
+[#Empty-Targets]: https://www.gnu.org/software/make/manual/make.html#Empty-Targets
+[#Special-Targets]: https://www.gnu.org/software/make/manual/make.html#Special-Targets
+[#Multiple-Targets]: https://www.gnu.org/software/make/manual/make.html#Multiple-Targets
+[#Multiple-Rules]: https://www.gnu.org/software/make/manual/make.html#Multiple-Rules
+[#Static-Pattern]: https://www.gnu.org/software/make/manual/make.html#Static-Pattern
+[#Static-Usage]: https://www.gnu.org/software/make/manual/make.html#Static-Usage
+[#Static-versus-Implicit]: https://www.gnu.org/software/make/manual/make.html#Static-versus-Implicit
+[#Double_002dColon]: https://www.gnu.org/software/make/manual/make.html#Double_002dColon
+[#Automatic-Prerequisites]: https://www.gnu.org/software/make/manual/make.html#Automatic-Prerequisites
+[#Recipes]: https://www.gnu.org/software/make/manual/make.html#Recipes
+[#Recipe-Syntax]: https://www.gnu.org/software/make/manual/make.html#Recipe-Syntax
+[#Splitting-Recipe-Lines]: https://www.gnu.org/software/make/manual/make.html#Splitting-Recipe-Lines
+[#Variables-in-Recipes]: https://www.gnu.org/software/make/manual/make.html#Variables-in-Recipes
+[#Echoing]: https://www.gnu.org/software/make/manual/make.html#Echoing
+[#Execution]: https://www.gnu.org/software/make/manual/make.html#Execution
+[#One-Shell]: https://www.gnu.org/software/make/manual/make.html#One-Shell
+[#Choosing-the-Shell]: https://www.gnu.org/software/make/manual/make.html#Choosing-the-Shell
+[#Parallel]: https://www.gnu.org/software/make/manual/make.html#Parallel
+[#Parallel-Output]: https://www.gnu.org/software/make/manual/make.html#Parallel-Output
+[#Parallel-Input]: https://www.gnu.org/software/make/manual/make.html#Parallel-Input
+[#Errors]: https://www.gnu.org/software/make/manual/make.html#Errors
+[#Interrupts]: https://www.gnu.org/software/make/manual/make.html#Interrupts
+[#Recursion]: https://www.gnu.org/software/make/manual/make.html#Recursion
+[#MAKE-Variable]: https://www.gnu.org/software/make/manual/make.html#MAKE-Variable
+[#Variables_002fRecursion]: https://www.gnu.org/software/make/manual/make.html#Variables_002fRecursion
+[#Options_002fRecursion]: https://www.gnu.org/software/make/manual/make.html#Options_002fRecursion
+[#g_t_002dw-Option]: https://www.gnu.org/software/make/manual/make.html#g_t_002dw-Option
+[#Canned-Recipes]: https://www.gnu.org/software/make/manual/make.html#Canned-Recipes
+[#Empty-Recipes]: https://www.gnu.org/software/make/manual/make.html#Empty-Recipes
+[#Using-Variables]: https://www.gnu.org/software/make/manual/make.html#Using-Variables
+[#Reference]: https://www.gnu.org/software/make/manual/make.html#Reference
+[#Flavors]: https://www.gnu.org/software/make/manual/make.html#Flavors
+[#Advanced]: https://www.gnu.org/software/make/manual/make.html#Advanced
+[#Substitution-Refs]: https://www.gnu.org/software/make/manual/make.html#Substitution-Refs
+[#Computed-Names]: https://www.gnu.org/software/make/manual/make.html#Computed-Names
+[#Values]: https://www.gnu.org/software/make/manual/make.html#Values
+[#Setting]: https://www.gnu.org/software/make/manual/make.html#Setting
+[#Appending]: https://www.gnu.org/software/make/manual/make.html#Appending
+[#Override-Directive]: https://www.gnu.org/software/make/manual/make.html#Override-Directive
+[#Multi_002dLine]: https://www.gnu.org/software/make/manual/make.html#Multi_002dLine
+[#Undefine-Directive]: https://www.gnu.org/software/make/manual/make.html#Undefine-Directive
+[#Environment]: https://www.gnu.org/software/make/manual/make.html#Environment
+[#Target_002dspecific]: https://www.gnu.org/software/make/manual/make.html#Target_002dspecific
+[#Pattern_002dspecific]: https://www.gnu.org/software/make/manual/make.html#Pattern_002dspecific
+[#Suppressing-Inheritance]: https://www.gnu.org/software/make/manual/make.html#Suppressing-Inheritance
+[#Special-Variables]: https://www.gnu.org/software/make/manual/make.html#Special-Variables
+[#Conditionals]: https://www.gnu.org/software/make/manual/make.html#Conditionals
+[#Conditional-Example]: https://www.gnu.org/software/make/manual/make.html#Conditional-Example
+[#Conditional-Syntax]: https://www.gnu.org/software/make/manual/make.html#Conditional-Syntax
+[#Testing-Flags]: https://www.gnu.org/software/make/manual/make.html#Testing-Flags
+[#Functions]: https://www.gnu.org/software/make/manual/make.html#Functions
+[#Syntax-of-Functions]: https://www.gnu.org/software/make/manual/make.html#Syntax-of-Functions
+[#Text-Functions]: https://www.gnu.org/software/make/manual/make.html#Text-Functions
+[#File-Name-Functions]: https://www.gnu.org/software/make/manual/make.html#File-Name-Functions
+[#Conditional-Functions]: https://www.gnu.org/software/make/manual/make.html#Conditional-Functions
+[#Foreach-Function]: https://www.gnu.org/software/make/manual/make.html#Foreach-Function
+[#File-Function]: https://www.gnu.org/software/make/manual/make.html#File-Function
+[#Call-Function]: https://www.gnu.org/software/make/manual/make.html#Call-Function
+[#Value-Function]: https://www.gnu.org/software/make/manual/make.html#Value-Function
+[#Eval-Function]: https://www.gnu.org/software/make/manual/make.html#Eval-Function
+[#Origin-Function]: https://www.gnu.org/software/make/manual/make.html#Origin-Function
+[#Flavor-Function]: https://www.gnu.org/software/make/manual/make.html#Flavor-Function
+[#Make-Control-Functions]: https://www.gnu.org/software/make/manual/make.html#Make-Control-Functions
+[#Shell-Function]: https://www.gnu.org/software/make/manual/make.html#Shell-Function
+[#Guile-Function]: https://www.gnu.org/software/make/manual/make.html#Guile-Function
+[#Running]: https://www.gnu.org/software/make/manual/make.html#Running
+[#Makefile-Arguments]: https://www.gnu.org/software/make/manual/make.html#Makefile-Arguments
+[#Goals]: https://www.gnu.org/software/make/manual/make.html#Goals
+[#Instead-of-Execution]: https://www.gnu.org/software/make/manual/make.html#Instead-of-Execution
+[#Avoiding-Compilation]: https://www.gnu.org/software/make/manual/make.html#Avoiding-Compilation
+[#Overriding]: https://www.gnu.org/software/make/manual/make.html#Overriding
+[#Testing]: https://www.gnu.org/software/make/manual/make.html#Testing
+[#Options-Summary]: https://www.gnu.org/software/make/manual/make.html#Options-Summary
+[#Implicit-Rules]: https://www.gnu.org/software/make/manual/make.html#Implicit-Rules
+[#Using-Implicit]: https://www.gnu.org/software/make/manual/make.html#Using-Implicit
+[#Catalogue-of-Rules]: https://www.gnu.org/software/make/manual/make.html#Catalogue-of-Rules
+[#Implicit-Variables]: https://www.gnu.org/software/make/manual/make.html#Implicit-Variables
+[#Chained-Rules]: https://www.gnu.org/software/make/manual/make.html#Chained-Rules
+[#Pattern-Rules]: https://www.gnu.org/software/make/manual/make.html#Pattern-Rules
+[#Pattern-Intro]: https://www.gnu.org/software/make/manual/make.html#Pattern-Intro
+[#Pattern-Examples]: https://www.gnu.org/software/make/manual/make.html#Pattern-Examples
+[#Automatic-Variables]: https://www.gnu.org/software/make/manual/make.html#Automatic-Variables
+[#Pattern-Match]: https://www.gnu.org/software/make/manual/make.html#Pattern-Match
+[#Match_002dAnything-Rules]: https://www.gnu.org/software/make/manual/make.html#Match_002dAnything-Rules
+[#Canceling-Rules]: https://www.gnu.org/software/make/manual/make.html#Canceling-Rules
+[#Last-Resort]: https://www.gnu.org/software/make/manual/make.html#Last-Resort
+[#Suffix-Rules]: https://www.gnu.org/software/make/manual/make.html#Suffix-Rules
+[#Implicit-Rule-Search]: https://www.gnu.org/software/make/manual/make.html#Implicit-Rule-Search
+[#Archives]: https://www.gnu.org/software/make/manual/make.html#Archives
+[#Archive-Members]: https://www.gnu.org/software/make/manual/make.html#Archive-Members
+[#Archive-Update]: https://www.gnu.org/software/make/manual/make.html#Archive-Update
+[#Archive-Symbols]: https://www.gnu.org/software/make/manual/make.html#Archive-Symbols
+[#Archive-Pitfalls]: https://www.gnu.org/software/make/manual/make.html#Archive-Pitfalls
+[#Archive-Suffix-Rules]: https://www.gnu.org/software/make/manual/make.html#Archive-Suffix-Rules
+[#Extending-make]: https://www.gnu.org/software/make/manual/make.html#Extending-make
+[#Guile-Integration]: https://www.gnu.org/software/make/manual/make.html#Guile-Integration
+[#Guile-Types]: https://www.gnu.org/software/make/manual/make.html#Guile-Types
+[#Guile-Interface]: https://www.gnu.org/software/make/manual/make.html#Guile-Interface
+[#Guile-Example]: https://www.gnu.org/software/make/manual/make.html#Guile-Example
+[#Loading-Objects]: https://www.gnu.org/software/make/manual/make.html#Loading-Objects
+[#load-Directive]: https://www.gnu.org/software/make/manual/make.html#load-Directive
+[#Remaking-Loaded-Objects]: https://www.gnu.org/software/make/manual/make.html#Remaking-Loaded-Objects
+[#Loaded-Object-API]: https://www.gnu.org/software/make/manual/make.html#Loaded-Object-API
+[#Loaded-Object-Example]: https://www.gnu.org/software/make/manual/make.html#Loaded-Object-Example
+[#Integrating-make]: https://www.gnu.org/software/make/manual/make.html#Integrating-make
+[#Job-Slots]: https://www.gnu.org/software/make/manual/make.html#Job-Slots
+[#POSIX-Jobserver]: https://www.gnu.org/software/make/manual/make.html#POSIX-Jobserver
+[#Windows-Jobserver]: https://www.gnu.org/software/make/manual/make.html#Windows-Jobserver
+[#Terminal-Output]: https://www.gnu.org/software/make/manual/make.html#Terminal-Output
+[#Features]: https://www.gnu.org/software/make/manual/make.html#Features
+[#Missing]: https://www.gnu.org/software/make/manual/make.html#Missing
+[#Makefile-Conventions]: https://www.gnu.org/software/make/manual/make.html#Makefile-Conventions
+[#Makefile-Basics]: https://www.gnu.org/software/make/manual/make.html#Makefile-Basics
+[#Utilities-in-Makefiles]: https://www.gnu.org/software/make/manual/make.html#Utilities-in-Makefiles
+[#Command-Variables]: https://www.gnu.org/software/make/manual/make.html#Command-Variables
+[#DESTDIR]: https://www.gnu.org/software/make/manual/make.html#DESTDIR
+[#Directory-Variables]: https://www.gnu.org/software/make/manual/make.html#Directory-Variables
+[#Standard-Targets]: https://www.gnu.org/software/make/manual/make.html#Standard-Targets
+[#Install-Command-Categories]: https://www.gnu.org/software/make/manual/make.html#Install-Command-Categories
+[#Quick-Reference]: https://www.gnu.org/software/make/manual/make.html#Quick-Reference
+[#Error-Messages]: https://www.gnu.org/software/make/manual/make.html#Error-Messages
+[#Complex-Makefile]: https://www.gnu.org/software/make/manual/make.html#Complex-Makefile
+[#GNU-Free-Documentation-License]: https://www.gnu.org/software/make/manual/make.html#GNU-Free-Documentation-License
+[#Concept-Index]: https://www.gnu.org/software/make/manual/make.html#Concept-Index
+[#Name-Index]: https://www.gnu.org/software/make/manual/make.html#Name-Index
 
