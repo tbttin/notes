@@ -17,7 +17,7 @@
 
   + Sharing.
 
-# Overview of make
+# Overview of `make`
 ## How to Read This Manual
 ## Problems and Bugs
 # An Introduction to Makefiles
@@ -26,7 +26,7 @@
 See ## Rule Syntax.
 
 ## A Simple Makefile
-## How make Processes a Makefile
+## How `make` Processes a Makefile
 
 - `make` would update *automatically generated* C programs, such as those made
   by Bison or Yacc, by their own rule.
@@ -368,7 +368,7 @@ See ## Rule Syntax.
   4. Expand elements of the line which appear in an immediate expansion context
      (see How make Reads a Makefile).
 
-  5. Scan the line for a separator character, such as ‘:’ or ‘=’, to determine
+  5. Scan the line for a separator character, such as `:` or `=`, to determine
      whether the line is a macro assignment or a rule (see Recipe Syntax).
 
   6. Internalize the resulting operation and read the next line.
@@ -416,7 +416,7 @@ See ## Rule Syntax.
   GNU `make` also has the ability to enable a second expansion of the
   *prerequisite*s (only) for some or all targets defined in the makefile.
 
-- An example of escaped variables and functions:
+- An example of escaped variables and escaped functions:
 
   ```makefile
   .SECONDEXPANSION:
@@ -532,8 +532,9 @@ See ## Rule Syntax.
           ...
   ```
 
-  Remember to put one *tab* character (or the value `.RECIPEPREFIX` variable)
-  at the beginning of every `recipe` line!
+  Remember to put one *tab* character (or the the *first* character in the
+  value of the `.RECIPEPREFIX` variable) at the beginning of every `recipe`
+  line!
 
 - A `target` is *out of date* when it does not exist or if it is older than any
   prerequisites.
@@ -660,7 +661,7 @@ See ## Rule Syntax.
         during directory search is used for any prerequisite lists which
         contain this target.
 
-        In short, if `make` doesn’t need to rebuild the target then you use the
+        In short, if `make` doesn't need to rebuild the target then you use the
         path found via directory search.
 
      2. If the target *does* need to be rebuilt (is out-of-date), the pathname
@@ -779,7 +780,7 @@ See ## Rule Syntax.
 - The *empty target* is a variant of the *phony target*.
 
 - The purpose of the empty target file is to record, with its last-modification
-  time, when the rule’s recipe was last executed.
+  time, when the rule's recipe was last executed.
 
   ```makefile
   print: foo.c bar.c
@@ -930,25 +931,239 @@ See ## Rule Syntax.
 
 ## Double-Colon Rules
 
+- When a target appears in multiple rules, all the rules must be the same type:
+  all ordinary, or all double-colon.
+
+  Each double-colon rule is processed individually, just as rules with
+  different targets are processed.
+
+- If there are no prerequisites for that rule, its recipe is always executed
+  (even if the target already exists).
+
+- The double-colon rules for a target are executed in the order they appear in
+  the makefile.
+
+- They provide a mechanism for cases in which the method used to update a
+  target differs depending on which prerequisite files caused the update, and
+  such cases are rare.
+
+- Each double-colon rule should specify a recipe; if it does not, an implicit
+  rule will be used if one applies.
+
 ## Generating Prerequisites Automatically
 
 # Writing Recipes in Rules
 
+- Recipes in makefiles are always interpreted by `/bin/sh` unless the makefile
+  specifies otherwise.
+
 ## Recipe Syntax
+
+- Makefiles have the unusual property that there are really two distinct
+  syntaxes in one file:
+
+  + Most of the makefile uses *`make` syntax*.
+
+  + However, recipes are meant to be interpreted by the shell and so they are
+    written using *shell syntax*.
+
+    `make` performs only a very few specific translations on the content of the
+    recipe before handing it to the shell.
+
+- A "*rule context*" that is, after a rule has been started until another rule
+  or variable definition.
+
+- Some consequences of these rules include:
+
+  +  A blank line that begins with a tab is *not* blank: it's an *empty recipe*
+     (see Empty Recipes).
+
+  +  A comment in a recipe is not a `make` comment; it will be passed to the
+     shell as-is. Whether the shell treats it as a comment or not depends on
+     your shell.
+
+  +  A variable definition in a "*rule context*" which is indented by a tab as
+     the first character on the line, will be considered part of a recipe, not
+     a `make` variable definition, and passed to the shell.
+
+  +  A conditional expression (`ifdef`, `ifeq`, etc. see Syntax of
+     Conditionals) in a "*rule context*" which is indented by a tab as the
+     first character on the line, will be considered part of a recipe and be
+     passed to the shell.
 
 ### Splitting Recipe Lines
 
+- Both the backslash and the newline characters are *preserved* and passed to
+  the shell.
+
+- Sometimes you want to split a long line inside of single quotes, but you
+  don't want the backslash/newline to appear in the quoted content.
+
+  You use `make` variables:
+
+  ```makefile
+  HELLO = 'hello \
+           world'
+
+  all : ; @echo $(HELLO)
+  ```
+
 ### Using Variables in Recipes
+
+- The expansion occurs after make has finished reading all the makefiles and
+  the target is determined to be out of date.
+
+  So, the recipes for targets which are not rebuilt are never expanded.
+
+- Whether the variable you want to reference is a `make` variable (use a single
+  dollar sign) or a shell variable (use two dollar signs). For example:
+
+  ```makefile
+  LIST = one two three
+  all:
+          for i in $(LIST); do \
+              echo $$i; \
+          done
+  ```
 
 ## Recipe Echoing
 
+- Normally `make` prints each line of the recipe before it is executed.
+
+- When a line starts with `@`, the echoing of that line is suppressed.
+
+- The `-s` or `--silent` flag to make prevents all echoing, as if all recipes
+  started with `@`.
+
+  A rule in the makefile for the special target `.SILENT` without prerequisites
+  has the same effect.
+
 ## Recipe Execution
+
+- When it is time to execute recipes to *update a target*, they are executed by
+  invoking a new sub-shell for  *each*  line of the recipe, unless the
+  `.ONESHELL` special target is in effect (In practice, `make` may take
+  shortcuts that do not affect the results).
+
+- We can use shell AND operator (`&&`):
+
+  ```makefile
+  foo : bar/lose
+          cd $(<D) && gobble $(<F) > ../$@
+  ```
 
 ### Using One Shell
 
+- There are generally two situations where this is useful:
+
+  + First, it can improve performance in makefiles where recipes consist of
+    many command lines, by avoiding extra processes.
+
+  + Second, you might want newlines to be included in your recipe command (for
+    example perhaps you are using a very different interpreter as your SHELL).
+
+-  If the `.ONESHELL` special target appears anywhere in the makefile then
+   *all* recipe lines for *each* target will be provided to a single invocation
+   of the shell.
+
+   Newlines between recipe lines will be preserved.
+
+   For example:
+
+   ```makefile
+   .ONESHELL:
+   foo : bar/lose
+           cd $(@D)
+           gobble $(@F) > ../$@
+   ```
+
+- If `.ONESHELL` is provided, then *only* the first line of the recipe will be
+  checked for the special prefix characters (`@`, `-`, and `+`).
+
+- If you want your recipe to start with one of these special characters you'll
+  need to arrange for them to not be the first characters on the first line,
+  perhaps by adding a comment or similar.
+
+  ```makefile
+  .ONESHELL:
+  SHELL = /usr/bin/perl
+  .SHELLFLAGS = -e
+  show :
+          # Make sure "@" is not the first character
+          # on the first line
+          @f = qw(a b c);
+          print "@f\n";
+  ```
+
+- As a special feature, if SHELL is determined to be a *POSIX-style shell*, the
+  special prefix characters in "internal" recipe lines will be *removed* before
+  the recipe is processed.
+
+  This feature is intended to allow existing makefiles to add the `.ONESHELL`
+  special target and still run properly without extensive modifications.
+
+  ```makefile
+  .ONESHELL:
+  foo : bar/lose
+          @cd $(@D)
+          @gobble $(@F) > ../$@
+  ```
+
+- Even with this special feature, however, makefiles with `.ONESHELL` will behave
+  differently in ways that could be noticeable.
+
+- For example, normally if any line in the recipe fails, that causes the rule
+  to fail and no more recipe lines are processed.
+
+  Under `.ONESHELL` a failure of any but the final recipe line will not be
+  noticed by make.
+
+  You can modify `.SHELLFLAGS` to add the `-e` option to the shell which will
+  cause any failure anywhere in the command line to cause the shell to fail,
+  but this could itself cause your recipe to behave differently.
+
+- Ultimately you may need to *harden* your recipe lines to allow them to work
+  with `.ONESHELL`.
+
 ### Choosing the Shell
 
+- The program used as the shell is taken from the variable `SHELL`.
+
+  If this variable is not set in your makefile, the program `/bin/sh` is used as
+  the shell.
+
+- The argument(s) passed to the shell are taken from the variable `.SHELLFLAGS`.
+
+  The default value of `.SHELLFLAGS` is `-c` normally, or `-ec` in
+  POSIX-conforming mode.
+
+- Choosing a Shell in DOS and Windows.
+
 ## Parallel Execution
+
+- If the `-j` option is followed by an integer, this is the number of recipes
+  to execute at once; this is called the number of *job slots*.
+
+  If there is nothing looking like an integer after the `-j` option, there is
+  no limit on the number of job slots.
+
+  The default number of job slots is one, which means serial execution (one
+  thing at a time).
+
+- You can inhibit parallelism in a particular makefile with the `.NOTPARALLEL`
+  pseudo-target.
+
+- On MS-DOS, the `-j` option has no effect, since that system doesn't support
+  multi-processing.
+
+- Handling recursive make invocations raises issues for parallel execution.
+
+- When make goes to start up a job, and it already has at least one job
+  running, it checks the current *load average*; if it is not lower than the
+  limit given with `-l` or `--max-load`, make waits until the load average goes
+  below that limit, or until all the other jobs finish.
+
+  By default, there is no load limit.
 
 ### Output During Parallel Execution
 
@@ -956,11 +1171,11 @@ See ## Rule Syntax.
 
 ## Errors in Recipes
 
-## Interrupting or Killing make
+## Interrupting or Killing `make`
 
-## Recursive Use of make
+## Recursive Use of `make`
 
-### How the MAKE Variable Works
+### How the `MAKE` Variable Works
 
 ### Communicating Variables to a Sub-make
 
@@ -1026,23 +1241,23 @@ See ## Rule Syntax.
 
 ## The foreach Function
 
-## The file Function
+## The `file` Function
 
-## The call Function
+## The `call` Function
 
-## The value Function
+## The `value` Function
 
-## The eval Function
+## The `eval` Function
 
-## The origin Function
+## The `origin` Function
 
-## The flavor Function
+## The `flavor` Function
 
 ## Functions That Control Make
 
-## The shell Function
+## The `shell` Function
 
-## The guile Function
+## The `guile` Function
 
 # How to Run make
 
@@ -1090,7 +1305,7 @@ See ## Rule Syntax.
 
 ## Implicit Rule Search Algorithm
 
-# Using make to Update Archive Files
+# Using `make` to Update Archive Files
 
 ## Archive Members as Targets
 
@@ -1102,15 +1317,15 @@ See ## Rule Syntax.
 
 ## Suffix Rules for Archive Files
 
-# Extending GNU make
+# Extending GNU `make`
 
 ## GNU Guile Integration
 
 ### Conversion of Guile Types
 
-### Interfaces from Guile to make
+### Interfaces from Guile to `make`
 
-### Example Using Guile in make
+### Example Using Guile in `make`
 
 ## Loading Dynamic Objects
 
@@ -1122,9 +1337,9 @@ See ## Rule Syntax.
 
 ### Example Loaded Object
 
-# Integrating GNU make
+# Integrating GNU `make`
 
-## Sharing Job Slots with GNU make
+## Sharing Job Slots with GNU `make`
 
 ### POSIX Jobserver Interaction
 
@@ -1132,7 +1347,7 @@ See ## Rule Syntax.
 
 ## Synchronized Terminal Output
 
-# Features of GNU make
+# Features of GNU `make`
 
 # Incompatibilities and Missing Features
 
