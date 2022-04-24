@@ -27,7 +27,7 @@
   + Clean up leftover work files and directories after a successful build.
 
 - Generate/update checksums:
-  
+
   ```bash
   makepkg --geninteg >> PKGBUILD
   ```

@@ -109,7 +109,7 @@ There are two kinds of headings: Setext (`=` and `-`) and ATX (`#`).
 
       End with a row of tildes that must be at least as long as the starting
       row.
-    
+
       If the code itself contains a row of tildes or backticks, just use a
       longer tildes or backticks at the start and end.
 
