@@ -286,6 +286,7 @@ See [Rule Syntax].
           frobnicate > foo
 
   %: force
+          @echo 'Running $@'
           @$(MAKE) -f Makefile $@
   force: ;
   ```
@@ -297,6 +298,8 @@ See [Rule Syntax].
 
   $ make bar
   ```
+
+  Why "Running GNUmakefile" is echoed?
 
 - The rule specifies a prerequisite `force`, to guarantee that the
   recipe will be run even if the target file already exists.
@@ -1111,22 +1114,22 @@ See [Rule Syntax].
 
 - Some consequences of these rules include:
 
-  +  A blank line that begins with a tab is *not* blank: it's an *empty
-     recipe* (see [Using Empty Recipes]).
+  + A blank line that begins with a tab is *not* blank: it is an
+    *empty recipe* (see [Using Empty Recipes]).
 
-  +  A comment in a recipe is not a `make` comment; it will be passed to
-     the shell as-is. Whether the shell treats it as a comment or not
-     depends on your shell.
+  + A comment in a recipe is not a `make` comment; it will be passed to
+    the shell as-is. Whether the shell treats it as a comment or not
+    depends on your shell.
 
-  +  A variable definition in a "*rule context*" which is indented by a
-     tab as the first character on the line, will be considered part of
-     a recipe, not a `make` variable definition, and passed to the
-     shell.
+  + A variable definition in a "*rule context*" which is indented by a
+    tab as the first character on the line, will be considered part of
+    a recipe, not a `make` variable definition, and passed to the
+    shell.
 
-  +  A conditional expression (`ifdef`, `ifeq`, etc. see [Syntax of
-     Conditionals]) in a "*rule context*" which is indented by a tab as
-     the first character on the line, will be considered part of a
-     recipe and be passed to the shell.
+  + A conditional expression (`ifdef`, `ifeq`, etc. see [Syntax of
+    Conditionals]) in a "*rule context*" which is indented by a tab as
+    the first character on the line, will be considered part of a
+    recipe and be passed to the shell.
 
 [#Recipe-Syntax]
 
@@ -1282,8 +1285,8 @@ See [Rule Syntax].
 
 - The program used as the shell is taken from the variable `SHELL`.
 
-  If this variable is not set in your makefile, the program `/bin/sh` is
-  used as the shell.
+  If this variable is not set *in your makefile*, the program `/bin/sh`
+  is used as the shell.
 
 - The argument(s) passed to the shell are taken from the variable
   `.SHELLFLAGS`.
@@ -1292,7 +1295,10 @@ See [Rule Syntax].
   POSIX-conforming mode.
 
 - Unlike most variables, the variable `SHELL` is *never* set from the
-  environment.
+  *environment*.
+
+- Furthermore, when you do set `SHELL` in your makefile that value is
+  *not* exported in the environment to recipe lines that `make` invokes?
 
 - Choosing a Shell in DOS and Windows.
 
@@ -1451,7 +1457,7 @@ ubsystem:
 
 - As a special feature, whenever a recipe line of a rule contains the
   variable `MAKE`, the flags `-t` (`--touch`), `-n` (`--just-print`), or
-  `-q` (`--question`) do not apply to that line.
+  `-q` (`--question`) do *not* apply to that line.
 
   Same effect as using a `+` character at the beginning of the recipe
   line.
@@ -1469,18 +1475,112 @@ ubsystem:
 
 ### Communicating Variables to a Sub-`make`
 
-- Environment (`export`ed) variables are defined in the sub-`make` as
-  defaults, but they do not override variables defined in the makefile
-  used by the sub-`make` unless you use the `-e` switch (see [Summary of
-  Options]).
+- Environment variables are defined in the sub-`make` as defaults, but
+  they do not override variables defined in the makefile used by the
+  sub-`make` unless you use the `-e` switch.
 
 - Except by explicit request, `make` exports a variable only if it is
   either defined in the environment *initially* or set on the command
-  line.
+  line, and if its name consists only of letters, numbers, and
+  underscores.
+
+- The value of the `make` variable `SHELL` is not exported. Instead, the
+  value of the `SHELL` variable from the invoking environment is passed
+  to the sub-`make`.
+
+- The special variable `MAKEFLAGS` is always exported (unless you
+  `unexport` it). `MAKEFILES` is exported if you set it to anything.
+
+- `make` automatically passes down variable values that were defined on
+  the command line, by putting them in the `MAKEFLAGS` variable. See
+  [Communicating Options to a Sub-`make`].
+
+- Variables are *not* normally passed down if they were created by
+  default by `make` (see [Variables Used by Implicit Rules]). The
+  sub-`make` will define these for itself.
+
+- `export` and `unexport` example:
+
+  ```makefile
+  export variable ...
+  unexport variable ...
+  ```
+
+  In both of these forms, the arguments to `export` and `unexport` are
+  expanded, and so could be variables or functions which expand to a
+  (list of) variable names to be (un)exported.
+
+- Only `export` directive tells `make` that variables which are not
+  explicitly mentioned in an `export` or `unexport` directive should be
+  exported.
+
+  Variables whose names contain characters other than alphanumerics and
+  underscores will not be exported unless specifically mentioned in an
+  `export` directive.
+
+- Compatibility with older version GNU `make`: write a rule for special
+  target `.EXPORT_ALL_VARIABLES` instead of `export`.
+
+- The main use of `MAKELEVEL` is to test it in a conditional directive
+  (see [Conditional Parts of Makefiles]); this way you can write a
+  makefile that behaves one way if run recursively and another way if
+  run directly by you.
+
+  The value of `MAKELEVEL` is '`0`' for the top-level `make`; '`1`' for
+  a sub-`make`, '`2`' for a sub-sub-`make`, and so on.
+
+- Passing variables on the command line overrides assignments in the
+  sub-makefile but exported variables do not override assignments in the
+  sub-makefile. These two methods for passing variables to a
+  sub-makefile are not equivalent and should not be confused.
+  [Jonathan's
+  comment](https://stackoverflow.com/questions/2826029/passing-additional-variables-from-command-line-to-make/2826178#comment51986622_2826178)
+
+- `make` command line variable override environment variables and
+  variables within makefile (unless `override` directive).
+
+  Command line variables are environment variables.
 
 [#Variables_002fRecursion]
 
 ### Communicating Options to a Sub-`make`
+
+- Flags such as '`-s`' and '`-k`' are passed automatically to the
+  sub-`make` through the variable `MAKEFLAGS`.
+
+  This variable is set up automatically by `make` to contain the flag
+  letters that `make` received. Thus, if you do '`make -ks`' then
+  `MAKEFLAGS` gets the value '`ks`'.
+
+- Words in the value of `MAKEFLAGS` that contain '`=`', `make` treats as
+  variable definitions just as if they appeared on the command line. See
+  [Overriding Variables].
+
+- The options '`-C`{.sample}', '`-f`{.sample}', '`-o`{.sample}', and
+  '`-W`{.sample}' are not put into `MAKEFLAGS`; these options are not
+  passed down.
+
+- If you do not want to pass the other flags down, you must change the
+  value of `MAKEFLAGS`, like this:
+
+  ```makefile
+  subsystem:
+          cd subdir && $(MAKE) MAKEFLAGS=
+  ```
+
+- The command line variable *definitions* really appear in the variable
+  `MAKEOVERRIDES`, and `MAKEFLAGS` contains a *reference* to this
+  variable.
+
+  If you do want to pass flags down normally, but don't want to pass
+  down the command line variable definitions, you can reset
+  `MAKEOVERRIDES` to empty, like this:
+
+  ```makefile
+  MAKEOVERRIDES =
+  ```
+
+- Correct way to use `MAKEFILES`, `MFLAGS`, and `GNUMAKEFILES`.
 
 [#Options_002fRecursion]
 
@@ -1490,9 +1590,57 @@ ubsystem:
 
 ## Defining Canned Recipes
 
+- In recipe execution, each line of a canned sequence is treated just as
+  if the line appeared on its own in the rule, preceded by a tab.
+
+- You can use the special prefix characters that affect command lines
+  ('`@`', '`-`', and '`+`') on each line of a canned sequence. See
+  [Writing Recipes in Rules].
+
+  For example, using this canned sequence:
+
+  ```makefile
+  define frobnicate =
+  @echo "frobnicating target $@"
+  frob-step-1 $< -o $@-step-1
+  frob-step-2 $@-step-1 -o $@
+  endef
+  ```
+- On the other hand, prefix characters on the recipe line that refers to a
+  canned sequence apply to every line in the sequence:
+
+  ```makefile
+  frob.out: frob.in
+          @$(frobnicate)
+  ```
+
 [#Canned-Recipes]
 
 ## Using Empty Recipes
+
+- Example:
+
+  ```makefile
+  target: ;
+  ```
+
+- One reason this is useful is to prevent a target from getting implicit
+  recipes (from implicit rules or the `.DEFAULT` special target; see
+  [Implicit Rules] and see [Defining Last-Resort Default Rules]).
+
+- Empty recipes can also be used to avoid errors for targets that will
+  be created as a side-effect of another recipe: if the target does not
+  exist the empty recipe ensures that `make` won't complain that it
+  doesn't know how to build the target, and `make` will assume the
+  target is out of date.
+
+- You may be inclined to define empty recipes for targets that are not
+  actual files, but only exist so that their prerequisites can be
+  remade.
+
+  However, this is not the best way to do that, because the
+  prerequisites may not be remade properly if the *target* file actually
+  does exist.
 
 [#Empty-Recipes]
 
