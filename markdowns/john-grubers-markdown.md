@@ -27,7 +27,8 @@
 
 - Blockquote's > determiners need to be indented.
 
-- Code block inside list item needs to be indented twice (8 spaces or 2 tabs).
+- Code block inside list item needs to be indented twice (8 spaces or 2
+  tabs).
 
 # Code blocks
 
@@ -43,18 +44,19 @@
 
   + Example:
 
-    This is `[an example] [id]` reference-style link.
-    `[id]: http://example.com/  "Optional Title Here"`
+    This is `[an example] [id]` reference-style link. `[id]:
+    http://example.com/  "Optional Title Here"`
 
   + Link definition names may consist of letters, numbers, spaces and
     punctuation - but they are _not_ case sensitive.
 
   + Implicit link name.
 
-    Visit `[Daring Fireball][]` for more information.
-    `[Daring Fireball]: http://daringfireball.net/`
+    Visit `[Daring Fireball][]` for more information. `[Daring
+    Fireball]: http://daringfireball.net/`
 
-- _Link titles_ can be enclosed in double quotes, single quotes or parentheses.
+- _Link titles_ can be enclosed in double quotes, single quotes or
+  parentheses.
 
 - The link URL may, optionaly, be surround by **angle brackets**:
 
