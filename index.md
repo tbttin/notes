@@ -10,7 +10,7 @@
 
 - [GNU `make` manual](makes/gnu-make-manual.md)
 
-# Arch Linux package management
+# Package management on Arch Linux
 
 - [makepkg](arch-package-managament/makepkg.md)
 
@@ -20,7 +20,21 @@
 
 # Vims
 
-- [tips and tricks](vims/favourite-tips-n-tricks.md)
+- [Vim tips and tricks](vims/favourite-tips-n-tricks.md)
+
+# `groff`
+
+- What is groff?
+
+- Markdown to pdf which one is better? groff or latex?
+
+# Git
+
+- List tracked files in a dotfiles:
+
+ ```bash
+ config ls-tree --full-tree --name-only -r HEAD
+ ```
 
 # Note taking
 
