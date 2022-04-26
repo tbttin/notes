@@ -14,3 +14,6 @@
     ````
     Look back and look forward is another way.
 
+- `c_CTRL-r_CTRL-w`: insert/complete the word under the cursor. Se also:
+  `/_CTRL-l`
+
