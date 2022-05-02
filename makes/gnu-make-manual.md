@@ -1646,6 +1646,31 @@ ubsystem:
 
 # How to Use Variables
 
+- Variables and functions in all parts of a makefile are expanded when
+  read, *except* for:
+
+  + In recipes,
+
+  + The right-hand sides of variable definitions using '`=`', and
+
+  + The bodies of variable definitions using the `define` directive.
+
+- A variable name may be any sequence of characters not containing
+  '`:`', '`#`', '`=`', or whitespace.
+
+  However, variable names containing characters other than letters,
+  numbers, and underscores should be considered carefully, as in some
+  shells they cannot be passed through the environment to a sub-`make`.
+
+- Variable names are case-sensitive.
+
+- It is traditional to use upper case letters in variable names, but we
+  recommend using lower case letters for variable names that serve
+  internal purposes in the makefile, and reserving upper case for
+  parameters that control implicit rules or for parameters that the user
+  should override with command options (see [Overriding
+  Variables]).
+
 [#Using-Variables]
 
 ## Basics of Variable References
@@ -1653,6 +1678,79 @@ ubsystem:
 [#Reference]
 
 ## The Two Flavors of Variables
+
+The two flavors are distinguished in how they are defined and in what
+they do when expanded.
+
+### Recursively Expanded Variables
+
+Variables of this sort are defined by lines using '`=`' (see [Setting
+Variables]) or by the `define` directive (see [Defining Multi-Line
+Variables]).
+
+The value you specify is installed *verbatim*; if it contains
+*references* to other variables, these references are expanded whenever
+this variable is substituted (in the course of expanding some other
+string).
+
+- Advantage:
+
+  ```makefile
+  CFLAGS = $(include_dirs) -O
+  include_dirs = -Ifoo -Ibar
+  ```
+
+  will do what was intended: when '`CFLAGS`' is expanded in a recipe, it
+  will expand to '`-Ifoo -Ibar -O`'.
+
+- Disadvantages:
+
+  + A major disadvantage is that you cannot append something on the end
+    of a variable, as in
+
+    ```makefile
+    CFLAGS = $(CFLAGS) -O
+    ```
+
+    because it will cause an infinite loop in the variable expansion.
+    (Actually `make` detects the infinite loop and reports an error.)
+
+  + Another disadvantage is that any functions (see [Functions for
+    Transforming Text]) referenced in the definition will be executed
+    *every* time the variable is expanded.
+
+    This makes `make` run slower; worse, it causes the `wildcard` and
+    `shell` functions to give unpredictable results because you cannot
+    easily control when they are called, or even *how many times*.
+
+### Simply Expanded Variables
+
+- *Simply expanded variables* are defined by lines using '`:=`' or
+  '`::=`' (see [Setting Variables]).
+
+  Both forms are equivalent in GNU `make`; however only the '`::=`' form
+  is described by the POSIX standard (support for '`::=`' was added to
+  the POSIX standard in 2012, so older versions of `make` won't accept
+  this form either).
+
+- The value of a simply expanded variable is scanned once and for all,
+  expanding any references to other variables and functions, when the
+  variable is defined.
+
+- The actual value of the simply expanded variable is the result of
+  expanding the text that you write. It does not contain any references
+  to other variables; it contains their values *as of the time this
+  variable was defined*.
+
+- You can include leading spaces in a variable value by protecting them
+  with variable references, like this:
+
+  ```makefile
+  nullstring :=
+  space := $(nullstring) # end of the line
+  ```
+
+  The comment '`# end of the line`' is included here just for clarity.
 
 [#Flavors]
 
@@ -1662,49 +1760,508 @@ ubsystem:
 
 ### Substitution References
 
+- It has the form '`$(var:a=b)`' (or '`$`') and its meaning is to take
+  the value of the variable `var`, replace every `a` *at the end* of a
+  word with `b` in that value, and substitute the resulting string.
+
+  ```makefile
+  foo := a.o b.o l.a c.o
+  bar := $(foo:.o=.c)
+  ```
+
+  A substitution reference is shorthand for the `patsubst` expansion
+  function (see [Functions for String Substitution and Analysis]):
+  '`$(var:a=b)`' is equivalent to '`$(patsubst %a,%b,var)`'.
+
+- Another type of substitution reference lets you use the full power of
+  the `patsubst` function.
+
+  ```makefile
+  foo := a.o b.o l.a c.o
+  bar := $(foo:%.o=%.c)
+  ```
+
 [#Substitution-Refs]
 
 ### Computed Variable Names
+
+- Variables may be *referenced* inside the *name* of a variable. This is
+  called a *computed variable name* or a *nested variable reference*.
+  For example,
+
+  ```makefile
+  x = y
+  y = z
+  a := $($(x))
+  ```
+
+  defines `a` as '`z`': the '`$(x)`' inside '`$($(x))`' expands to
+  '`y`', so '`$($(x))`' expands to '`$(y)`' which in turn expands to
+  '`z`'.
+
+  Here the name of the variable to reference is not stated explicitly; it
+  is *computed* by expansion of '`$(x)`'.
+
+- The previous example shows two levels of nesting, but any number of
+  levels is possible. For example, here are three levels:
+
+  ```makefile
+  x = y
+  y = z
+  z = u
+  a := $($($(x)))
+  ```
+
+- References to recursively-expanded variables within a variable name
+  are re-expanded in the usual fashion. For example:
+
+  ```makefile
+  x = $(y)
+  y = z
+  z = Hello
+  a := $($(x))
+  ```
+
+  defines `a` as '`Hello`': '`$($(x))`' **becomes** '`$($(y))`' which
+  becomes '`$(z)`' which becomes '`Hello`'.
+
+- Nested variable references can also contain modified references and
+  function invocations, just like any other reference.
+
+  ```makefile
+  x = variable1
+  variable2 := Hello
+  y = $(subst 1,2,$(x))
+  z = y
+  a := $($($(z)))
+  ```
+
+  eventually defines `a` as '`Hello`': '`$($($(z)))`' expands to
+  '`$($(y))`' which becomes '`$($(subst 1,2,$(x)))`'. This gets the
+  value '`variable1`' from `x` and changes it by substitution to
+  '`variable2`', so that the entire string becomes '`$(variable2)`', a
+  simple variable reference whose value is '`Hello`'.
+
+- The only *restriction* on this sort of use of nested variable
+  references is that they cannot specify part of the name of a function
+  to be called.
+
+  This is because the test for a recognized function name is done
+  *before* the expansion of nested references. For example,
+
+  ```makefile
+  ifdef do_sort
+  func := sort
+  else
+  func := strip
+  endif
+
+  bar := a d b g q c
+
+  foo := $($(func) $(bar))
+  ```
+
+  attempts to give '`foo`' the value of the variable '`sort a d b g q
+  c`' or '`strip a d b g q c`', rather than giving '`a d b g q c`' as
+  the argument to either the `sort` or the `strip` function.
+
+  This restriction could be removed in the future if that change is
+  shown to be a good idea.
+
+- You can also use computed variable names in the *left-hand side* of a
+  variable assignment, or in a `define` directive, as in:
+
+  ```makefile
+  dir = foo
+  $(dir)_sources := $(wildcard $(dir)/*.c)
+  define $(dir)_print =
+  lpr $($(dir)_sources)
+  endef
+  ```
 
 [#Computed-Names]
 
 ## How Variables Get Their Values
 
+Variables can get values in several different ways:
+
+- You can specify an overriding value when you run `make`. See
+  [Overriding Variables].
+
+- You can specify a value in the makefile, either with an assignment
+  (see [Setting Variables]) or with a verbatim definition (see [Defining
+  Multi-Line Variables]).
+
+- Variables in the environment become `make` variables. See [Variables
+  from the Environment].
+
+- Several *automatic* variables are given new values for each rule. Each
+  of these has a single conventional use. See [Automatic Variables].
+
+- Several variables have constant initial values. See [Variables Used by
+  Implicit Rules].
+
 [#Values]
 
 ## Setting Variables
+
+- There is no limit on the length of the value of a variable except the
+  amount of memory on the computer.
+
+- If you'd like a variable to be set to a value *only* if it's not
+  already set, then you can use the shorthand operator '`?=`' instead of
+  '`=`'.
+
+  These two settings of the variable '`FOO`' are identical:
+
+  ```makefile
+  FOO ?= bar
+  ```
+
+  and
+
+  ```makefile
+  ifeq ($(origin FOO), undefined)
+  FOO = bar
+  endif
+  ```
+
+- The *shell assignment operator* '`!=`' can be used to execute a shell
+  script and set a variable to its output.
+
+  This operator first evaluates the right-hand side, then passes that
+  result to the shell for execution.
+
+  If the result of the execution ends in a newline, that one newline is
+  removed; all other newlines are replaced by spaces.
+
+  The resulting string is then placed into the named
+  *recursively-expanded variable*. For example:
+
+  ```makefile
+  hash != printf '\043'
+  file_list != find . -name '*.c'
+  ```
+
+- If the result of the execution could produce a `$`, and you don't
+  intend what follows that to be interpreted as a make variable or
+  function reference, then you must replace every `$` with `$$` as part
+  of the execution.
+
+  Alternatively, you can set a simply expanded variable to the result of
+  running a program using the `shell` function call. For example:
+
+  ```makefile
+  hash := $(shell printf '\043')
+  var := $(shell find . -name "*.c")
+  ```
+
+  As with the `shell` function, the exit status of the just-invoked shell
+  script is stored in the `.SHELLSTATUS` variable.
 
 [#Setting]
 
 ## Appending More Text to Variables
 
+- When the variable in question has not been defined before, '`+=`' acts
+  just like normal '`=`': it defines a recursively-expanded variable.
+
+  However, when there *is* a previous definition, exactly what '`+=`'
+  does depends on what flavor of variable you defined originally.
+
+  In fact,
+
+  ```makefile
+  variable := value
+  variable += more
+  ```
+
+  is exactly equivalent to:
+
+  ```makefile
+  variable := value
+  variable := $(variable) more
+  ```
+
+  And
+
+  ```makefile
+  variable = value
+  variable += more
+  ```
+
+  is roughly equivalent to:
+
+  ```makefile
+  temp = value
+  variable = $(temp) more
+  ```
+
 [#Appending]
 
 ## The `override` Directive
+
+- If a variable has been set with a command argument (see [Overriding
+  Variables]), then ordinary assignments in the makefile are *ignored*.
+
+  If you want to set the variable in the makefile even though it
+  was set with a command argument, you can use an `override` directive,
+  which is a line that looks like this:
+
+  ```makefile
+  override variable = value
+  ```
+
+  or
+
+  ```makefile
+  override variable := value
+  ```
+
+  To append more text to a variable defined on the command line, use:
+
+  ```makefile
+  override variable += more text
+  ```
+
+- Variable assignments marked with the `override` flag have a higher
+  priority than all other assignments, *except* another `override`.
+
+  *Subsequent* assignments or appends to this variable which are not
+  marked `override` will be *ignored*.
+
+- The `override` directive was not invented for escalation in the war
+  between makefiles and command arguments.
+
+  It was invented so you can *alter* and *add* to values that the user
+  specifies with command arguments.
+
+- You can also use `override` *directive*s with `define` directives.
+  This is done as you might expect:
+
+  ```makefile
+  override define foo =
+  bar
+  endef
+  ```
 
 [#Override-Directive]
 
 ## Defining Multi-Line Variables
 
+- This directive has an unusual syntax which allows newline characters
+  to be included in the value, which is convenient for defining both
+  canned sequences of commands (see [Defining Canned Recipes]), and also
+  sections of makefile syntax to use with `eval`.
+
+- The `define` directive works just like any other variable definition.
+
+  The variable name may contain *function* and *variable references*,
+  which are expanded when the directive is read to find the actual
+  variable name to use.
+
+- The final newline before the `endef` is not included in the value; in
+  order to define a variable that contains a newline character you must
+  use *two* empty lines, not one:
+
+  ```makefile
+  define newline
+
+
+  endef
+  ```
+- You may omit the variable assignment operator if you prefer.
+
+  If omitted, `make` assumes it to be '`=`' and creates a
+  recursively-expanded variable (see [The Two Flavors of Variables]).
+
+- You may nest `define` directives: `make` will keep track of nested
+  directives and report an error if they are not all properly closed
+  with `endef`.
+
+  Note that lines beginning with the recipe prefix character are
+  considered part of a recipe, so any `define` or `endef` strings
+  appearing on such a line will not be considered `make` directives.
+
+  ```makefile
+  define two-lines
+  echo foo
+  echo $(bar)
+  endef
+  ```
+
+  When used in a recipe, the previous example is functionally equivalent
+  to this:
+
+  ```makefile
+  two-lines = echo foo; echo $(bar)
+  ```
+
+  since two commands separated by semicolon behave much like two
+  separate shell commands.
+
 [#Multi_002dLine]
 
 ## Undefining Variables
+
+- If you want to clear a variable, setting its value to empty is usually
+  sufficient.
+
+  Expanding such a variable will yield the same result (empty string)
+  regardless of whether it was set or not.
+
+  However, if you are using the `flavor` (see [Flavor Function]) and
+  `origin` (see [Origin Function]) functions, there is a difference
+  between a variable that was never set and a variable with an empty
+  value.
+
+  In such situations you may want to use the `undefine` directive to
+  make a variable appear as if it was never set. For example:
+
+  ```makefile
+  foo := foo
+  bar = bar
+
+  undefine foo
+  undefine bar
+
+  $(info $(origin foo))
+  $(info $(flavor bar))
+  ```
+
+  This example will print "undefined" for both variables.
+
+- If you want to undefine a command-line variable definition, you can
+  use the `override` directive together with `undefine`, similar to how
+  this is done for variable definitions:
+
+  ```makefile
+  override undefine CFLAGS
+  ```
 
 [#Undefine-Directive]
 
 ## Variables from the Environment
 
+- Every environment variable that `make` sees when it starts up is
+  transformed into a `make` variable with the same name and value.
+
+  However, an explicit assignment in the makefile, or with a command
+  argument, overrides the environment. (If the '`-e`' flag is specified,
+  then values from the environment override assignments in the makefile.
+  But this is not recommended practice.)
+
+- When `make` runs a recipe, variables defined in the makefile are
+  placed into the environment of each shell. This allows you to pass
+  values to sub-`make` invocations (see [Recursive Use of `make`]).
+
+  By default, only variables that came from the environment or the
+  command line are passed to recursive invocations. You can use the
+  `export` directive to pass other variables. See [Communicating
+  Variables to a Sub-`make`], for full details.
+
 [#Environment]
 
 ## Target-specific Variable Values
+
+- This feature allows you to define different values for the same
+  variable, based on the target that `make` is currently building.
+
+  As with automatic variables, these values are only available within
+  the context of a target's recipe (and in other target-specific
+  assignments).
+
+  Set a target-specific variable value like this:
+
+  ```makefile
+  target … : variable-assignment
+  ```
+
+- Multiple `target` values create a target-specific variable value for
+  each member of the target list individually.
+
+- All variables that appear within the `variable-assignment` are
+  evaluated within the context of the target: thus, any
+  previously-defined target-specific variable values will be in effect.
+
+  Note that this variable is actually distinct from any "global" value:
+  the two variables do not have to have the same *flavor* (recursive vs.
+  simple).
+
+- There is one more special feature of target-specific variables: when
+  you define a target-specific variable that variable value is also in
+  effect for all prerequisites of this target, and all their
+  prerequisites, etc. (unless those prerequisites override that variable
+  with their own target-specific variable value).
+
+- Be aware that a given prerequisite will only be built once per
+  invocation of make, at most.
+
+  If the same file is a prerequisite of multiple targets, and each of
+  those targets has a different value for the same target-specific
+  variable, then the first target to be built will cause that
+  prerequisite to be built and the prerequisite will inherit the
+  target-specific value from the first target.
 
 [#Target_002dspecific]
 
 ## Pattern-specific Variable Values
 
+- If a target matches more than one pattern, the matching
+  pattern-specific variables with longer *stems* are interpreted first.
+
+  This results in more specific variables taking precedence over the
+  more generic ones, for example:
+
+  ```makefile
+  %.o: %.c
+          $(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
+
+  lib/%.o: CFLAGS := -fPIC -g
+  %.o: CFLAGS := -g
+
+  all: foo.o lib/bar.o
+  ```
+
+- In this example the first definition of the `CFLAGS` variable will be
+  used to update `lib/bar.o` even though the second one also applies to
+  this target.
+
+  Pattern-specific variables which result in the same stem length are
+  considered in the order in which they were defined in the makefile.
+
+- Pattern-specific variables are searched after any target-specific
+  variables defined explicitly for that target, and before
+  target-specific variables defined for the parent target.
+
 [#Pattern_002dspecific]
 
 ## Suppressing Inheritance
+
+- Sometimes, however, you may not want a variable to be inherited. For
+  these situations, `make` provides the `private` modifier.
+
+  Although this modifier can be used with any variable assignment, it
+  makes the most sense with target- and pattern-specific variables.
+
+- Any variable marked `private` will be visible to its local target but
+  will not be inherited by prerequisites of that target.
+
+  A global variable marked `private` will be visible in the global scope
+  but will not be inherited by any target, and hence will not be visible
+  in any recipe.
+
+- As an example, consider this makefile:
+
+  ```makefile
+  EXTRA_CFLAGS =
+
+  prog: private EXTRA_CFLAGS = -L/usr/local/lib
+  prog: a.o b.o
+  ```
+
+  Due to the `private` modifier, `a.o` and `b.o` will not inherit the
+  `EXTRA_CFLAGS` variable assignment from the `prog` target.
 
 [#Suppressing-Inheritance]
 
@@ -1718,13 +2275,114 @@ ubsystem:
 
 ## Example of a Conditional
 
+- As this example illustrates, conditionals work at the textual level:
+  the lines of the conditional are treated as part of the makefile, or
+  ignored, according to the condition.
+
+- This is why the larger syntactic units of the makefile, such as rules,
+  may cross the beginning or the end of the conditional.
+
 [#Conditional-Example]
 
 ## Syntax of Conditionals
 
+- There are four different directives that test different conditions.
+  Here is a table of them:
+
+  ```makefile
+  ifeq (arg1, arg2)
+  ifeq 'arg1' 'arg2'
+  ifeq "arg1" "arg2"
+  ifeq "arg1" 'arg2'
+  ifeq 'arg1' "arg2"
+  ```
+
+- `ifdef` conditional:
+
+  ```makefile
+  ifdef variable-name
+  ```
+
+  The `ifdef` form takes the *name* of a variable as its argument, not a
+  reference to a variable.
+
+  If the value of that variable has a non-empty value, the
+  `text-if-true` is effective; otherwise, the `text-if-false`, if any,
+  is effective. Variables that have never been defined have an empty
+  value.
+
+  The text `variable-name` is expanded, so it could be a variable
+  or function that expands to the name of a variable. For example:
+
+  ```makefile
+  bar = true
+  foo = bar
+  ifdef $(foo)
+  frobozz = yes
+  endif
+  ```
+
+  The variable reference `$(foo)` is expanded, yielding `bar`, which
+  is considered to be the name of a variable. The variable `bar` is
+  not expanded, but its value is examined to determine if it is
+  non-empty.
+
+  Note that `ifdef` only tests whether a variable has a value. It does
+  not expand the variable to see if that value is nonempty.
+
+  Consequently, tests using `ifdef` return true for all definitions
+  except those like `foo =`. To test for an empty value, use
+  `ifeq ($(foo),)`. For example,
+
+  ```makefile
+  bar =
+  foo = $(bar)
+  ifdef foo
+  frobozz = yes
+  else
+  frobozz = no
+  endif
+  ```
+
+  sets '`frobozz`' to '`yes`', while:
+
+  ```makefile
+  foo =
+  ifdef foo
+  frobozz = yes
+  else
+  frobozz = no
+  endif
+  ```
+
+  sets '`frobozz`' to '`no`'.
+
+- `make` evaluates conditionals when it reads a makefile.
+
+  Consequently, you cannot use automatic variables in the tests of
+  conditionals because they are not defined until recipes are run (see
+  [Automatic Variables]).
+
 [#Conditional-Syntax]
 
 ## Conditionals that Test Flags
+
+- For example, here is how to arrange to use '`ranlib -t`' to finish
+  marking an archive file up to date:
+
+  ```makefile
+  archive.a: …
+  ifneq (,$(findstring t,$(MAKEFLAGS)))
+          +touch archive.a
+          +ranlib -t archive.a
+  else
+          ranlib archive.a
+  endif
+  ```
+
+  The '`+`' prefix marks those recipe lines as "recursive" so that they
+  will be executed despite use of the '`-t`' flag. See [Recursive Use of
+  `make`].
 
 [#Testing-Flags]
 
