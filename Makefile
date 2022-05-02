@@ -1,13 +1,14 @@
 PARSER    := /usr/bin/pandoc
-# Try groff?
-PFLAGS    := --from=commonmark\
-	     --columns=79\
+PFLAGS    := \
+	     --columns=72\
 	     --variable=colorlinks\
-	     --highlight-style=tango\
-	     --number-sections\
-	     --toc
+	     --highlight-style=tango
+	     # --number-sections
+	     # --from=commonmark\
+	     # --toc
 	     # --to=ms
-MAKEFLAGS += --no-builtin-rules\
+MAKEFLAGS += \
+	     --no-builtin-rules\
 	     --no-builtin-variables
 
 out_dir     := notes-output
@@ -22,7 +23,7 @@ all: $(pdf_targets)
 
 .SECONDEXPANSION:
 $(pdf_dir)/%.pdf: %.md | $$(@D)/
-	$(PARSER) $(PFLAGS) -o $@ -- $<
+	$(PARSER) $(PFLAGS) --output $@ -- $<
 
 $(pdf_subdirs):
 	$(mkdir) $@
