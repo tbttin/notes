@@ -55,10 +55,17 @@
 - Ranking mirror list:
 
   ```bash
-  curl --silent 'https://archlinux.org/mirrorlist/?country=all&protocol=https&use_mirror_status=on' |
-  sed --expression 's/^#Server/Server/' --expression '/^#/d' |
-  rankmirrors -n 6 - > mirrorlist &
+  curl -s 'https://archlinux.org/mirrorlist/' \
+          -d 'country=all' \
+          -d 'protocol=https' \
+          -d 'ip_version=4' \
+          -d 'ip_version=6' \
+          -d 'use_mirror_status=on' |
+          sed -e 's/^#Server/Server/' -e '/^#/d' |
+          rankmirrors -n 6 - > mirrorlist &
   ```
+
 # Log file
 
 - Pacman log file can be found in `/var/log/pacman.log`.
+
