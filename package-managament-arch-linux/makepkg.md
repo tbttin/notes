@@ -1,4 +1,4 @@
-- PKGBUILD prototypes can be found in `/usr/share/pacman/`
+- PKGBUILD prototypes can be found in `/usr/share/pacman`
 
 - `makepkg` build order:
 
@@ -10,7 +10,7 @@
 
   + `build()`
 
-- `makepkg` frequently used cases and explanations:
+- Frequently used cases and explanations:
 
   ```bash
   makepkg --cleanbuild --syncdeps --force --iinstall [--clean]
@@ -25,6 +25,8 @@
   + Install with pacman.
 
   + Clean up leftover work files and directories after a successful build.
+
+  + `--noarchive`: do not create the archive.
 
 - Generate/update checksums:
 
