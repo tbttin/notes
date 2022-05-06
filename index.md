@@ -12,11 +12,11 @@
 
 # Package management on Arch Linux
 
-- [makepkg](arch-package-managament/makepkg.md)
+- [makepkg](package-managament-arch-linux/makepkg.md)
 
-- [pacman](arch-package-managament/pacman.md)
+- [pacman](package-managament-arch-linux/pacman.md)
 
-- [namcap](arch-package-managament/namcap.md)
+- [namcap](package-managament-arch-linux/namcap.md)
 
 # Vims
 
