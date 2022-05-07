@@ -1,6 +1,6 @@
 # Markdowns
 
-- [John Gruber's markdown](markdowns/john-grubers-markdown.md)
+- [John Gruber's Markdown](markdowns/john-grubers-markdown.md)
 
 - [Pandoc's flavored Markdown](markdowns/pandocs-flavored-markdown.md)
 
@@ -12,11 +12,11 @@
 
 # Package management on Arch Linux
 
-- [makepkg](package-managament-arch-linux/makepkg.md)
+- [makepkg - package build utility](package-managament-arch-linux/makepkg.md)
 
-- [pacman](package-managament-arch-linux/pacman.md)
+- [pacman - package manager utility](package-managament-arch-linux/pacman.md)
 
-- [namcap](package-managament-arch-linux/namcap.md)
+- [namcap - package analysis utility](package-managament-arch-linux/namcap.md)
 
 # Vims
 
