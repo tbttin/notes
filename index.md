@@ -20,7 +20,7 @@
 
 # Vims
 
-- [Vim tips and tricks](vims/favourite-tips-n-tricks.md)
+- [Adapting tips and tricks](vims/adapting-tips-and-tricks.md)
 
 # `groff`
 
