@@ -50,6 +50,14 @@
   paccache -rk1
   ```
 
+# Removing unused packages (orphans)
+
+- Recursively removing orphans and their configuration files:
+
+    ```bash
+    pacman -Qtdq | pacman -Rns -
+    ```
+
 # Mirror list
 
 - Ranking mirror list:
