@@ -14,7 +14,7 @@
 
   + `:h :_*`: command line special characters.
 
-    More special: '`:\bar`', '`:quote`'
+    More special: '`:\bar`', '`:quote`', '`:star`'
 
   + `:h ::*`: ex command filename modifiers.
 
@@ -72,14 +72,16 @@
   The first one first finds the next occurrence of "test 1", and then
   the first occurrence of "test" after that.
 
-- `/{regex}/`: do the nomal search but remove old offset.
+- `/{regex}/`: do the nomal search but *remove* old offset.
 
-- Search inside *visual* area: `/\%Vfoo.*bar\%V`.
+- Search *inside* visual area: `/\%Vfoo.*bar\%V`.
 
-- `4,/this line/` from line 4 till match with "this line" after the
-  cursor line.
+- (`,`) comma vs. (`;`) semi-colon:
 
-  `5;/that line/` from line 5 till match with "that line" after line 5.
+  + `4,/this line/` from line 4 till match "this line" after the cursor
+    line.
+
+  + `5;/that line/` from line 5 till match "that line" after line 5.
 
   '`:;`' when separated with ';' the cursor position will be set to that
   line before interpreting the next line specifier.
@@ -106,7 +108,7 @@
 - Helps: cmdline, cmdline-completion, cmdline-special,
   filename-modifiers, .etc
 
-- Option completion `:set option=<Tab>`
+- Option completion `:set option=<Tab>` (some)
 
 - Edit *cmdline commands* just like any other buffer:
   '`cmdline-window`', `c_CTRL-F`, `q:`, `q?` and `q/`.
@@ -126,7 +128,9 @@
   command `shell_cmd`, e.g. `:w !sudo tee %` (a.k.a. the write with
   *sudo* trick).
 
-- `.!sh`: execute current line so `!` command does take a `[range]`!
+- `:.!sh`: execute the current line (or pipe to external command?).
+
+  Same as the filter operator: `!!external-command` (not `:!!`).
 
 - Redirect ex command output:
 
@@ -137,13 +141,12 @@
   :redi[r] END
   ```
 
- - Recover '`more-prompt`', '`hit-enter`': if you accidentally hit
-   `<Enter>` or `<Space>` and you want to see the displayed text:`g<`.
+ - '`more-prompt`' or '`hit-enter`': if you accidentally hit `<Enter>`
+   or `<Space>` and you want to see the displayed text: `g<`.
 
    This only works when '`more`' is set.
 
-- `:e[dit]!` will revert to the latest *saved* version of the current
-  file.
+- `:e[dit]!`: revert to the latest *saved* version of the current file.
 
 - Transfer text, they do *not* use registers.
 
@@ -158,8 +161,6 @@
   + `:se[t]`         show all modified options\
     `:se[t] all`     show all non-termcap options\
     `:se[t] termcap` show all termcap options
-
-- Option completion `:set option=<Tab>`
 
 ## Buffers
 
@@ -192,9 +193,6 @@
 - `gv`: start visual mode with the same area as the previous area and
   the *same* mode.
 
-  *After* using "p" or "P" in visual mode the text that was put will be
-  selected.
-
 - `1v` or `{count}v` selects an area equal to the previous visual.
 
   Note that this will only work if you actually did something to the
@@ -203,18 +201,17 @@
 
 - Just recall, '`wrap`'ed long line:
 
-  + `g0` to first visible character in this line
+  + `g0` to first visible character in this line.
 
-  + `g^` to first non-blank visible character in this line
+  + `g^` to first non-blank visible character in this line.
 
-  + `gm` to middle of screen line
+  + `gm` to middle of screen line.
 
-  + `gM` to middle of the text in this line
+  + `gM` to middle of the text in this line.
 
-  + `g$` to last visible character in this line
+  + `g$` to last visible character in this line.
 
-- `ge`: backward to the end of word `[count]` (vs `be` from middle
-  word?).
+- `ge`: backward to the end of word (vs. `be` from middle word).
 
 - `g_`: to the last non-blank character of the line.
 
@@ -226,7 +223,7 @@
   + `g; [count]`: go to the older position, `g, [count]`: go to the newer.
 
   + `gi`: enter insert mode in last insert location, jump around and
-    "`gi`-boom"!
+    "gi`-boom"!
 
 - Paste/put:
 
@@ -251,6 +248,13 @@
   + `:sh[ell]`, or
 
   + `CTRL-Z`, `fg [job spec]`, `bg [job spec]`
+
+- Start `vim` from terminal (aliased):
+
+  ```bash
+  vim -t <tag>
+  vim +find\ <filename>
+  ```
 
 - The generic names for the *filetype plugins* are:
 
@@ -290,7 +294,7 @@
 
 - `:sf[ind]` and `:vert[ical] sf[ind]`, maybe `:tabf[ind]`
 
-- '`c_##`' mean all files in arglist.
+- '`:_##`' mean all files in arglist.
 
   ```vim
   :vim[grep] /TODO/ ##
@@ -299,22 +303,17 @@
   :cfdo %s/TODO/DONE/g | update
   ```
 
-  `:cdo s/TODO/DONE/g | update` vs `:cfdo %s/TODO/DONE/g | update`
+  `:cdo s/TODO/DONE/g | update` vs. `:cfdo %s/TODO/DONE/g | update`
 
     + The first one update buffer multiple time.
+
+    + The first case quickfix list update multiple time?
 
   Try to use *quickfix list* more.
 
 - `:h location-list`, `:lvimgrep`
 
-- Start `vim` from terminal: `vim -t {tag}`, `vim +find\ {regex}`
-  (aliased).
-
 - `"1p` and then `.` then `.`
-
-- Filter operator: `!!external-command`
-
-  Nothing to do with `:!!external-command`.
 
 # TODO
 
@@ -373,7 +372,7 @@
 
 - Yank from vim via terminal escape code? OSC52Yank?
 
-- `:cfdo` vs `:cdo`?
+- `:cfdo` vs. `:cdo`?
 
 - `/\v` and PCRE?
 
