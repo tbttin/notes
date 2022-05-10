@@ -1,47 +1,34 @@
-# Miscellany
-
-- Doing some external command line works:
-
-  + `:sh[ell]`, or
-
-  + `CTRL-Z`, `fg [job spec]`, `bg [job spec]`
-
-- The generic names for the *filetype plugins* are:
-
-  `ftplugin/<filetype>.vim`\
-  `ftplugin/<filetype>_<name>.vim`\
-  `ftplugin/<filetype>/<name>.vim`
-
-- Sometimes you will see a split column number. For example, "col 2-9".
-
-  This indicates that the cursor is positioned on the *second*
-  character, but because character one is a *tab*, occupying eight
-  spaces worth of columns, the screen column is 9 (2nd character, 9th
-  column).
-
-- Profiling:
-
-  ```vim
-  :prof[ile]
-  ```
-
-  ```bash
-  vim --startuptime vim.log
-  ```
-
 # Helps
 
-## Manuals
+- Help *prefixes* and *patterns*: `:h {prefix}<C-D>` ('`wildmode`').
 
-- Indexes and quickrefs: `:h index<C-D>`, `:h Q_<C-D>` ('`wildmenu`').
+  `:h help-summary` for most basic categories.
+
+  + `:h index<C-D>`: indexes.
+
+  + `:h Q_*`: quick references (not much practical).
+
+  + `:h /\*`: regex items always start with a slash.
+
+  + `:h s/\*`: substitute items always start with `s/`.
+
+  + `:h :_*`: command line special characters.
+
+    More special: '`:\bar`', '`:quote`'
+
+  + `:h ::*`: ex command filename modifiers.
+
+  + `:h terminal-*`: vim's terminal.
+
+  + `:h complete_*`: auto completion popup menu.
 
 - Manuals: help-summary, user-manual, usr_toc, reference_toc, helphelp,
   option-summary, index (alphabet order), quickref (feature order),
-  motion, terminal, windows, tabs, packages, pattern, vimdiff,
-  diffpatch, undo, tips, spell, .etc
+  motion, tags-and-searchs, terminal, windows, tabs, packages, pattern,
+  vimdiff, diffpatch, undo, tips, spell, .etc
 
-- Lists: jumplist, changes, tags, quickfix, location-list, buffers,
-  arguments, function-list, .etc
+- Lists: jumplist, changelist, qargument-list, uickfix, location-list,
+  buffers, function-list, .etc
 
 ## Docs
 
@@ -57,23 +44,17 @@
 
 # Searching
 
-- Helps:
-
-  + Regex items always start with a slash `:h /\+`
-
-  + Substitute items always start with an `s/` `:h s/\&`
-
 - Search non-ASCII characters: `/\v[^\d0-\d127]`. See '`/\]`'.
 
-- Operator + search motion: `d/[regex]`
+- Operator + search motion: `d/[regex]/[e]` (`:h {motion}`).
 
-  + Combine with `.`, '`last-pattern`', `n` (also '`gn`'), '`{offset}`'.
+  + Combine with `n` (also '`gn`'), `.`, '`last-pattern`', '`{offset}`'.
 
   + Can be switched to *line-wise* motion with `dV`. See '`o_V`'.
 
   + Jump around matches with '`/_CTRL-G`' and '`/_CTRL-T`'.
 
-- `c_CTRL-R_CTRL-W`: insert/complete the word under the cursor. Se also
+- `c_CTRL-R_CTRL-W`: insert/complete the word under the cursor. See also
   `/_CTRL-L`
 
 - `\%(\)`: just like `\(\)`, but without counting it as a
@@ -134,10 +115,10 @@
 
 - `:cq[uit]` quit Vim with error code `{N}`. `{N}` defaults to one.
 
-  Useful when Vim is called from another program: e.g., a compiler
+  Useful when Vim is *called* from another program: e.g., a compiler
   will not compile the same file again, `git commit` will abort the
-  committing process, `fc` (built-in for shells like bash and zsh)
-  will not execute the command, etc.
+  committing process, `fc` (built-in for shells like bash and zsh) will
+  not execute the command, etc.
 
 - `:*` as last visual range ('`:star`'). Same as `:'<,'>`.
 
@@ -178,6 +159,8 @@
     `:se[t] all`     show all non-termcap options\
     `:se[t] termcap` show all termcap options
 
+- Option completion `:set option=<Tab>`
+
 ## Buffers
 
 - The file you were previously editing is called the *alternate* file.
@@ -199,14 +182,12 @@
 
   `:sav[eas][!] [++opt] {file}`
 
-- Option completion `:set option=<Tab>`
-
 # Normal-mode commands
 
 - '`blockwise-operators`': '`v_b_I`', '`v_b_A`': insert/append the same
   text in front of/after all the selected lines. Se also '`v_b_>`'.
 
-  Usage: multi-lines editing: [un]comment, "quoting", .etc
+  Useful in multi-lines editing: [un]comment, "quoting", .etc
 
 - `gv`: start visual mode with the same area as the previous area and
   the *same* mode.
@@ -263,17 +244,138 @@
   `qM@mq`\
   `@m`
 
+# Miscellany
+
+- Doing some external command line works:
+
+  + `:sh[ell]`, or
+
+  + `CTRL-Z`, `fg [job spec]`, `bg [job spec]`
+
+- The generic names for the *filetype plugins* are:
+
+  `ftplugin/<filetype>.vim`\
+  `ftplugin/<filetype>_<name>.vim`\
+  `ftplugin/<filetype>/<name>.vim`
+
+- Sometimes you will see a split column number. For example, "col 2-9".
+
+  This indicates that the cursor is positioned on the *second*
+  character, but because character one is a *tab*, occupying eight
+  spaces worth of columns, the screen column is 9 (2nd character, 9th
+  column).
+
+- Profiling:
+
+  ```vim
+  :prof[ile]
+  ```
+
+  or
+
+  ```bash
+  vim --startuptime vim.log
+  ```
+
+- '`arglist`': a list of files you give when starting vim.
+
+  '`buffer-list`': every file you open in vim (unless it was deleted
+  with '`:bdel`' or '`:bwipe`').
+
+## Uncensored
+
+- `[m`, `[M`: jump to next method.
+
+  `[[`, `]]`
+
+- `:sf[ind]` and `:vert[ical] sf[ind]`, maybe `:tabf[ind]`
+
+- '`c_##`' mean all files in arglist.
+
+  ```vim
+  :vim[grep] /TODO/ ##
+  :cn
+  ...
+  :cfdo %s/TODO/DONE/g | update
+  ```
+
+  `:cdo s/TODO/DONE/g | update` vs `:cfdo %s/TODO/DONE/g | update`
+
+    + The first one update buffer multiple time.
+
+  Try to use *quickfix list* more.
+
+- `:h location-list`, `:lvimgrep`
+
+- Start `vim` from terminal: `vim -t {tag}`, `vim +find\ {regex}`
+  (aliased).
+
+- `"1p` and then `.` then `.`
+
+- Filter operator: `!!external-command`
+
+  Nothing to do with `:!!external-command`.
+
 # TODO
 
-  - Read every command manual carefully (again, maybe).
+ - Read every command manual carefully (again, maybe).
 
-    + `a` does take `[count]`, `3a.`: insert three dots.
+   + `a` does take `[count]`, `3a.`: insert three dots.
 
-    + `v` and `r` do take a `[count]` too.
+   + `v` and `r` *and* `$` do take a `[count]` too.
 
-    + So, try `[count]` with every single command heh?
+   + *Most* of commands `:b` and their relatives, operator, motions
+     *does* accept a count.
 
-      READ THEM
+   + So, try `[count]` with every single command heh?
 
-  - Research about *mappings* and *macros* tips and tricks.
+     ... RTFM!
+
+ - Learn about '`:terminal`'.
+
+   + How to "normal-mode" in terminal?
+
+   + It suck with vi-mode in Bash?
+
+ - Research about *mappings* and *macros* tips and tricks.
+
+   Or about topics that are super cool but you are not using it much.
+
+- File-based navigation:
+
+  What is this?
+
+  `:set wildmode=list:full`
+
+  See also '`completeopt`'.
+
+- Symbol-based navigation:
+
+  + `:h tags`, `:h ctas`, `:h cscope`
+
+  + `gd` or `gD`
+
+  + `:tjump /regex`
+
+  + '`g_CTRL_]`': list tag, g]
+
+  + `[_CRTL-I`, `:ij[ump] /regex`
+
+  + `[i` or `:isearch /regex`
+
+  Include      Define
+  :ijump       :djump
+  :isearch     :dsearch
+  :ilist       :dlist
+  [<C-i>       [<C-d>
+  [I           [D
+  ]i           ]d
+
+- Yank from vim via terminal escape code? OSC52Yank?
+
+- `:cfdo` vs `:cdo`?
+
+- `/\v` and PCRE?
+
+- `diffopt` [See more](https://vimways.org/2018/the-power-of-diff/)
 
