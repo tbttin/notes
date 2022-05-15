@@ -46,19 +46,22 @@
 
 # Note taking
 
-## Reading wiki.vim docs
+## Some note picked up when reading wiki.vim docs
 
 - Fast workflow.
 
   + Open `index.md` file quickly (hotkey or alias).
 
-  + Jump to *link destinition* (move to the line, `$`, and back) then `gf`.
+  + Jump to *link destination* (move to the line, `$`, and back) then `gf`.
 
     * `CTRL-^` to switch back.
 
     * `:bf` or `:b1` always switch to `index.md`.
 
   + Search note quickly.
+
+    * Currently, index.md and section folding in note file (well
+      organize) is enough.
 
     * Search and load results into buffers, search in buffers.
 
@@ -74,4 +77,30 @@
 
 - Note then clean/rinse and link to your knowledge or existed notes or
   internet.
+
+## Workflow
+
+- Write markdown in vim.
+
+  + Try to balance between note taking and representation.
+
+- Can not find the (capable) way to preview/view markdown in vim.
+  Convert from *markdown* to *pdf* with `pandoc`.
+
+  + `make` is a choice.
+
+  + A lot of cool stuff like highlight link and code, TOC, heading
+    number, .etc
+
+- View pdf in `zathura`.
+
+  + TOC
+
+  + Index mode
+
+## How to take note?
+
+- How to mark what you already know or do not know?
+
+- Recall
 
