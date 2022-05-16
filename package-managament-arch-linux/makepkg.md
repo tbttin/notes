@@ -32,11 +32,7 @@
 
   ```bash
   makepkg --geninteg >> PKGBUILD
-  ```
-
-  or
-
-  ```bash
+  # or
   updpkgsums
   ```
 

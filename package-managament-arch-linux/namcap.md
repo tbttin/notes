@@ -2,11 +2,7 @@
 
   ```bash
   namcap PKGBUILD
-  ```
-
-  or:
-
-  ```bash
+  # or
   namcap pkgname-pkgver.pkg.tar.zst
   ```
 

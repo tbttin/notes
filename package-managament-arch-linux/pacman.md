@@ -5,31 +5,17 @@
 
   ```bash
   pacman --query --list --file=<package-file>
-  ```
-
-  or:
-
-  ```bash
+  # or
   pacman --query --info --file=<package-file>
-  ```
-
-  or:
-
-
-  ```bash
-  pacman --query --info installed-package
+  # or
+  pacman --query --info <installed-package>
   ```
 
 - Find which package holds `filename`:
 
   ```bash
   pacman --query --owns filename
-  ```
-
-  or:
-
-
-  ```bash
+  # or
   pacman --files --refresh filename
   `````
 
