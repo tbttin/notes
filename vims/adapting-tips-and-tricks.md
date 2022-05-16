@@ -6,7 +6,7 @@
 
   + `:h index<C-D>`: indexes.
 
-  + `:h Q_*`: quick references (not much practical).
+  + `:h Q_*`: quick references (abbr names are not much practical).
 
   + `:h /\*`: regex items always start with a slash.
 
@@ -46,11 +46,11 @@
 
 - Search non-ASCII characters: `/\v[^\d0-\d127]`. See '`/\]`'.
 
-- Operator + search motion: `d/[regex]/[e]` (`:h {motion}`).
+- Operator + search motion: `d/regex/[e]` (`:h {motion}`). Combine with:
 
-  + Combine with `n` (also '`gn`'), `.`, '`last-pattern`', '`{offset}`'.
+  + `n` (also '`gn`'), `.`, '`last-pattern`', '`{offset}`', .etc
 
-  + Can be switched to *line-wise* motion with `dV`. See '`o_V`'.
+  + Switched to *line-wise* motion with `dV`. See '`o_V`'.
 
   + Jump around matches with '`/_CTRL-G`' and '`/_CTRL-T`'.
 
@@ -199,6 +199,18 @@
   previous visual selection, such as a yank, delete, or change
   operation.
 
+- Correct way to use `{count}` and text-object: `{count}ap`.
+
+  Did not think about count and nested blocks before? `v{count}[ia]b`.
+  See also '`[(`'.
+
+  ```bash
+  printf("%3.0f\t%6.1f\n", fahr, ((5.0/9.0) * (fahr-32)));
+  #                                               ^
+  #                                              v2ap
+  #                              [------selected-------]
+  ```
+
 - Just recall, '`wrap`'ed long line:
 
   + `g0` to first visible character in this line.
@@ -314,6 +326,13 @@
 - `:h location-list`, `:lvimgrep`
 
 - `"1p` and then `.` then `.`
+
+- Impvove this, quickly delete a pair of `()`, `[]`:
+
+  ```vim
+  " % prepare jump record
+  %x``x
+  ```
 
 # TODO
 
