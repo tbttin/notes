@@ -204,3 +204,8 @@ lines.
 
 
 **SWITCHING TO COMMONMARK**
+
+# Uncensored
+
+- Inline code atributes (inlide_code_attributes) just like fenced code
+  blocks: `` `<$>`{.haskell} ``
