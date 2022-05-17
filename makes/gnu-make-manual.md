@@ -10,8 +10,8 @@
 
 - Why I create this note?
 
-  + Learning `make`. To note every thing new to me or I can not
-    understand.
+  + Learning `make`. To note every thing new to me or I do not
+    understand at that time.
 
   + A note for myself for reference purpose.
 
@@ -46,7 +46,7 @@ See [Rule Syntax].
 ## How `make` Processes a Makefile
 
 - `make` would update *automatically generated* C programs, such as
-  those made by Bison or Yacc, by their own rule.
+  those made by *Bison* or *Yacc*, by their own rule.
 
 [#How-Make-Works]
 
@@ -1109,9 +1109,6 @@ See [Rule Syntax].
     `make` performs only a very few specific translations on the content
     of the recipe before handing it to the shell.
 
-- A "*rule context*" that is, after a rule has been started until
-  another rule or variable definition.
-
 - Some consequences of these rules include:
 
   + A blank line that begins with a tab is *not* blank: it is an
@@ -1214,20 +1211,20 @@ See [Rule Syntax].
     command (for example perhaps you are using a very different
     interpreter as your SHELL).
 
--  If the `.ONESHELL` special target appears anywhere in the makefile
-   then *all* recipe lines for *each* target will be provided to a
-   single invocation of the shell.
+- If the `.ONESHELL` special target appears anywhere in the makefile
+  then *all* recipe lines for *each* target will be provided to a
+  single invocation of the shell.
 
-   Newlines between recipe lines will be preserved.
+  Newlines between recipe lines will be preserved.
 
-   For example:
+  For example:
 
-   ```makefile
-   .ONESHELL:
-   foo : bar/lose
-           cd $(@D)
-           gobble $(@F) > ../$@
-   ```
+  ```makefile
+  .ONESHELL:
+  foo : bar/lose
+          cd $(@D)
+          gobble $(@F) > ../$@
+  ```
 
 - If `.ONESHELL` is provided, then *only* the first line of the recipe
   will be checked for the special prefix characters (`@`, `-`, and `+`).
@@ -1283,10 +1280,8 @@ See [Rule Syntax].
 
 ### Choosing the Shell
 
-- The program used as the shell is taken from the variable `SHELL`.
-
-  If this variable is not set *in your makefile*, the program `/bin/sh`
-  is used as the shell.
+- If `SHELL` variable is not set *in your makefile*, the program
+  `/bin/sh` is used as the shell.
 
 - The argument(s) passed to the shell are taken from the variable
   `.SHELLFLAGS`.
@@ -1298,7 +1293,9 @@ See [Rule Syntax].
   *environment*.
 
 - Furthermore, when you do set `SHELL` in your makefile that value is
-  *not* exported in the environment to recipe lines that `make` invokes?
+  *not* exported in the environment to recipe lines that `make` invokes.
+  Instead, the value inherited from the user's environment, if any, is
+  exported. 
 
 - Choosing a Shell in DOS and Windows.
 
@@ -1430,18 +1427,14 @@ See [Rule Syntax].
 ## Recursive Use of `make`
 
 ```makefile
-ubsystem:
+subsystem:
         # They are equivalent
         cd subdir && $(MAKE)
         $(MAKE) -C subdir
 ```
 
-- If you include files from other directories the value of `CURDIR` does
-  *not* change.
-
-  The value has the same precedence it would have if it were set in the
-  makefile (by default, an environment variable `CURDIR` will not
-  override this value)?
+- Note that iff you include files from other directories the value of
+  `CURDIR` does *not* change.
 
 [#Recursion]
 
@@ -1475,9 +1468,16 @@ ubsystem:
 
 ### Communicating Variables to a Sub-`make`
 
-- Environment variables are defined in the sub-`make` as defaults, but
-  they do not override variables defined in the makefile used by the
-  sub-`make` unless you use the `-e` switch.
+- Variable values of the top-level `make` can be passed to the
+  sub-`make` through the environment by explicit request. These
+  variables are defined in the sub-`make` as defaults, but they do not
+  override variables defined in the makefile used by the sub-`make`
+  unless you use the '`-e`' switch.
+
+- To pass down, or *export*, a variable, `make` adds the variable and
+  its value to the environment for running each line of the recipe? The
+  sub-`make`, in turn, uses the environment to initialize its table of
+  variable values.
 
 - Except by explicit request, `make` exports a variable only if it is
   either defined in the environment *initially* or set on the command
@@ -1492,12 +1492,7 @@ ubsystem:
   `unexport` it). `MAKEFILES` is exported if you set it to anything.
 
 - `make` automatically passes down variable values that were defined on
-  the command line, by putting them in the `MAKEFLAGS` variable. See
-  [Communicating Options to a Sub-`make`].
-
-- Variables are *not* normally passed down if they were created by
-  default by `make` (see [Variables Used by Implicit Rules]). The
-  sub-`make` will define these for itself.
+  the command line, by putting them in the `MAKEFLAGS` variable.
 
 - `export` and `unexport` example:
 
@@ -1529,17 +1524,20 @@ ubsystem:
   The value of `MAKELEVEL` is '`0`' for the top-level `make`; '`1`' for
   a sub-`make`, '`2`' for a sub-sub-`make`, and so on.
 
-- Passing variables on the command line overrides assignments in the
-  sub-makefile but exported variables do not override assignments in the
-  sub-makefile. These two methods for passing variables to a
-  sub-makefile are not equivalent and should not be confused.
-  [Jonathan's
-  comment](https://stackoverflow.com/questions/2826029/passing-additional-variables-from-command-line-to-make/2826178#comment51986622_2826178)
+- More research:
 
-- `make` command line variable override environment variables and
-  variables within makefile (unless `override` directive).
+  + Passing variables on the command line overrides assignments in the
+    sub-makefile but exported variables do not override assignments in
+    the sub-makefile.
 
-  Command line variables are environment variables.
+    These two methods for passing variables to a sub-makefile are not
+    equivalent and should not be confused. [Jonathan's
+    comment](https://stackoverflow.com/q/2826029/#comment51986622_2826178)
+
+  + `make` command line variable override environment variables and
+    variables within makefile (unless `override` directive).
+
+    Command line variables are environment variables?
 
 [#Variables_002fRecursion]
 
@@ -1556,9 +1554,8 @@ ubsystem:
   variable definitions just as if they appeared on the command line. See
   [Overriding Variables].
 
-- The options '`-C`{.sample}', '`-f`{.sample}', '`-o`{.sample}', and
-  '`-W`{.sample}' are not put into `MAKEFLAGS`; these options are not
-  passed down.
+- The options '`-C`', '`-f`', '`-o`', and '`-W`' are not put into
+  `MAKEFLAGS`; these options are not passed down.
 
 - If you do not want to pass the other flags down, you must change the
   value of `MAKEFLAGS`, like this:
@@ -1570,7 +1567,12 @@ ubsystem:
 
 - The command line variable *definitions* really appear in the variable
   `MAKEOVERRIDES`, and `MAKEFLAGS` contains a *reference* to this
-  variable.
+  variable. From what I understand this:
+
+  ```makefile
+  MAKEOVERRIDES = foo=bar boo=baz
+  MAKEFLAGS = $(MAKEOVERRIDES)
+  ```
 
   If you do want to pass flags down normally, but don't want to pass
   down the command line variable definitions, you can reset
@@ -1580,7 +1582,8 @@ ubsystem:
   MAKEOVERRIDES =
   ```
 
-- Correct way to use `MAKEFILES`, `MFLAGS`, and `GNUMAKEFILES`.
+- The correct way to use `MAKEFILES`, `MFLAGS`, and `GNUMAKEFILES` for
+  historical compatibility.
 
 [#Options_002fRecursion]
 
@@ -1606,7 +1609,7 @@ ubsystem:
   frob-step-2 $@-step-1 -o $@
   endef
   ```
-- On the other hand, prefix characters on the recipe line that refers to a
+  On the other hand, prefix characters on the recipe line that refers to a
   canned sequence apply to every line in the sequence:
 
   ```makefile
@@ -1626,10 +1629,10 @@ ubsystem:
 
 - One reason this is useful is to prevent a target from getting implicit
   recipes (from implicit rules or the `.DEFAULT` special target; see
-  [Implicit Rules] and see [Defining Last-Resort Default Rules]).
+  [Using Implicit Rules] and see [Defining Last-Resort Default Rules]).
 
 - Empty recipes can also be used to avoid errors for targets that will
-  be created as a side-effect of another recipe: if the target does not
+  be created as a side-effect of another recipe:? if the target does not
   exist the empty recipe ensures that `make` won't complain that it
   doesn't know how to build the target, and `make` will assume the
   target is out of date.
@@ -1640,7 +1643,7 @@ ubsystem:
 
   However, this is not the best way to do that, because the
   prerequisites may not be remade properly if the *target* file actually
-  does exist.
+  does exist. See [Phony Targets].
 
 [#Empty-Recipes]
 
@@ -1655,12 +1658,16 @@ ubsystem:
 
   + The bodies of variable definitions using the `define` directive.
 
-- A variable name may be any sequence of characters not containing
+- A variable name may be any sequence of characters *not* containing
   '`:`', '`#`', '`=`', or whitespace.
 
-  However, variable names containing characters other than letters,
-  numbers, and underscores should be considered carefully, as in some
-  shells they cannot be passed through the environment to a sub-`make`.
+  However, variable names containing characters other than *letters*,
+  *numbers*, and *underscores* should be considered carefully, as in
+  some shells they cannot be passed through the environment to a
+  sub-`make`.
+
+  Variable names beginning with '`.`' and an uppercase letter may be
+  given special meaning in future versions of `make`.
 
 - Variable names are case-sensitive.
 
@@ -2388,13 +2395,63 @@ Variables can get values in several different ways:
 
 # Functions for Transforming Text
 
+- The result of the function's processing is substituted into the
+  makefile at the point of the call, just as a variable might be
+  substituted.
+
 [#Functions]
 
 ## Function Call Syntax
 
+- It use the same rules as variable references. A function call looks
+  like this:
+
+  ``` example
+  $(function arguments)
+  ```
+
+  or like this:
+
+  ``` example
+  ${function arguments}
+  ```
+
+- They are separated from the function name by one or more spaces or
+  tabs, and if there is more than one argument, then they are separated
+  by commas.
+
+- How to use *spaces*, *commas*, *unmatching pairs* as the first
+  argument:
+
+  ``` example
+  comma:= ,
+  empty:=
+  space:= $(empty) $(empty)
+  foo:= a b c
+  bar:= $(subst $(space),$(comma),$(foo))
+  # bar is now ‘a,b,c’.
+  ```
+
+  Here the `subst` function replaces each space with a comma, through the
+  value of `foo`, and substitutes the result.
+
 [#Syntax-of-Functions]
 
 ## Functions for String Substitution and Analysis
+
+- `$(patsubst pattern,replacement,text)`{.makefile}
+
+  + Finds whitespace-separated words in `text` that match `pattern` and
+    replaces them with `replacement`.
+
+    Here `pattern` may contain a '`%`' which acts as a wildcard, matching
+    any number of any characters within a word.
+
+  + If `replacement` also contains a '`%`', the '`%`' is replaced by the
+    text that matched the '`%`' in `pattern`.
+
+  + Only the first '`%`' in the `pattern` and `replacement` is treated
+    this way; any subsequent '`%`' is unchanged.
 
 [#Text-Functions]
 
@@ -2412,9 +2469,55 @@ Variables can get values in several different ways:
 
 ## The `file` Function
 
+- The syntax of the `file` function is:
+
+  ``` example
+  $(file op filename[,text])
+  ```
+
+- The operator `op` can be:
+
+  + `>` to indicate the file will be overwritten with new content
+
+  + `>>` the current contents of the file will be appended to.
+
+  + `<` the contents of the file will be read in.
+
+- There may optionally be whitespace between the operator and the file
+  name.
+
 [#File-Function]
 
 ## The `call` Function
+
+- The syntax of the `call` function is:
+
+  ``` example
+  $(call variable,param,param,…)
+  ```
+
+  Note that `variable` is the *name* of a variable, not a *reference* to
+  that variable. (You can, however, use a variable reference in the name
+  if you want the name not to be a constant.)
+
+  If `variable` is the name of a built-in function, the built-in
+  function is always invoked (even if a `make` variable by that name
+  also exists).
+
+  The `call` function expands the `param` arguments before assigning
+  them to temporary variables. This means that `variable` values
+  containing references to built-in functions that have special
+  expansion rules, like `foreach` or `if`, may not work as you expect.
+
+- This macro simply reverses its arguments:
+
+  ``` example
+  reverse = $(2) $(1)
+
+  foo = $(call reverse,a,b)
+  ```
+
+- WTF the recursive *map* example?
 
 [#Call-Function]
 
@@ -2423,6 +2526,10 @@ Variables can get values in several different ways:
 [#Value-Function]
 
 ## The `eval` Function
+
+- It's important to realize that the `eval` argument is expanded
+  *twice*; first by the `eval` function, then the results of that
+  expansion are expanded again when they are parsed as makefile syntax.
 
 [#Eval-Function]
 
@@ -2439,6 +2546,14 @@ Variables can get values in several different ways:
 [#Make-Control-Functions]
 
 ## The `shell` Function
+
+- Because this function involves spawning a new shell, you should
+  carefully consider the performance implications of using the `shell`
+  function within recursively expanded variables vs. simply expanded
+  variables (see [The Two Flavors of Variables](#Flavors)).
+
+- After the `shell` function or '`!=`' assignment operator is used, its
+  exit status is placed in the `.SHELLSTATUS` variable.
 
 [#Shell-Function]
 
