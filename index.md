@@ -44,6 +44,60 @@
   git log --follow [--patch] -- filenames
   ```
 
+# Bash
+
+GNU Bash manual.
+
+## Pipelines
+
+A pipeline is a sequence of one or more commands separated by one of the
+control operators '|' or '|&'.
+
+## Jobspecs
+
+- This
+
+  ```bash
+  [1] 25647
+  ```
+
+  indicating that this job is job number 1 and that the process [ID] of
+  the last process in the pipeline associated with this job is 25647.
+
+- There are a number of ways to refer to a job in the shell. The
+  character '`%`' introduces a job specification (`jobspec`).
+
+  Job number `n` *may* be referred to as '`%n`'.
+
+  The symbols '`%%`' and '`%+`' refer to the shell's notion of the
+  current job, which is the last job stopped while it was in the
+  foreground or started in the background.
+
+  A single '`%`' (with no accompanying job specification) also refers to
+  the current job.
+
+  The previous job may be referenced using '`%-`'. If there is only a
+  single job, '`%+`' and '`%-`' can both be used to refer to that job.
+
+  In output pertaining to jobs (e.g., the output of the `jobs` command),
+  the current job is always flagged with a '`+`', and the previous job
+  with a '`-`'.
+
+- A job may also be referred to using a prefix of the name used to start
+  it, or using a substring that appears in its command line.
+
+  For example, '`%ce`' refers to a stopped job whose command name begins
+  with '`ce`'.
+
+  Using '`%?ce`', on the other hand, refers to any job containing the
+  string '`ce`' in its command line. If the prefix or substring matches
+  more than one job, Bash reports an error.
+
+- Simply naming a job can be used to bring it into the foreground:
+  '`%1`' is a synonym for '`fg %1`', bringing job 1 from the background
+  into the foreground. Similarly, '`%1 &`' resumes job 1 in the
+  background, equivalent to '`bg %1`'.
+
 # Note taking
 
 ## Some note picked up when reading wiki.vim docs
