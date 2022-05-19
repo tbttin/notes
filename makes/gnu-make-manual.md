@@ -273,6 +273,8 @@ See [Rule Syntax].
   print the recipe needed to update it without actually running it, and
   then print the recipe needed to update `foo` without running that.
 
+- Try `make -d`.
+
 [#Remaking-Makefiles]
 
 ## Overriding Part of Another Makefile
@@ -2571,13 +2573,75 @@ Variables can get values in several different ways:
 
 ## Arguments to Specify the Goals
 
+- `print`
+
+  Print listings of the source files that have changed?
+
 [#Goals]
 
 ## Instead of Executing Recipes
 
+- '`-n`{.sample}'\
+  '`--just-print`{.sample}'\
+  '`--dry-run`{.sample}'\
+  '`--recon`{.sample}'
+
+  "No-op". Causes `make` to print the recipes that are needed to make the
+  targets up to date, but not actually execute them. Note that some
+  recipes are still executed, even with this flag (see [How the `MAKE`
+  Variable Works]). Also any recipes needed to update included makefiles
+  are still executed (see [How Makefiles Are Remade]).
+
+- '`-W file`{.sample}'\
+  '`--what-if=file`{.sample}'\
+  '`--assume-new=file`{.sample}'\
+  '`--new-file=file`{.sample}'
+
+  "What if". Each '`-W`' flag is followed by a file name. The given files'
+  modification times are recorded by `make` as being the present time,
+  although the actual modification times remain the same. You can use the
+  '`-W`' flag in conjunction with the '`-n`' flag to see what would happen
+  if you were to modify specific files.
+
+- The '`-n`', '`-t`', and '`-q`' options do not affect recipe lines that
+  begin with '`+`' characters or contain the strings '`$(MAKE)`' or
+  '`${MAKE}`'.
+
+- The '`-t`' flag prevents phony targets (see [Phony Targets]) from
+  being updated, unless there are recipe lines beginning with '`+`' or
+  containing '`$(MAKE)`' or '`${MAKE}`'?
+
 [#Instead-of-Execution]
 
 ## Avoiding Recompilation of Some Files
+
+- If you anticipate the problem before changing the header file, you can
+  use the '`-t`' flag. This flag tells `make` not to run the recipes in
+  the rules, but rather to mark the target up to date by changing its
+  last-modification date. You would follow this procedure:
+
+  1. Use the command '`make`' to recompile the source files that really
+     need recompilation, ensuring that the object files are up-to-date
+     before you begin.
+
+  2. Make the changes in the header files.
+
+  3. Use the command '`make -t`' to mark all the object files as up to
+     date. The next time you run `make`, the changes in the header files
+     will not cause any recompilation.
+
+- If you have already changed the header file at a time when some files
+  do need recompilation, it is too late to do this. Instead, you can use
+  the '`-o file`' flag, which marks a specified file as "old" . This
+  means that the file itself will not be remade, and nothing else will
+  be remade on its account. Follow this procedure:
+
+  1. Recompile the source files that need compilation for reasons
+     independent of the particular header file, with '`make -o
+     headerfile`'. If several header files are involved, use a separate
+     '`-o`' option for each header file.
+
+  2. Touch all the object files with '`make -t`'.
 
 [#Avoiding-Compilation]
 
@@ -2599,17 +2663,64 @@ Variables can get values in several different ways:
 
 ## Using Implicit Rules
 
+- Note that explicit prerequisites do not influence implicit rule
+  search. For example, consider this explicit rule:
+
+  ``` example
+  foo.o: foo.p
+  ```
+
+  The prerequisite on `foo.p` does not necessarily mean that `make` will
+  remake `foo.o` according to the implicit rule to make an object file,
+  a `.o` file, from a Pascal source file, a `.p` file.
+
+  For example, if `foo.c` also *exists*, the implicit rule to make an
+  object file from a C source file is used instead, because it appears
+  before the Pascal rule in the list of predefined implicit rules (see
+  [Catalogue of Built-In Rules]).
+
 [#Using-Implicit]
 
 ## Catalogue of Built-In Rules
+
+- The '`-r`' or '`--no-builtin-rules`' option cancels all predefined
+  rules.
+
+- To see the full list of default rules and variables available in your
+  version of GNU `make`, run '`make -p`' in a directory with no
+  makefile.
+
+- Every rule that produces an object file uses the variable
+  `OUTPUT_OPTION`. `make` defines this variable either to contain '`-o
+  $@`', or to be empty, depending on a compile-time option.
+
+  You need the '`-o`' option to ensure that the output goes into the right
+  file when the source file is in a different directory, as when using
+  `VPATH` (see [Directory Search]).
+
+  However, compilers on some systems do not accept a '`-o`' switch for
+  object files. If you use such a system, and use `VPATH`, some
+  compilations will put their output in the wrong place.
+
+  A possible workaround for this problem is to give `OUTPUT_OPTION` the
+  value '`; mv $*.o $@`'.
 
 [#Catalogue-of-Rules]
 
 ## Variables Used by Implicit Rules
 
+- You can cancel all variables used by implicit rules with the '`-R`' or
+  '`--no-builtin-variables`' option.
+
+- To see the complete list of predefined variables for your instance of
+  GNU `make` you can run '`make -p`' in a directory with no makefiles.
+
 [#Implicit-Variables]
 
 ## Chains of Implicit Rules
+
+- Intermediate files are remade using their rules just like all other
+  files. But intermediate files are treated differently in two ways?
 
 [#Chained-Rules]
 
@@ -2619,17 +2730,233 @@ Variables can get values in several different ways:
 
 ### Introduction to Pattern Rules
 
+- Pattern rules may have more than one target (see [Pattern Rule
+  Examples]); however, every target must contain a `%` character.
+  Pattern rules are always treated as grouped targets (see [Multiple
+  Targets in a Rule]) regardless of whether they use the `:` or `&:`
+  separator.
+
 [#Pattern-Intro]
 
 ### Pattern Rule Examples
+
+- This pattern rule has two targets:
+
+  ``` example
+  %.tab.c %.tab.h: %.y
+          bison -d $<
+  ```
+
+  This tells `make` that the recipe '`bison -d x.y`' will make both
+  `x.tab.c` and `x.tab.h`.
 
 [#Pattern-Examples]
 
 ### Automatic Variables
 
+#### `$@`
+
+- The file name of the target of the rule. If the target is an archive
+  member, then '`$@`' is the name of the archive file. In a pattern rule
+  that has multiple targets (see [Introduction to Pattern Rules]),
+  '`$@`' is the name of whichever target caused the rule's recipe to be
+  run.
+
+#### `$%`
+
+- The target member name, when the target is an archive member. See
+  [Archives]. For example, if the target is `foo.a(bar.o)` then '`$%`'
+  is `bar.o` and '`$@`' is `foo.a`. '`$%`' is empty when the target is
+  not an archive member.
+
+#### `$<`
+
+- The name of the first prerequisite. If the target got its recipe from
+  an implicit rule, this will be the first prerequisite added by the
+  implicit rule (see [Implicit Rules]).
+
+#### `$?`
+
+- The names of all the prerequisites that are newer than the target,
+  with spaces between them. If the target does not exist, all
+  prerequisites will be included. For prerequisites which are archive
+  members, only the named member is used (see [Archives]).
+
+#### `$^`
+
+- The names of all the prerequisites, with spaces between them. For
+  prerequisites which are archive members, only the named member is used
+  (see [Archives]). A target has only one prerequisite on each other
+  file it depends on, no matter how many times each file is listed as a
+  prerequisite. So if you list a prerequisite more than once for a
+  target, the value of `$^` contains just one copy of the name. This
+  list does **not** contain any of the order-only prerequisites; for
+  those see the '`$|`' variable, below.
+
+#### `$+`
+
+- This is like '`$^`', but prerequisites listed more than once are
+  duplicated in the order they were listed in the makefile. This is
+  primarily useful for use in linking commands where it is meaningful to
+  repeat library file names in a particular order.
+
+#### `$|`
+
+- The names of all the order-only prerequisites, with spaces between
+  them.
+
+#### `$*`
+
+- The stem with which an implicit rule matches (see [How Patterns
+  Match]). If the target is `dir/a.foo.b` and the target pattern is
+  `a.%.b` then the stem is `dir/foo`. The stem is useful for
+  constructing names of related files.
+
+- In a static pattern rule, the stem is part of the file name that
+  matched the '`%`' in the target pattern.
+
+- In an explicit rule, there is no stem; so '`$*`' cannot be determined
+  in that way. Instead, if the target name ends with a recognized suffix
+  (see [Old-Fashioned Suffix Rules]), '`$*`' is set to the target name
+  minus the suffix. For example, if the target name is '`foo.c`', then
+  '`$*`' is set to '`foo`', since '`.c`' is a suffix. GNU `make` does
+  this bizarre thing only for compatibility with other implementations
+  of `make`. You should generally avoid using '`$*`' except in implicit
+  rules or static pattern rules.
+
+- If the target name in an explicit rule does not end with a recognized
+  suffix, '`$*`' is set to the empty string for that rule.
+
+- '`$?`' is useful even in explicit rules when you wish to operate on
+  only the prerequisites that have changed. For example, suppose that an
+  archive named `lib` is supposed to contain copies of several object
+  files. This rule copies just the changed object files into the
+  archive:
+
+  ``` example
+  lib: foo.o bar.o lose.o win.o
+          ar r lib $?
+  ```
+
+- Of the variables listed above, four have values that are single file
+  names, and three have values that are lists of file names. These seven
+  have variants that get just the file's directory name or just the file
+  name within the directory. The variant variables' names are formed by
+  appending '`D`' or '`F`', respectively. The functions `dir` and
+  `notdir` can be used to obtain a similar effect (see [Functions for
+  File Names]). Note, however, that the '`D`' variants all omit the
+  trailing slash which always appears in the output of the `dir`
+  function. Here is a table of the variants:
+
+#### '`$(@D)`'
+
+- The directory part of the file name of the target, with the trailing
+  slash removed. If the value of '`$@`' is `dir/foo.o` then '`$(@D)`' is
+  `dir`. This value is `.` if '`$@`' does not contain a slash.
+
+#### '`$(@F)`'
+
+- The file-within-directory part of the file name of the target. If the
+  value of '`$@`' is `dir/foo.o` then '`$(@F)`' is `foo.o`. '`$(@F)`' is
+  equivalent to '`$(notdir $@)`'.
+
+#### '`$(*D)`' '`$(*F)`'
+
+- The directory part and the file-within-directory part of the stem;
+  `dir` and `foo` in this example.
+
+#### '`$(%D)`' '`$(%F)`'
+
+- The directory part and the file-within-directory part of the target
+  archive member name. This makes sense only for archive member targets
+  of the form `archive(member)` and is useful only when `member` may
+  contain a directory name. (See [Archive Members as Targets].)
+
+#### '`$(<D)`' '`$(<F)`'
+
+- The directory part and the file-within-directory part of the first
+  prerequisite.
+
+#### '`$(^D)`' '`$(^F)`'
+
+- Lists of the directory parts and the file-within-directory parts of
+  all prerequisites.
+
+#### '`$(+D)`' '`$(+F)`'
+
+- Lists of the directory parts and the file-within-directory parts of
+  all prerequisites, including multiple instances of duplicated
+  prerequisites.
+
+#### '`$(?D)`' '`$(?F)`'
+
+- Lists of the directory parts and the file-within-directory parts of
+  all prerequisites that are newer than the target.
+
 [#Automatic-Variables]
 
 ### How Patterns Match
+
+- When the target pattern does not contain a slash (and it usually does
+  not), directory names in the file names are removed from the file name
+  before it is compared with the target prefix and suffix.
+
+  After the comparison of the file name to the target pattern, the
+  directory names, along with the slash that ends them, are added on to
+  the prerequisite file names generated from the pattern rule's
+  prerequisite patterns and the file name.
+
+  The directories are ignored only for the purpose of finding an
+  implicit rule to use, not in the application of that rule.
+
+  Thus, '`e%t`' matches the file name `src/eat`, with '`src/a`{.sample}'
+  as the stem. When prerequisites are turned into file names, the
+  directories from the stem are added at the front, while the rest of
+  the stem is substituted for the '`%`'. The stem '`src/a`' with a
+  prerequisite pattern '`c%r`' gives the file name `src/car`.
+
+- A pattern rule can be used to build a given file only if there is a
+  target pattern that matches the file name, *and* all prerequisites in
+  that rule either exist or can be built.
+
+  The rules you write take precedence over those that are built in.
+
+  Note however, that a rule whose prerequisites actually exist or are
+  mentioned always takes priority over a rule with prerequisites that
+  must be made by chaining other implicit rules? See [Using Implicit
+  Rules]
+
+- It is possible that more than one pattern rule will meet these
+  criteria. In that case, `make` will choose the rule with the shortest
+  stem (that is, the pattern that matches most specifically)? If more
+  than one pattern rule has the shortest stem, `make` will choose the
+  first one found in the makefile.
+
+  This algorithm results in more specific rules being preferred over
+  more generic ones; for example:
+
+  ``` example
+  %.o: %.c
+          $(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
+
+  %.o : %.f
+          $(COMPILE.F) $(OUTPUT_OPTION) $<
+
+  lib/%.o: lib/%.c
+          $(CC) -fPIC -c $(CFLAGS) $(CPPFLAGS) $< -o $@
+  ```
+
+  Given these rules and asked to build `bar.o` where both `bar.c` and
+  `bar.f` exist, `make` will choose the first rule and compile `bar.c`
+  into `bar.o`. In the same situation where `bar.c` does not exist, then
+  `make` will choose the second rule and compile `bar.f` into `bar.o`.
+
+  If `make` is asked to build `lib/bar.o` and both `lib/bar.c` and
+  `lib/bar.f` exist, then the third rule will be chosen since the stem
+  for this rule ('`bar`') is shorter than the stem for the first rule
+  ('`lib/bar`'). If `lib/bar.c` does not exist then the third rule is
+  not eligible and the second rule will be used, even though the stem is
+  longer.
 
 [#Pattern-Match]
 
