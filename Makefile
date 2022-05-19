@@ -9,7 +9,8 @@ PFLAGS    := \
              # --to=ms
 MAKEFLAGS += \
              --no-builtin-rules\
-             --no-builtin-variables
+             --no-builtin-variables\
+             --warn-undefined-variables
 
 out_dir     := notes-output
 pdf_dir     := $(out_dir)/pdf
