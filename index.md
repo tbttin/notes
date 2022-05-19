@@ -32,17 +32,9 @@
 
 # Git
 
-- List tracked files in a bare repository (dotfiles):
+- [Pro Git v2](git/pro-git-v2.md)
 
-  ```bash
-  config ls-tree --full-tree --name-only -r HEAD
-  ```
-
-- Git `log` track moved files:
-
-  ```bash
-  git log --follow [--patch] -- filenames
-  ```
+- [Notes](git/notes.md)
 
 # Bash
 
