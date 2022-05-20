@@ -22,7 +22,7 @@ adding up all the patches.
   described as *delta-based* version control).
 
 - Instead, Git thinks of its data more like a series of snapshots of a
-  miniature filesystem. 
+  miniature filesystem.
 
 ### Nearly Every Operation Is Local
 
@@ -127,6 +127,14 @@ $ man git-<verb>
 
 ### Cloning an Existing Repository
 
+- What are these protocols?
+
+  + `https://`
+
+  + `git://`
+
+  + `user@server:path/to/repo.git` (the SSH transfer protocol)
+
 ## Recording Changes to the Repository
 
 ### Checking the Status of Your Files
@@ -135,19 +143,98 @@ $ man git-<verb>
 
 ### Staging Modified Files
 
+- `git add` is a *multipurpose* command --- you use it to begin tracking
+  new files, to stage files, and to do other things like *marking*
+  merge-conflicted files as resolved.
+
 ### Short Status
+
+```bash
+$ git status -s
+ M README
+MM Rakefile
+A  lib/git.rb
+M  lib/simplegit.rb
+?? LICENSE.txt
+```
+
+New files that aren't tracked have a `??` next to them, *new* files that
+have been added to the staging area have an `A`, modified files have an
+`M` and so on.
+
+There are two columns to the output --- the left-hand column indicates
+the status of the staging area and the right-hand column indicates the
+status of the working tree.
+
+So for example in that output, the `README` file is modified in the
+working directory but not yet staged, while the `lib/simplegit.rb` file
+is modified and staged.
+
+The `Rakefile` was modified, staged and then modified again, so there
+are changes to it that are both staged and unstaged.
 
 ### Ignoring Files
 
 ### Viewing Your Staged and Unstaged Changes
 
-## Git Diff in an External Tool
+- To see what you've changed but *not* yet staged, type `git diff` with
+  no other arguments.
+
+  That command compares what is in your working directory with what is
+  in your *staging area*.
+
+  That's why if you've staged all of your changes, `git diff` will give
+  you no output.
+
+- If you want to see what you've staged that will go into your *next
+  commit*, you can use `git diff --staged`.
+
+  This command compares your staged changes to your *last commit*.
+
+- See all the changes since the last commit, whether or not they have
+  been staged for commit or not?
+
+- Summary:
+
+  ```
+               HEAD ______git diff______ Working
+                    \       HEAD       /  tree
+                     \                /
+                      \              /
+                       \            /
+                   git diff     git diff
+                   --staged    (haven't yet staged)
+                          \      /
+                           \    /
+                            \  /
+                             \/
+                           Staging
+                            area
+  ```
 
 ### Committing Your Changes
 
 ### Skipping the Staging Area
 
+- `git commit --all` command makes Git automatically stage every file
+  that is already tracked before doing the commit, letting you skip the
+  `git add` part.
+
 ### Removing Files
+
+- Another useful thing you may want to do is to keep the file in your
+  working tree but remove it from your staging area.
+
+  ```bash
+  $ git rm --cached README
+  ```
+
+- You can pass files, directories, and file-glob patterns to the `git
+  rm` command:
+
+  ```bash
+  $ git rm log/\*.log
+  ```
 
 ### Moving Files
 
