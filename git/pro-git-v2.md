@@ -15,6 +15,8 @@ adding up all the patches.
 
 ## A Short History of Git
 
+## What is Git?
+
 ### Snapshots, Not Differences
 
 - These other systems think of the information they store as a set of
@@ -23,18 +25,6 @@ adding up all the patches.
 
 - Instead, Git thinks of its data more like a series of snapshots of a
   miniature filesystem.
-
-### Nearly Every Operation Is Local
-
-### Git Has Integrity
-
-### Git Generally Only Adds Data
-
-### The Three States
-
-## What is Git?
-
-### Snapshots, Not Differences
 
 ### Nearly Every Operation Is Local
 
@@ -208,23 +198,23 @@ are changes to it that are both staged and unstaged.
 3. See all the changes since the last commit, whether or not they have
    been staged for commit or not?
 
-- Summary:
+Summary:
 
-  ```
-               HEAD ______git diff______ Working
-                    \       HEAD       /  tree
-                     \                /
-                      \              /
-                       \            /
-                   git diff     git diff
-                   --staged    (haven't yet staged)
-                          \      /
-                           \    /
-                            \  /
-                             \/
-                           Staging
-                            area
-  ```
+```
+             HEAD ______git diff______ Working
+                  \       HEAD       /  tree
+                   \                /
+                    \              /
+                     \            /
+                  git diff    git diff
+                  --staged   (haven't yet staged)
+                        \      /
+                         \    /
+                          \  /
+                           \/
+                         Staging
+                          area
+```
 
 ### Committing Your Changes
 
