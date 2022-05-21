@@ -1,4 +1,4 @@
-# [Getting Started]
+# Getting Started
 
 ## About Version Control
 
@@ -119,13 +119,21 @@ $ man git-<verb>
 
 ## Summary
 
-# [Git Basics]
+# Git Basics
 
 ## Getting a Git Repository
 
 ### Initializing a Repository in an Existing Directory
 
+- `git init`
+
+  + Templates (default `/usr/share/git-core/templates`).
+
+  + Hooks.
+
 ### Cloning an Existing Repository
+
+- `git clone <url>`
 
 - What are these protocols?
 
@@ -139,7 +147,11 @@ $ man git-<verb>
 
 ### Checking the Status of Your Files
 
+- `git status`
+
 ### Tracking New Files
+
+- `git add`
 
 ### Staging Modified Files
 
@@ -177,22 +189,24 @@ are changes to it that are both staged and unstaged.
 
 ### Viewing Your Staged and Unstaged Changes
 
-- To see what you've changed but *not* yet staged, type `git diff` with
-  no other arguments.
+- `git diff`
 
-  That command compares what is in your working directory with what is
-  in your *staging area*.
+1. To see what you've changed but *not* yet staged, type `git diff` with
+   no other arguments.
 
-  That's why if you've staged all of your changes, `git diff` will give
-  you no output.
+   That command compares what is in your working directory with what is
+   in your *staging area*.
 
-- If you want to see what you've staged that will go into your *next
-  commit*, you can use `git diff --staged`.
+   That's why if you've staged all of your changes, `git diff` will give
+   you no output.
 
-  This command compares your staged changes to your *last commit*.
+2. If you want to see what you've staged that will go into your *next
+   commit*, you can use `git diff --staged`.
 
-- See all the changes since the last commit, whether or not they have
-  been staged for commit or not?
+   This command compares your staged changes to your *last commit*.
+
+3. See all the changes since the last commit, whether or not they have
+   been staged for commit or not?
 
 - Summary:
 
@@ -214,6 +228,8 @@ are changes to it that are both staged and unstaged.
 
 ### Committing Your Changes
 
+- `git commit`
+
 ### Skipping the Staging Area
 
 - `git commit --all` command makes Git automatically stage every file
@@ -221,6 +237,8 @@ are changes to it that are both staged and unstaged.
   `git add` part.
 
 ### Removing Files
+
+- `git rm`
 
 - Another useful thing you may want to do is to keep the file in your
   working tree but remove it from your staging area.
@@ -238,27 +256,57 @@ are changes to it that are both staged and unstaged.
 
 ### Moving Files
 
+- `git mv`
+
 ## Viewing the Commit History
+
+- `git log`
+
+Wanna know how to write a good commit? Read `log` manpage.
+
+- `git log --patch -2`
+
+- `git log --stat`
+
+- `git log --pretty=oneline|format:`
+
+  + The *author* is the person who originally wrote the work.
+
+  + The *committer* is the person who last applied the work.
+
+- `git log --graph`
 
 ### Limiting Log Output
 
-## Preventing the display of merge commits
+- `git log --since --until`
+
+- `git log --grep` # grep commit message
+
+- `git log -S function_name`
 
 ## Undoing Things
 
 ### Unstaging a Staged File
 
+- Use `git reset HEAD <file>...` to unstage.
+
 ### Unmodifying a Modified File
+
+- `git checkout`
 
 ### Undoing things with git restore
 
 #### Unstaging a Staged File with git restore
 
+- `git restore --cached`
+
 #### Unmodifying a Modified File with git restore
+
+- `git restore`
 
 ## Working with Remotes
 
-## Remote repositories can be on your local machine.
+- `git remote`
 
 ### Showing Your Remotes
 
@@ -266,39 +314,120 @@ are changes to it that are both staged and unstaged.
 
 ### Fetching and Pulling from Your Remotes
 
+- `git fetch`
+
+- `git pull`
+
+- It's important to note that the `git fetch` command only downloads the
+  data (new work) to your local repository --- it doesn't automatically
+  merge it with any of your work or modify what you're currently working
+  on.
+
 ### Pushing to Your Remotes
+
+- `git push`
 
 ### Inspecting a Remote
 
+- `git remote show [remote]`
+
 ### Renaming and Removing Remotes
+
+- `git remote rename`
+
+- `git remote remove` or `git remove rm`
 
 ## Tagging
 
 ### Listing Your Tags
 
-## Listing tag wildcards requires `-l`
+- `git tag`
+
+- `git tag --list 'v1.8.5*'`
 
 ### Creating Tags
 
+- Git supports two types of tags: *lightweight* and *annotated*.
+
+  + A lightweight tag is very much like a branch that doesn't change ---
+    it's just a pointer to a specific commit?
+
+  + Annotated tags, however, are stored as full objects in the Git
+    database. They're checksummed; contain the tagger name, email, and
+    date; have a tagging message; and can be signed and verified with
+    GNU Privacy Guard (GPG).
+
+- Determine if a tag is annotated: `git cat-file -t <tagname>`
+
+  + `commit` for lightweight, since there is no tag object, it points
+    directly to the commit.
+
+  + `tag` for annotated, since there is a tag object in that case.
+
 ### Annotated Tags
+
+- `git tag -a <tagname>`
+
+- `git tag -m 'message' <tagname>` # -a is implied
+
+- `git show <tagname>`
 
 ### Lightweight Tags
 
+- `git tag <tagname>`
+
+- This is basically the commit checksum stored in a file --- no other
+  information is kept.
+
+- List all lightweight tags: `git show-ref --tags`
+
 ### Tagging Later
+
+- `git tag -a <tagname> <checksum>`
 
 ### Sharing Tags
 
-## `git push`
+- `git push <remote> <tagname>`
+
+  This process is just like sharing remote branches.
+
+- `git push <remote> --tags` will push both lightweight and annotated
+  tags.
+
+- To push only annotated tags: `git push <remote> --follow-tags`
+
+  There is currently no option to push only lightweight tags.
 
 ### Deleting Tags
 
+- Local: `git tag -d <tagname>`
+
+- Remote: two common variations:
+
+  + `git push <remote> :refs/tags/<tagname>`
+
+    The way to interpret the above is to read it as the null value
+    before the colon is being pushed to the remote tag name, effectively
+    deleting it.
+
+  + `git push origin --delete <tagname>`
+
 ### Checking out Tags
+
+- `git checkout <tagname>` # detached HEAD
+
+  In "detached HEAD" your new commit won't belong to any branch and will
+  be *unreachable*, except by the exact commit hash.
+
+- `git checkout -b <branchname> <tagname>`
 
 ## Git Aliases
 
+- `git config --global alias.unstage 'reset HEAD --'`
+
 ## Summary
 
-# [Git Branching]
+# Git Branching
 
 ## Branches in a Nutshell
 
@@ -360,7 +489,7 @@ are changes to it that are both staged and unstaged.
 
 ## Summary
 
-# [Git on the Server]
+# Git on the Server
 
 ## The Protocols
 
@@ -432,7 +561,7 @@ are changes to it that are both staged and unstaged.
 
 ## Summary
 
-# [Distributed Git]
+# Distributed Git
 
 ## Distributed Workflows
 
@@ -494,7 +623,7 @@ are changes to it that are both staged and unstaged.
 
 ## Summary
 
-# [GitHub]
+# GitHub
 
 ## Account Setup and Configuration
 
@@ -604,7 +733,7 @@ are changes to it that are both staged and unstaged.
 
 ## Summary
 
-# [Git Tools]
+# Git Tools
 
 ## Revision Selection
 
@@ -796,7 +925,7 @@ are changes to it that are both staged and unstaged.
 
 ## Summary
 
-# [Customizing Git]
+# Customizing Git
 
 ## Git Configuration
 
@@ -876,7 +1005,7 @@ are changes to it that are both staged and unstaged.
 
 ## Summary
 
-# [Git and Other Systems]
+# Git and Other Systems
 
 ## Git as a Client
 
@@ -994,7 +1123,7 @@ are changes to it that are both staged and unstaged.
 
 ## Summary
 
-# [Git Internals]
+# Git Internals
 
 ## Plumbing and Porcelain
 
@@ -1070,7 +1199,7 @@ are changes to it that are both staged and unstaged.
 
 ## Summary
 
-# [Appendix A: Git in Other Environments]
+# Appendix A: Git in Other Environments
 
 ## Graphical Interfaces
 
@@ -1112,7 +1241,7 @@ are changes to it that are both staged and unstaged.
 
 ## Summary
 
-# [Appendix B: Embedding Git in your Applications]
+# Appendix B: Embedding Git in your Applications
 
 ## Command-line Git
 
@@ -1150,7 +1279,7 @@ are changes to it that are both staged and unstaged.
 
 ### Further Reading
 
-# [Appendix C: Git Commands]
+# Appendix C: Git Commands
 
 ## Setup and Config
 
