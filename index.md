@@ -32,6 +32,9 @@
 
 # Git
 
+Read more git command manual (it's not so hard, try to find one new
+option/thing *every day*).
+
 - [Pro Git v2](git/pro-git-v2.md)
 
 - [Notes](git/notes.md)
@@ -90,6 +93,46 @@ control operators '|' or '|&'.
   into the foreground. Similarly, '`%1 &`' resumes job 1 in the
   background, equivalent to '`bg %1`'.
 
+# Command-line manuals
+
+## Built-in commands
+
+- `<command> --help`
+
+  `help <command>`
+
+  `<command> -?`
+
+  **Or** `man bash` then `/^  +<command> \[` for more detail.
+
+  What the heck about this regex? Where to find regex library docs in my
+  system? Answered in [Searching in manual pages].
+
+## Searching
+
+- `type -a <command>` to see types of `command`.
+
+- `whatis <command>` to see sections, short descriptions of the `command`.
+
+  `man -f <command>` or `man --whatis command`.
+
+- `apropos <keyword>` search `keyword` in short description of manpages.
+
+  `man -k <keyword>` or `man --apropos <keyword>`.
+
+## Searching in manual pages
+
+### `less` as pager
+
+- `less --version` to see what regex library is used.
+
+  `ldd "$(which less)"`
+
+  `./configure --with-regex=?` (['`pcre2`' in Arch Linux])
+
+['`pcre2`' in Arch Linux]:
+https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/less/trunk/PKGBUILD
+
 # Note taking
 
 ## Some note picked up when reading wiki.vim docs
@@ -143,6 +186,8 @@ control operators '|' or '|&'.
   + TOC
 
   + Index mode
+
+  + Follow links
 
 ## How to take note?
 
