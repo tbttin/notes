@@ -33,7 +33,7 @@ adding up all the patches.
 - Everything in Git is checksummed before it is stored and is then
   referred to by that checksum.
 
-- The mechanism that Git uses for this checksumming is called a SHA-1
+  The mechanism that Git uses for this checksumming is called a SHA-1
   hash.
 
 - This is a 40-character string composed of hexadecimal characters (0--9
@@ -47,11 +47,11 @@ adding up all the patches.
 - Git has three main states that your files can reside in: *modified*,
   *staged*, and *committed*:
 
-  + Modified means that you have changed the file but have not committed
-    it to your database yet.
+  + Modified (tracked) means that you have changed the file but have not
+    committed it to your database yet.
 
-  + Staged means that you have marked a modified file in its current
-    version to go into your next commit snapshot.
+  + Staged means that you have marked a new or newly modified file in
+    its current version to go into your next commit snapshot.
 
   + Committed means that the data is safely stored in your local
     database.
@@ -62,6 +62,8 @@ adding up all the patches.
   and the *Git directory*.
 
 ## The Command Line
+
+- See also `gitcli(7)`
 
 ## Installing Git
 
@@ -117,9 +119,13 @@ $ man git-<verb>
 
 - `git init`
 
+- `git-init(1)`
+
   + Templates (default `/usr/share/git-core/templates`).
 
   + Hooks.
+
+- `gitrepository-layout(5)`
 
 ### Cloning an Existing Repository
 
@@ -176,6 +182,8 @@ The `Rakefile` was modified, staged and then modified again, so there
 are changes to it that are both staged and unstaged.
 
 ### Ignoring Files
+
+- `gitignore(5)`
 
 ### Viewing Your Staged and Unstaged Changes
 
@@ -347,7 +355,7 @@ Wanna know how to write a good commit? Read `log` manpage.
     date; have a tagging message; and can be signed and verified with
     GNU Privacy Guard (GPG).
 
-- Determine if a tag is annotated: `git cat-file -t <tagname>`
+- Determine if a tag is annotated: `git cat-file -t <tag>`
 
   + `commit` for lightweight, since there is no tag object, it points
     directly to the commit.
@@ -356,15 +364,15 @@ Wanna know how to write a good commit? Read `log` manpage.
 
 ### Annotated Tags
 
-- `git tag -a <tagname>`
+- `git tag -a <tag>`
 
-- `git tag -m 'message' <tagname>` # -a is implied
+- `git tag -m 'message' <tag>` # -a is implied
 
-- `git show <tagname>`
+- `git show <tag>`
 
 ### Lightweight Tags
 
-- `git tag <tagname>`
+- `git tag <tag>`
 
 - This is basically the commit checksum stored in a file --- no other
   information is kept.
@@ -373,11 +381,11 @@ Wanna know how to write a good commit? Read `log` manpage.
 
 ### Tagging Later
 
-- `git tag -a <tagname> <checksum>`
+- `git tag -a <tag> <checksum>`
 
 ### Sharing Tags
 
-- `git push <remote> <tagname>`
+- `git push <remote> <tag>`
 
   This process is just like sharing remote branches.
 
@@ -390,26 +398,26 @@ Wanna know how to write a good commit? Read `log` manpage.
 
 ### Deleting Tags
 
-- Local: `git tag -d <tagname>`
+- Local: `git tag -d <tag>`
 
 - Remote: two common variations:
 
-  + `git push <remote> :refs/tags/<tagname>`
+  + `git push <remote> :refs/tags/<tag>`
 
     The way to interpret the above is to read it as the null value
     before the colon is being pushed to the remote tag name, effectively
     deleting it.
 
-  + `git push origin --delete <tagname>`
+  + `git push origin --delete <tag>`
 
 ### Checking out Tags
 
-- `git checkout <tagname>` # detached HEAD
+- `git checkout <tag>` # detached HEAD
 
   In "detached HEAD" your new commit won't belong to any branch and will
   be *unreachable*, except by the exact commit hash.
 
-- `git checkout -b <branchname> <tagname>`
+- `git checkout -b <branch> <tag>`
 
 ## Git Aliases
 
@@ -419,59 +427,459 @@ Wanna know how to write a good commit? Read `log` manpage.
 
 # Git Branching
 
+- In many VCS tools, this (create/delete a branch) is a somewhat
+  expensive process, often requiring you to create a new copy of your
+  source code directory, which can take a long time for large projects.
+
 ## Branches in a Nutshell
+
+- Staging the files computes a checksum for each one, stores *that
+  version* of the file in the Git repository (Git refers to them as
+  *blobs*), and adds that checksum to the staging area.
+
+- When you make a commit, Git stores a commit object that contains a
+  *pointer* to the snapshot (root tree's hash) of the content you
+  staged.
+
+  Git checksums each subdirectory and stores them as a tree object in
+  the Git repository. Git then creates a commit object that has the
+  metadata and a pointer to the root project tree so it can re-create
+  that snapshot when needed.
+
+  This object also contains the author's name and email address, the
+  message that you typed, and *pointers* to the commit or commits that
+  directly came before this commit (its parent or parents): zero parents
+  for the initial commit, one parent for a normal commit, and multiple
+  parents for a commit that results from a merge of two or more
+  branches.
+
+  A commit and its tree:
+
+  ```
+                    /--> tree --> glob
+                   /          \
+                  /            \--> glob
+  commit --> tree --> glob
+                  \
+                   \--> glob
+  ```
+
+- A branch in Git is simply a lightweight movable pointer to one of
+  these commits.
 
 ### Creating a New Branch
 
+- `git brach <newbranch>`
+
+- `git log --oneline --decorate`
+
+- What happens when you create a new branch? Well, doing so creates a
+  new pointer for you to move around.
+
+- How does Git know what branch you're currently on? It keeps a special
+  pointer called `HEAD`.
+
+  ```
+                       HEAD
+                        |
+                        v
+                      master
+                        |
+                        v
+  98ca8 --> 87ac9 --> f30bc
+                        ^
+                        |
+                      testing
+  ```
+
 ### Switching Branches
 
-## `git log`
+- `git checkout <branch>`
 
-## Switching branches changes files in your working directory
+  `git checkout master`
 
-## Creating a new branch and switching to it at the same time
+  That command did two things. It *moved* the HEAD pointer back to point
+  to the `master` branch, and it *reverted* the files in your working
+  directory back to the snapshot that `master` points to.
+
+- `git log <branch>`
+
+- `git log --all`
+
+- `git log --oneline --decorate --graph --all`
+
+- Because a branch in Git is actually a simple file that contains the 40
+  character SHA-1 checksum of the commit it points to, branches are
+  cheap to create and destroy.
+
+  Creating a new branch is as quick and simple as writing 41 bytes to a
+  file (40 characters and a newline).
+
+- `git switch <branch>` # git version >2.23
+
+  `git switch -` return to previous checked out branch.
+
+- Creating a new branch and switching to it at the same time:
+
+  + `git checkout -b <branch>`
+
+  + `git switch -c <branch>`
 
 ## Basic Branching and Merging
 
 ### Basic Branching
 
+- `git checkout <tobranch>`
+
+  `git merge <thisbranch> <thatbranch>` merge `<thisbranch>` and
+  `<thatbranch>` into the current branch.
+
+   + `--autostash` be careful with non-trivial conflicts.
+
+   + `--rerere-autoupdate`
+
+  `git branch -d <branch>`
+
+- Fast-forward example:
+
+  ```
+                master   hotfix
+                  |        |
+                  v        v
+  C0 <--- C1 <--- C2 <--- C4
+  ```
+
+  ```bash
+  git checkout master
+  git merge hotfix
+  ```
+
+  To phrase that another way, when you try to merge one commit with a
+  commit that can be reached by following the first commit's history,
+  Git simplifies things by moving the pointer forward because there is
+  no divergent work to merge together --- this is called a
+  *fast-forward*.
+
 ### Basic Merging
 
+- Diverged branches:
+
+  ```
+                         master
+                           |
+                           v
+  C0 <--- C1 <--- C2 <--- C4
+                  ^
+                  |
+                  `--- C3 <--- C5
+                                ^
+                                |
+                              iss53
+  ```
+
+- In this case, Git does a simple *three-way merge*, using the two
+  snapshots pointed to by the branch tips and the common ancestor of the
+  two.
+
+- Git creates a new snapshot that results from this three-way merge and
+  automatically creates a new commit that points to it.
+
+  This is referred to as a merge commit, and is special in that it has
+  more than one parent.
+
 ### Basic Merge Conflicts
+
+- `git-merge(1)`
+
+  + How to resolve conflicts:
+
+    `git merge --abort`
+
+    `git log --merge --patch <path>`
+
+    `git show :1:filename` show the common ancestor.
+
+    `git show :2:filename` show the *HEAD*.
+
+    `git show :3:filename` show the *MERGE_HEAD*.
+
+  + Merge strategies?
+
+  + Configurations:
+
+   * `'merge.conflictstyle' = merge|diff3|zdiff3`
+
+- After you've resolved each of these sections in each conflicted file
+  (deleted conflict markers), run `git add` on each file to mark it as
+  resolved.
+
+  Staging the file marks it as resolved in Git.
+
+- `git commit`
+
+  `git merge --continue`
+
+## Branch Management
+
+- `git brach -v` to see last commit on each branch.
+
+- `git brach --merged`
+
+   Branches on this list without the `*` in front of them are generally
+   fine to delete with `git branch -d`; you've already incorporated
+   their work into another branch, so you're not going to lose anything.
+
+- `git brach --no-merged`
+
+  `git branch --no-merged <branch>`
+
+- `git branch -D <branch>`
 
 ### Changing a branch name
 
 #### Changing the master branch name
 
+- Warning:
+
+  Changing the name of a branch like master/main/mainline/default will
+  break the integrations, services, helper utilities and build/release
+  scripts that your repository uses. Before you do this, make sure you
+  consult with your collaborators. Also, make sure you do a thorough
+  search through your repo and update any references to the old branch
+  name in your code and scripts.
+
+- `git branch --move master main`
+
+- `git push --set-upstream origin main`
+
+  `git branch --all`
+
+- Now you have a few more tasks in front of you to complete the
+  transition:
+
+  + Any projects that depend on this one will need to update their code
+    and/or configuration.
+
+  + Update any test-runner configuration files.
+
+  + Adjust build and release scripts.
+
+  + Redirect settings on your repo host for things like the repo's
+    default branch, merge rules, and other things that match branch
+    names.
+
+  + Update references to the old branch in documentation.
+
+  + Close or merge any pull requests that target the old branch.
+
+- `git push origin --delete master`
+
 ## Branching Workflows
 
 ### Long-Running Branches
 
+- The idea is that your branches are at various levels of stability;
+  when they reach a more stable level, they're merged into the branch
+  above them.
+
+  + `master` stable, has been or will be released.
+
+  + `develop` or `next` to work or test stability.
+
+  + `proposed` or `pu` (proposed updates) more levels of stability.
+
+- Again, having multiple long-running branches isn't necessary, but it's
+  often helpful, especially when you're dealing with very large or
+  complex projects.
+
 ### Topic Branches
+
+- Topic branches (`hotfix`, `iss53`), however, are useful in projects of
+  any size. A topic branch is a short-lived branch that you create and
+  use for a single particular feature or related work.
 
 ## Remote Branches
 
-## "origin" is not special
+- `origin/master`: remote's master branch
+
+  `master`: local branch
+
+  `master` vs. `origin/master` vs. `v2.3.7`?
+
+    + `v2.3.7` do not move automatically
+
+- `git remote`
+
+- Remote references are references (pointers) in your remote
+  repositories, including branches, tags, and so on.
+
+  You can get a full list of remote references explicitly with `git
+  ls-remote <remote>`, or `git remote show <remote>` for remote branches
+  as well as more information.
+
+- Remote-tracking branches are references to the state of remote
+  branches. They're local references that you can't move; Git moves them
+  for you whenever you do any network communication, to make sure they
+  accurately represent the state of the remote repository.
+
+  Think of them as bookmarks, to remind you where the branches in your
+  remote repositories were the last time you connected to them.
 
 ### Pushing
 
-## Don't type your password every time
+- `git push <remote> <branch>`
+
+  `git push origin serverfix` this is a bit of a shortcut.
+
+  Git automatically expands the `serverfix` branchname out to
+  `refs/heads/serverfix:refs/heads/serverfix`, which means, "Take my
+  `serverfix` local branch and push it to update the remote's
+  `serverfix` branch."
+
+- `git push <remote> <localbranch>:<remotebranch>`
+
+  `git push origin serverfix:serverfix` does the same thing --- it says,
+  "Take my serverfix and make it the remote's serverfix."
+
+- `git fetch orgin` to fetch new branches.
+
+  It's *important* to note that when you do a fetch that brings down new
+  remote-tracking branches, you don't automatically have local, editable
+  copies of them.
+
+  In other words, in this case, you don't have a new `serverfix` branch
+  --- you have only an `origin/serverfix` pointer that you can't modify.
+
+  To merge this work into your current working branch, you can run `git
+  merge origin/serverfix`.
+
+  If you want your own `serverfix` branch that you can work on, you can
+  base it off your remote-tracking branch with `git checkout -b
+  serverfix origin/serverfix`
+
+  See also [Tracking Branches].
+
+#### Don't type your password every time
+
+- If you don't want to type it every single time you push, you can set
+  up a "credential cache". The simplest is just to keep it in memory for
+  *a few minutes*, which you can easily set up by running `git config
+  --global credential.helper cache`.
 
 ### Tracking Branches
 
-## Upstream shorthand
+- `git checkout -b <branch> <remote>/<branch>`
+
+  Shortcut: `git checkout --track <remote>/<branch>`
+
+  Shortcut of shortcut: `git checkout <branch>` if the branch name
+  you're trying to checkout (a) doesn't exist and (b) exactly matches a
+  name on only one remote, Git will create a tracking branch for you.
+
+- Checking out a local branch from a remote-tracking branch
+  automatically creates what is called a "tracking branch" (and the
+  branch it tracks is called an "upstream branch").
+
+- If you already have a local branch and want to set it to a remote
+  branch you just pulled down, or want to change the upstream branch
+  you're tracking, you can use the `-u` or `--set-upstream-to` option to
+  `git branch` to explicitly set it at any time.
+
+  ```bash
+  $ git branch -u origin/serverfix
+  ```
+
+- `git fetch --all; git branch -vv`
+
+#### Upstream shorthand
+
+When you have a tracking branch set up, you can reference its upstream
+branch with the `@{upstream}` or `@{u}` shorthand. So if you're on the
+`master` branch and it's tracking `origin/master`, you can say something
+like `git merge @{u}` instead of `git merge origin/master` if you wish.
 
 ### Pulling
 
+- `git fetch`
+
+- `git pull`
+
 ### Deleting Remote Branches
+
+- `git push origin --delete <branch>`
+
+  Basically all this does is remove the pointer from the server. The Git
+  server will generally keep the data there for a while until a garbage
+  collection runs, so if it was accidentally deleted, it's often easy to
+  recover.
+
+  See also [Changing a branch name].
 
 ## Rebasing
 
 ### The Basic Rebase
 
+- `git checkout experiment`
+
+  `git rebase master`
+
+  Rebase `experiment` branch onto the `master` branch.
+
+  This operation works by going to the common ancestor of the two
+  branches (the one you're on and the one you're rebasing onto), getting
+  the *diff* introduced by each commit of the branch you're on, saving
+  those diffs to temporary files, resetting the current branch to the
+  same commit as the branch you are rebasing onto, and finally applying
+  each change in turn.
+
+- With the `rebase` command, you can take all the changes that were
+  committed on one branch and replay them on a different branch.
+
+- `git checkout master`
+
+  `git merge experiment` fast-foward `master` branch.
+
 ### More Interesting Rebases
 
+- You can take the changes on `client` that aren't on `server` (`C8` and
+  `C9`) and replay them on your `master` branch by using the `--onto`
+  option of `git rebase`:
+
+  ```
+                        master
+                          |
+                          v
+  C1 <--- C2 <--- C5 <--- C6
+          ^
+          |
+          `--- C3 <--- C4 <--- C10
+               ^                ^
+               |                |
+               |              server
+               |
+               `--- C8 <--- C9
+                            ^
+                            |
+                          client
+  ```
+
+- `git rebast --onto master server client`
+
+  This basically says, "Take the `client` branch, figure out the
+  patches since it diverged from the `server` branch, and replay
+  these patches in the `client` branch as if it was based
+  directly off the `master` branch instead."
+
+  `git checkout master; git merge experiment`
+
+
+- `git rebase master server` rebase the `server` branch onto the
+  `master` branch without having to check it out.
+
 ### The Perils of Rebasing
+
+Do not rebase commits that exist outside your repository and that people
+may have based work on.
 
 ### Rebase When You Rebase
 
@@ -554,6 +962,8 @@ Wanna know how to write a good commit? Read `log` manpage.
 # Distributed Git
 
 ## Distributed Workflows
+
+- `gitworkflows(7)`
 
 ### Centralized Workflow
 
