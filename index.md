@@ -110,7 +110,7 @@ control operators '|' or '|&'.
   What the heck about this regex? Where to find regex library docs in my
   system? Answered in [Searching in manual pages].
 
-## Searching
+## Searching for manpage
 
 - `type -a <command>` to see types of `command`.
 
@@ -118,11 +118,17 @@ control operators '|' or '|&'.
 
   `man -f <command>` or `man --whatis command`.
 
-- `apropos <keyword>` search `keyword` in short description of manpages.
+- `apropos <text>` search `text` in short description of manpages.
 
-  `man -k <keyword>` or `man --apropos <keyword>`.
+  `man -k <text>` or `man --apropos <text>`.
 
-## Searching in manual pages
+- `man -K <text>` or `man --global-apropos <text>`
+
+  `man -wK <text>`
+
+  To search `text` in all manpages. Should specify a section number.
+
+## Searching inside manpages
 
 ### `less` as pager
 
