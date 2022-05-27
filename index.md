@@ -37,6 +37,8 @@ option/thing *every day*).
 
 - [Pro Git v2](git/pro-git-v2.md)
 
+- [Manuals](git/manuals.md)
+
 - [Notes](git/notes.md)
 
 # Bash

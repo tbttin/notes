@@ -13,50 +13,8 @@
   ```
 - Git branching strategies vs. trunk-based development?
 
-# Manuals
+- *Symbolic ref* is a ref that point to another ref.
 
-- How to read Git manuals:
+  A symbolic ref is a regular file that stores a string that begins with
+  `ref: refs/`.
 
-  + [The Scott Chacon and Ben Straub's Pro Git book]
-
-  + `git(1)`
-
-    `/^GUIDES`
-
-  + `gitcli(7)`
-
-  + `gittutorial(7)`
-
-    `gittutorial-2(7)`
-
-  + [Git User's Manual]
-
-  + `giteveryday(7)`
-
-    * `git-init(1)`
-
-    * `git-add(1)`
-
-    * `git-merge(1)`
-
-  + `gitworkflows(7)`
-
-[The Scott Chacon and Ben Straub's Pro Git book]:
-https://git-scm.com/book
-
-[Git User's Manual]:
-https://git-scm.com/docs/user-manual
-
-# Command-line interface
-
-- `gitcli(7)`
-
-- The ambiguous between revision and file name (*HEAD*):
-
-  + File name: `git diff -- HEAD`
-
-  + Revision: `git diff HEAD --`
-
-  `--end-of-options`
-
-  Full ref 'refs/heads/master' vs. full path `./master`?
