@@ -1,36 +1,44 @@
 # Manuals
 
-- How to read Git manuals:
+- [ ] [The Scott Chacon and Ben Straub's Pro Git book]
 
-  + [The Scott Chacon and Ben Straub's Pro Git book]
+- [x] `git(1)`
 
-  + `git(1)`
+  + [ ] `/^GUIDES`
 
-    `/^GUIDES`
+- [x] `gitcli(7)`
 
-  + `gitcli(7)`
+- [x] `gitrevisions(7)`
 
-  + `gitrevisions(7)`
-  
-  + `gitglossary(7)`
+- [x] `gitglossary(7)`
 
-  + `gittutorial(7)`
+- [x] `gittutorial(7)`
 
-    `gittutorial-2(7)`
+- [ ] `gittutorial-2(7)`
 
-  + [Git User's Manual]
+  + [ ] `git-cat-file(1)`
 
-  + `giteveryday(7)`
+    `git cat-file -t <SHA-1>`
 
-    * `git-init(1)`
+    `git cat-file commit <SHA-1>`
 
-    * `git-add(1)`
+    `gitrevisions(7)` recap: `git cat-file commit main`
 
-    * `git-merge(1)`
+  + [ ] `git-ls-tree(1)`
 
-  + `gitworkflows(7)`
+- [ ] [Git User's Manual]
 
-  + `gitcore-tutorial(7)`
+- [ ] `giteveryday(7)`
+
+  + [x] `git-init(1)`
+
+  + [x] `git-add(1)`
+
+  + [x] `git-merge(1)`
+
+- [ ] `gitworkflows(7)`
+
+- [ ] `gitcore-tutorial(7)`
 
 [The Scott Chacon and Ben Straub's Pro Git book]:
 https://git-scm.com/book
@@ -47,9 +55,9 @@ https://git-scm.com/docs/user-manual
 
   + `-S`, `--staged` stash only the index.
 
-  + `/^EXAMPLES` some really good examples.
-
   + `--index`?
+
+  + `/^EXAMPLES` some really good examples.
 
 # `git-reflog(1)`
 
