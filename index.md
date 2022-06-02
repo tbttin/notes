@@ -39,7 +39,7 @@ option/thing *every day*).
 
 - [Manuals](git/manuals.md)
 
-- [Notes](git/notes.md)
+- [Drafts](git/drafts.md)
 
 # Bash
 
