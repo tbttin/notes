@@ -136,9 +136,11 @@ control operators '|' or '|&'.
 
   `ldd "$(which less)"`
 
-  `./configure --with-regex=?` (['`pcre2`' in Arch Linux])
+  `./configure --with-regex=?` (['`PCRE2`'] in Arch Linux [PKGBUILD])
 
-['`pcre2`' in Arch Linux]:
+['`PCRE2`']:
+https://www.pcre.org/current/doc/html/pcre2syntax.html
+[PKGBUILD]:
 https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/less/trunk/PKGBUILD
 
 # Note taking
