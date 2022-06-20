@@ -56,7 +56,7 @@
           -d 'ip_version=6' \
           -d 'use_mirror_status=on' |
           sed -e 's/^#Server/Server/' -e '/^#/d' |
-          rankmirrors -n 6 - > mirrorlist &
+          rankmirrors -n 6 - > ~/mirrorlist &
   ```
 
 # Log file
