@@ -22,7 +22,7 @@
 - List *modified* configuration files:
 
   ```bash
-  pacman --query --info --info | grep ^MODIFIED | cut --fileds=2
+  pacman --query --info --info | grep ^MODIFIED | cut --fields=2
   `````
 
 # Cache cleaning
