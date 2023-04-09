@@ -64,6 +64,18 @@
   config ls-tree --full-tree --name-only -r HEAD
   ```
 
+# Submodules
+
+## Add submodules
+
+## Remove submodules
+
+```bash
+git rm <path-to-submodule>
+rm -rf .git/modules/<path-to-submodule>
+git config --remove-section submodule.<path-to-submodule>
+```
+
 # Miscellany
 
 - Git `log` track moved files:
@@ -76,7 +88,8 @@
   ```bash
   mkdir my-git.git
   cd my-git.git
-  GIT_DIR=. git init
+  GIT_DIR=. git init # or
+  git init --bare /path/to/my-git.git
   ```
 
 - Git branching strategies vs. trunk-based development?

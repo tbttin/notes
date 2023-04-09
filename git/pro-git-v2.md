@@ -107,6 +107,8 @@ commands:
 $ git help <verb>
 $ git <verb> --help
 $ man git-<verb>
+# Also
+$ man git <command>
 ```
 
 ## Summary
@@ -794,9 +796,13 @@ Wanna know how to write a good commit? Read `log` manpage.
 #### Upstream shorthand
 
 When you have a tracking branch set up, you can reference its upstream
-branch with the `@{upstream}` or `@{u}` shorthand. So if you're on the
-`master` branch and it's tracking `origin/master`, you can say something
-like `git merge @{u}` instead of `git merge origin/master` if you wish.
+branch with the `@{upstream}` or `@{u}` shorthand.
+
+So if you're on the `master` branch and it's tracking `origin/master`,
+you can say something like `git merge @{u}` instead of `git merge
+origin/master` if you wish.
+
+See `gitrevisions(7)`
 
 ### Pulling
 
@@ -880,6 +886,30 @@ like `git merge @{u}` instead of `git merge origin/master` if you wish.
 
 Do not rebase commits that exist outside your repository and that people
 may have based work on.
+
+- Read
+
+  + `git-reflog(1)`
+
+  + `git-reset(1)`
+
+  + `git-checkout(1)`
+
+  + `git-restore(1)`
+
+  + `git-revert(1)`
+
+  + `git-switch(1)`
+
+  + `git-branch(1)`
+
+  + `git-tag(1)`
+
+  + `git-config(1)`
+
+  + `git-show(1)`
+
+  + `git-remote(1)`
 
 ### Rebase When You Rebase
 
@@ -1136,6 +1166,8 @@ may have based work on.
 # Git Tools
 
 ## Revision Selection
+
+- `gitrevision(7)`
 
 ### Single Revisions
 
