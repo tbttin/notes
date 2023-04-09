@@ -228,7 +228,7 @@
 - `g_`: to the last non-blank character of the line.
 
 - `ga`: print the ASCII value of the character under the cursor in decimal,
-  hexadecimal and octal. See also '`g8`', '`g?`'.
+  hexadecimal and octal. See also the Unicode versions '`g8`'; '`g?`'.
 
 - '`change-list-jump`':
 
@@ -259,7 +259,7 @@
 
   + `:sh[ell]`, or
 
-  + `CTRL-Z`, `fg [job spec]`, `bg [job spec]`
+  + `CTRL-Z`, `fg [jobspec]`, `bg [jobspec]`
 
 - Start `vim` from terminal (aliased):
 
@@ -396,4 +396,6 @@
 - `/\v` and PCRE?
 
 - `diffopt` [See more](https://vimways.org/2018/the-power-of-diff/)
+
+- mnemonic
 
