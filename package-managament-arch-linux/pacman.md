@@ -17,13 +17,13 @@
   pacman --query --owns filename
   # or
   pacman --files --refresh filename
-  `````
+  ```
 
 - List *modified* configuration files:
 
   ```bash
   pacman --query --info --info | grep ^MODIFIED | cut --fields=2
-  `````
+  ```
 
 # Cache cleaning
 
