@@ -63,3 +63,9 @@
 
 - Pacman log file can be found in `/var/log/pacman.log`.
 
+- Packages install/update history:
+
+  ```bash
+  grep "\(upgraded\|installed\) $pkg" /var/log/pacman.log
+  ```
+
