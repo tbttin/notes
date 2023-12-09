@@ -143,6 +143,11 @@ https://www.pcre.org/current/doc/html/pcre2syntax.html
 [PKGBUILD]:
 https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/less/trunk/PKGBUILD
 
+# Organic farming
+
+- [The One-Straw Revolution - An Introduction to Natural
+  Farming](organic-farming/the-one-straw-revolution-an-introduction-to-natural-farming.md)
+
 # Note taking
 
 ## Some note picked up when reading wiki.vim docs
