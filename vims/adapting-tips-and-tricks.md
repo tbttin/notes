@@ -162,6 +162,10 @@
     `:se[t] all`     show all non-termcap options\
     `:se[t] termcap` show all termcap options
 
+- Save and see the changes: `:w !diff % -` (if there is command line
+  instead of a filename vim write the files content to stdin of the
+  shell).
+
 ## Buffers
 
 - The file you were previously editing is called the *alternate* file.
@@ -253,6 +257,21 @@
   `qM@mq`\
   `@m`
 
+# Windowing
+
+- Splitting: `CTRL-W_v` or `CTRL-W_s`.
+
+- Vertical and horizontal switch (if there are only 2 windows,
+  `CTRL-W_t can be dropped`):
+  
+  + Verical to horizontal split: `CTRL-W_t` `CTRL-W_K`.
+
+  + Horizontal to vertical split: `CTRL-W_t` `CTRL-W_H`.
+
+- Diff files in each of the windows: `:difft[his]` or `:windo difft[his]`.
+
+  + To turn it off: `:diffo[ff]` or `:diffo[ff]!` 
+
 # Miscellany
 
 - Doing some external command line works:
@@ -297,6 +316,8 @@
 
   '`buffer-list`': every file you open in vim (unless it was deleted
   with '`:bdel`' or '`:bwipe`').
+
+- Exit with a non-zero exit code: `:cq[uit]`
 
 ## Uncensored
 
