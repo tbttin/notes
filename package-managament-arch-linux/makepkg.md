@@ -10,6 +10,8 @@
 
   + `build()`
 
+  + `package()`
+
 - Frequently used cases and explanations:
 
   ```bash
@@ -27,6 +29,10 @@
   + Clean up leftover work files and directories after a successful build.
 
   + `--noarchive`: do not create the archive.
+
+  + `--verifysource`: download the file if required and perform the integrity checks.
+
+  + `--nobuild`: when patches checking is required.
 
 - Generate/update checksums:
 
