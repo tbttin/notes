@@ -270,6 +270,8 @@
 
 - Diff files in each of the windows: `:difft[his]` or `:windo difft[his]`.
 
+  + `[c` and `]c` to jump between diffs.
+
   + To turn it off: `:diffo[ff]` or `:diffo[ff]!` 
 
 # Miscellany
