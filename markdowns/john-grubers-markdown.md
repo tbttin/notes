@@ -44,8 +44,8 @@
 
   + Example:
 
-    This is `[an example] [id]` reference-style link. `[id]:
-    http://example.com/  "Optional Title Here"`
+    This is `[an example][id]` reference-style link. `[id]:
+    http://example.com/ "Optional Title Here"`
 
   + Link definition names may consist of letters, numbers, spaces and
     punctuation - but they are _not_ case sensitive.
