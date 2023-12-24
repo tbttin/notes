@@ -99,20 +99,20 @@ control operators '|' or '|&'.
 
 ## Built-in commands
 
+- `type -a <command>` to see types of `command`.
+
 - `<command> --help`
 
   `help <command>`
 
   `<command> -?`
 
-  **Or** `man bash` then `/^  +<command> \[` for more detail.
+  **Or** `man bash` then `/^ +<command> \[` for more detail.
 
   What the heck about this regex? Where to find regex library docs in my
   system? Answered in [Searching in manual pages].
 
 ## Searching for manpage
-
-- `type -a <command>` to see types of `command`.
 
 - `whatis <command>` to see sections, short descriptions of the `command`.
 
@@ -142,6 +142,97 @@ control operators '|' or '|&'.
 https://www.pcre.org/current/doc/html/pcre2syntax.html
 [PKGBUILD]:
 https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/less/trunk/PKGBUILD
+
+# Linux Foundation's Filesystem Hierarchy Standard (FHS)
+
+- See `hier(7)`: typical Linux filesistem hierarchy.
+
+  + `/media/*` external devices mount point. Arch Linux does not use
+    that.
+
+- See `file-hierarchy(7)`, **systemd** system and service manager
+  hierarchy.
+
+## How to classify?
+
+- Some questions that might help to distinguish between the different classes:
+
+  |                       | DATA | CONFIG | STATE | CACHE | RUNTIME |
+  |-----------------------|:----:|:------:|:-----:|:-----:|:-------:|
+  | sync across machines? | yes? |   yes  |   no  |   no  |    no   |
+  | manage in VCS?        |  no  |   yes  |   no  |   no  |    no   |
+  | should be backed up?  |  yes |   yes  |  yes  |   no  |    no   |
+  | can live in tmpfs?    |  no  |   no   |   no  |  yes  |   yes?  |
+  | contains much data?   |  yes |   no   |   no  |  yes  |    no   |
+
+## XDG Base Directory specification
+
+- It's about portable cross-architecture, cross-OS, bla bla.
+
+### User directories
+
+#### `XDG_CONFIG_HOME`
+
+  - Where under-specific *configurations* should be written (analogous to
+    `/etc`).
+
+  - Should default to $HOME/.config.
+
+#### `XDG_DATA_HOME`
+
+  - Where user-specific *data files* should be written (analogous to
+    `/usr/share`).
+
+  - Should default to `$HOME/.local/share`
+
+  - See more at [Linux
+    Foundation](https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch04s11.html)
+
+#### `XDG_STATE_HOME`
+
+  - Where user-specific *state files* should be written (analogous to
+    `/var/lib`).
+
+  - Should default to `$HOME/.local/state`
+
+  - State information is generally used to preserve the condition of an
+    application (or a group of inter-related applications) between
+    invocations and between different instances of the same application.
+
+    * actions history (logs, history, recently used files, …)
+
+    * current state of the application that can be reused on a restart
+      (view, layout, open files, undo history, …)
+
+#### `XDG_CACHE_HOME`
+
+  - Where user-specific *non-essential (cached) data* should be written
+    (analogous to `/var/cache`).
+
+  - Should default to $HOME/.cache.
+
+#### `XDG_RUNTIME_DIR`
+
+  - See [Arch's
+    Wiki](https://wiki.archlinux.org/title/XDG_Base_Directory#User_directories)
+
+#### `$HOME/.local/bin`
+
+Where *user-specific executable files* may store there.
+
+### System directories
+
+- `XDG_DATA_DIRS`
+
+  + List of directories separated by `:`
+
+  + Should default to `/usr/local/share:/usr/share`
+
+- `XDG_CONFIG_DIRS`
+
+  + List of directories separated by `:`
+
+  + Should default to `/etc/xdg`
 
 # Organic farming
 
