@@ -16,8 +16,6 @@
 
 - [pacman - package manager utility](package-managament-arch-linux/pacman.md)
 
-- [namcap - package analysis utility](package-managament-arch-linux/namcap.md)
-
 # Vims
 
 - [Favourite tips and tricks](vims/favourite-tips-and-tricks.md)
