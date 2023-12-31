@@ -1,16 +1,36 @@
 # Markdowns
 
+What is Markdown? A lightweight markup language that easy to write and
+read, optionally convert to other formats.
+
 - [John Gruber's Markdown](markdowns/john-grubers-markdown.md)
 
 - [Pandoc's flavored Markdown](markdowns/pandocs-flavored-markdown.md)
 
 - [CommonMark Spec 0.30](markdowns/commonmark-spec-0.30.md)
 
+- TODO:
+
+  + Change all italics to _this_, bold to this **bold**
+
+  + Try [Github Flavored Markdown](https://github.github.com/gfm/)
+
+  + Not related but how awsome is
+    [SVG](https://www.w3schools.com/graphics/svg_intro.asp)?
+
+# `groff`
+
+- What is groff?
+
+- Markdown to pdf which one is better? groff or latex?
+
 # Makefiles
 
 - [GNU `make` manual](makes/gnu-make-manual.md)
 
 # Package management on Arch Linux
+
+- [Arch Build System](package-managament-arch-linux/abs.md)
 
 - [makepkg - package build utility](package-managament-arch-linux/makepkg.md)
 
@@ -22,11 +42,12 @@
 
 - [Adapting tips and tricks](vims/adapting-tips-and-tricks.md)
 
-# `groff`
+- TODO: Syntax highlighting
 
-- What is groff?
+  + There are so many syntax for markdown, vim markdown syntax highlight
+    suck.
 
-- Markdown to pdf which one is better? groff or latex?
+  + Markdown codelock highlighting? Eh?
 
 # Git
 
@@ -141,6 +162,28 @@ https://www.pcre.org/current/doc/html/pcre2syntax.html
 [PKGBUILD]:
 https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/less/trunk/PKGBUILD
 
+## Manpage sections
+
+- `ls -d /usr/share/man/man*`
+
+- `man -k intro`
+
+- `man man`
+
+- `printf(1p)`: _p_ mean POSIX manpages.
+
+### On some systems
+
+Some of the following sections are available:
+
+- `0` C library header files
+
+- `9` Kernel routines
+
+- `n` Tcl/Tk keywords
+
+- `x` The X Window System
+
 # Linux Foundation's Filesystem Hierarchy Standard (FHS)
 
 - See `hier(7)`: typical Linux filesistem hierarchy.
@@ -245,7 +288,8 @@ Where *user-specific executable files* may store there.
 
   + Open `index.md` file quickly (hotkey or alias).
 
-  + Jump to *link destination* (move to the line, `$`, and back) then `gf`.
+  + Jump to *link destination* (move to next blank-line, `$`, and `bb`)
+    then `gf`.
 
     * `CTRL-^` to switch back.
 

@@ -4,9 +4,9 @@
   the package and the dependencies it requires with:
 
   ```bash
-  pacman --query --list --file=<package-file>
+  pacman --query --list --file=pkgname-pkgver.pkg.tar.zst
   # or
-  pacman --query --info --file=<package-file>
+  pacman --query --info --file=pkgname-pkgver.pkg.tar.zst
   # or
   pacman --query --info <installed-package>
   ```
@@ -25,6 +25,12 @@
   pacman --query --info --info | grep ^MODIFIED | cut --fields=2
   ```
 
+- Package dependencies tree `pactree(8)`.
+
+- `pacman --sync --search` has builtin ERE.
+
+  `pacman -Ss '^vim-'`
+
 # Cache cleaning
 
 - Pacman stores its downloaded packages in `/var/cache/pacman/pkg`.
@@ -33,7 +39,7 @@
   one past version use:
 
   ```bash
-  paccache -rk1
+  doas paccache -rk1
   ```
 
 # Removing unused packages (orphans)
@@ -41,12 +47,12 @@
 - Recursively removing orphans and their configuration files:
 
     ```bash
-    pacman -Qtdq | pacman -Rns -
+    pacman -Qtdq | doas pacman -Rns -
     ```
 
 # Mirror list
 
-- Ranking mirror list:
+- Ranking mirror list (`pacman-contrib` package is required):
 
   ```bash
   curl -s 'https://archlinux.org/mirrorlist/' \
@@ -69,3 +75,13 @@
   grep "\(upgraded\|installed\) $pkg" /var/log/pacman.log
   ```
 
+- `pacdiff(8)` a tool for managing `.pac*` files.
+
+  See [Pacnew and Pacsave files](https://wiki.archlinux.org/title/Pacnew_and_Pacsave_files).
+
+- `/var/lib/pacman/local/pkgname` is where pacman save package
+  informaiton:
+
+  + Installed files.
+
+  + Package description.
