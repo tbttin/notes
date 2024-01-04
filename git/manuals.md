@@ -142,6 +142,10 @@ https://git-scm.com/book
 [Git User's Manual]:
 https://git-scm.com/docs/user-manual
 
+# `commit`
+
+- `-a` auto stage all modified and deleted files.
+
 # `git-stash(1)`
 
   + Save all changes in the working tree and the index, roll them back
