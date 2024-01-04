@@ -22,13 +22,14 @@
 
   + `:h complete_*`: auto completion popup menu.
 
-- Manuals: help-summary, user-manual, usr_toc, reference_toc, helphelp,
-  option-summary, index (alphabet order), quickref (feature order),
-  motion, tags-and-searchs, terminal, windows, tabs, packages, pattern,
-  vimdiff, diffpatch, undo, tips, spell, .etc
+- Manuals: `help-summary`, `user-manual`, `usr_toc`, `reference_toc`,
+  `helphelp`, `option-summary`, `index` (alphabet order), `quickref`
+  (feature order), `motion`, `tags-and-searchs`, `terminal`,
+  `windows`, `tabs`, `packages`, `pattern`, `vimdiff`, `diffpatch`,
+  `undo`, `tips`, `spell`, .etc
 
-- Lists: jumplist, changelist, qargument-list, uickfix, location-list,
-  buffers, function-list, .etc
+- Lists: `jumplist`, `changelist`, `qargument-list`, `uickfix`,
+  `location-list`, `buffers`, `function-list`, .etc
 
 ## Docs
 
@@ -103,10 +104,10 @@
 
 # Command-line commands
 
-- Fact: 'command-line command' = 'ex commands' = 'colon commands'
+- *Fact*: 'command-line command' = 'ex commands' = 'colon commands'
 
-- Helps: cmdline, cmdline-completion, cmdline-special,
-  filename-modifiers, .etc
+- Helps: `cmdline`, `cmdline-completion`, `cmdline-special`,
+  `filename-modifiers`, .etc
 
 - Option completion `:set option=<Tab>` (some)
 
@@ -117,10 +118,14 @@
 
 - `:cq[uit]` quit Vim with error code `{N}`. `{N}` defaults to one.
 
-  Useful when Vim is *called* from another program: e.g., a compiler
-  will not compile the same file again, `git commit` will abort the
-  committing process, `fc` (built-in for shells like bash and zsh) will
-  not execute the command, etc.
+  Useful when Vim is *called* from another program: e.g.:
+
+  + A compiler will not compile the same file again.
+
+  + `git commit` will abort the committing process.
+
+  + `fc` (built-in for shells like bash and zsh) will not execute the
+    command, etc.
 
 - `:*` as last visual range ('`:star`'). Same as `:'<,'>`.
 
@@ -130,7 +135,9 @@
 
 - `:.!sh`: execute the current line (or pipe to external command?).
 
-  Same as the filter operator: `!!external-command` (not `:!!`).
+  Same as the `filter` operator: `!!external-command` (not `:!!`).
+
+- Change existing text to table with `:!column -t`.
 
 - Redirect ex command output:
 
@@ -215,6 +222,24 @@
   #                              [------selected-------]
   ```
 
+- Paste/put:
+
+  + `]p` (just like "`p`") and `[p` (just like "`P`"), but adjust the
+    indent to the current line.
+
+  + `gp` and `gP` also put the text before or after the current line,
+    but they leave the cursor positioned at the *end* of the pasted
+    text.
+
+- `{count}:` = range ('`N:`'): is translated into `:.,.+(count - 1)`.
+
+- Recursive/appended macros:
+
+  `qM@mq`\
+  `@m`
+
+## Jumpings
+
 - Just recall, '`wrap`'ed long line:
 
   + `g0` to first visible character in this line.
@@ -234,28 +259,18 @@
 - `ga`: print the ASCII value of the character under the cursor in decimal,
   hexadecimal and octal. See also the Unicode versions '`g8`'; '`g?`'.
 
-- '`change-list-jump`':
+- '`changelist`':
 
-  + `g; [count]`: go to the older position, `g, [count]`: go to the newer.
+  + `[count]g;` and `[count]g,` jump backward/forward in the changelist.
 
   + `gi`: enter insert mode in last insert location, jump around and
     "gi`-boom"!
 
-- Paste/put:
+- `'[` or ```[`` To the first character of the previously changed or
+  yanked text.
 
-  + `]p` (just like "`p`") and `[p` (just like "`P`"), but adjust the
-    indent to the current line.
-
-  + `gp` and `gP` also put the text before or after the current line,
-    but they leave the cursor positioned at the *end* of the pasted
-    text.
-
-- `{count}:` = range ('`N:`'): is translated into `:.,.+(count - 1)`.
-
-- Recursive/appended macros:
-
-  `qM@mq`\
-  `@m`
+  `']` or ```]`` To the last character of the previously changed or
+  yanked text.
 
 # Windowing
 
@@ -340,9 +355,9 @@
 
   `:cdo s/TODO/DONE/g | update` vs. `:cfdo %s/TODO/DONE/g | update`
 
-    + The first one update buffer multiple time.
+  + The first one update buffer multiple time.
 
-    + The first case quickfix list update multiple time?
+  + The first case quickfix list update multiple time?
 
   Try to use *quickfix list* more.
 
@@ -359,28 +374,37 @@
 
 # TODO
 
- - Read every command manual carefully (again, maybe).
+- Make these notes more concise, add keywords to search, links to
+  manuals.
 
-   + `a` does take `[count]`, `3a.`: insert three dots.
+  Vim is just another **rabbit hole**. Don't fall!
 
-   + `v` and `r` *and* `$` do take a `[count]` too.
+  Or see it as a journey. Just enjoy it!
 
-   + *Most* of commands `:b` and their relatives, operator, motions
-     *does* accept a count.
+- Read every command manual carefully (again, maybe).
 
-   + So, try `[count]` with every single command heh?
+  + `a` does take `[count]`, `3a.`: insert three dots.
 
-     ... RTFM!
+  + `v` and `r` *and* `$` do take a `[count]` too.
 
- - Learn about '`:terminal`'.
+  + *Most* of commands `:b` and their relatives, operator, motions
+    *does* accept a count.
 
-   + How to "normal-mode" in terminal?
+  + So, try `[count]` with every single command heh?
 
-   + It suck with vi-mode in Bash?
+    ... RTFM!
 
- - Research about *mappings* and *macros* tips and tricks.
+- Learn about '`:terminal`'.
 
-   Or about topics that are super cool but you are not using it much.
+  + How to "normal-mode" in terminal?
+
+  + It suck with vi-mode in Bash?
+
+- Research about *mappings* and *macros* tips and tricks.
+
+  Or about topics that are super cool but you are not using it much.
+
+- Read `autocmd`.
 
 - File-based navigation:
 
