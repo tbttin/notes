@@ -288,23 +288,25 @@ Where *user-specific executable files* may store there.
 
   + Open `index.md` file quickly (hotkey or alias).
 
-  + Jump to *link destination* (move to next blank-line, `$`, and `bb`)
-    then `gf`.
+  + Jump to *link destination* (move to next blank-line, then `bb`)
+    and `gf`.
 
     * `CTRL-^` to switch back.
+
+    * `<Leader>b`
 
     * `:bf` or `:b1` always switch to `index.md`.
 
   + Search note quickly.
 
-    * Currently, index.md and section folding in note file (well
-      organize) is enough.
+    * Currently, `index.md` and section folding (well organize) is
+      enough.
 
     * Search and load results into buffers, search in buffers.
 
     * Quickfix lists.
 
-- Pages? Short pages?
+- Use short notes, link between them.
 
 - Care about note structures? Note subdirectories?
 
@@ -322,6 +324,7 @@ Where *user-specific executable files* may store there.
   + Try to balance between note taking and representation.
 
 - Can not find the (capable) way to preview/view markdown in vim.
+
   Convert from *markdown* to *pdf* with `pandoc`.
 
   + `make` is a choice.
