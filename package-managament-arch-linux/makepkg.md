@@ -1,23 +1,51 @@
-# `PKGBUILD` functions
+# `PKGBUILD`
+
+- PKGBUILD prototypes can be found in `/usr/share/pacman`.
+
+- A prototype `.install` is provided at
+  `/usr/share/pacman/proto.install`.
+
+- See `provides` array in `PKGBUILD(5)`
+
+- When multiple types are available, the strongest checksum is to be
+  preferred: `b2` over `sha512`, `sha512` over `sha384`, `sha384` over
+  `sha256`, `sha256` over `sha224`, `sha224` over `sha1`, `sha1` over
+  `md5`, and `md5` over `ck`.
+
+- If there have not been any upstream changes then increase `pkgrel`.
+
+  + Include patchings?
+
+- `options( array )`, when `makepkg` fails, but `make` succeeds:
+
+  + `!buildflags`, to prevent its default `CPPFLAGS`, `CFLAGS`,
+    `CXXFLAGS`, and `LDFLAGS`.
+
+  + `!makeflags`, to prevent its default `MAKEFLAGS`.
+
+  + `!debug`, to prevent its default `DEBUG_CFLAGS`, and
+    `DEBUG_CXXFLAGS`, in case the `PKGBUILD` is a debug build.
+
+## `PKGBUILD` functions
 
 `makepkg` build order (after the source are fetched, extracted):
 
 1. `prepare()`
 
-   - Steps that run exactly once then put them in here.
+   + Steps that run exactly once then put them in here.
 
-   - Skip the extraction and this function with `--noextract`.
+   + Skip the extraction and this function with `--noextract`.
 
 2. `pkgver()`
 
-   - See [VCS package
+   + See [VCS package
      `pkgver()`](https://wiki.archlinux.org/title/VCS_package_guidelines#The_pkgver()function)
 
-   - See `pacman(8)` for more information on version comparisons.
+   + See `pacman(8)` for more information on version comparisons.
 
 3. `build()`
 
-   - Steps that re-run after any manual edits.
+   + Steps that re-run after any manual edits.
 
 4. `check()`
 
@@ -26,14 +54,21 @@
 
 5. `package()` only this function is required, others are optional.
 
-   - `--repackage` create package without building.
+   + `--repackage` create package without building.
 
-   - See `fakeroot(1)`.
+   + See `fakeroot(1)`.
 
-  Then, using `namcap` to check the PKGBUILD and the package has been
-  created is recommended.
+# `makepkg`
 
-# `makepkg` common used options:
+- 3-step build cycle:
+
+  + `./configure`
+
+  + `make`
+
+  + `make install`
+
+## `makepkg` common used options:
 
 ```bash
 makepkg --cleanbuild --syncdeps --force --iinstall [--clean]
@@ -60,27 +95,29 @@ makepkg --cleanbuild --syncdeps --force --iinstall [--clean]
 
 - `--holdver` when using VSC sources.
 
-# Misc
+# Packaging
 
-- 3-step build cycle:
+- An Arch package contains:
 
-  + `./configure`
+  + The binary files to install.
 
-  + `make`
+  + `.PKGINFO`: contains all the metadata needed by pacman to deal with
+    packages, dependencies, etc.
 
-  + `make install`
+  + `.BUILDINFO`: contains information needed for reproducible builds.
+    See `BUILDINFO(5)`.
 
-- Generate/update checksums:
+  + `.MTREE`: contains hashes and timestamps of the files, which are
+    included in the local database so that pacman can verify the
+    integrity of the package.
 
-  ```bash
-  makepkg --geninteg >> PKGBUILD
+  + `.INSTALL`: an optional file used to execute commands after the
+    install/upgrade/remove stage. (This file is present only if
+    specified in the PKGBUILD.)
 
-  # or updpkgsums from pacman-contrib package
-  updpkgsums PKGBUILD
-
-  # or manually
-  sha512sum $files
-  ```
+  + `.Changelog`: an optional file kept by the package maintainer
+    documenting the changes of the package. (It is not present in all
+    packages.)
 
 - Packaging mistakes checking:
 
@@ -105,22 +142,3 @@ makepkg --cleanbuild --syncdeps --force --iinstall [--clean]
   # or objdump -p
   ```
 
-- If there have not been any upstream changes then increase `pkgrel`.
-
-  + Include patchings?
-
-# PKGBUILD
-
-- PKGBUILD prototypes can be found in `/usr/share/pacman`.
-
-- A prototype `.install` is provided at
-  `/usr/share/pacman/proto.install`.
-
-- Use `updpkgsums(8)` to in place update PKGBUILD checksums.
-
-- See `provides` array in `PKGBUILD(5)`
-
-- When multiple types are available, the strongest checksum is to be
-  preferred: `b2` over `sha512`, `sha512` over `sha384`, `sha384` over
-  `sha256`, `sha256` over `sha224`, `sha224` over `sha1`, `sha1` over
-  `md5`, and `md5` over `ck`.
