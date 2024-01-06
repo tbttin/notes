@@ -291,6 +291,12 @@
 
 # Miscellany
 
+- Incompletion mode / context-aware word completion:
+
+  [thoughbot](https://youtu.be/3TX3kV3TICU?t=1027&si=oGEmFTkvpQxzHtsI)
+
+  `CTRL-X` `CTRL-N` `CTRL-X` `CTRL-P`/`CTRL-N`
+
 - Doing some external command line works:
 
   + `:sh[ell]`, or
