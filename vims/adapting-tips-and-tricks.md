@@ -1,6 +1,6 @@
 # Helps
 
-- Help *prefixes* and *patterns*: `:h {prefix}<C-D>` ('`wildmode`').
+- Help *prefixes* and *patterns*: `:h {prefix}<C-D>` (`wildmode`).
 
   `:h help-summary` for most basic categories.
 
@@ -14,7 +14,7 @@
 
   + `:h :_*`: command line special characters.
 
-    More special: '`:\bar`', '`:quote`', '`:star`'
+    More special: `:\bar`, `:quote`, `:star`
 
   + `:h ::*`: ex command filename modifiers.
 
@@ -45,15 +45,15 @@
 
 # Searching
 
-- Search non-ASCII characters: `/\v[^\d0-\d127]`. See '`/\]`'.
+- Search non-ASCII characters: `/\v[^\d0-\d127]`. See `/\*`.
 
 - Operator + search motion: `d/regex/[e]` (`:h {motion}`). Combine with:
 
-  + `n` (also '`gn`'), `.`, '`last-pattern`', '`{offset}`', .etc
+  + `n` (also `gn`), `.`, `last-pattern`, `{offset}`, .etc
 
-  + Switched to *line-wise* motion with `dV`. See '`o_V`'.
+  + Switched to *line-wise* motion with `dV`. See `o_V`.
 
-  + Jump around matches with '`/_CTRL-G`' and '`/_CTRL-T`'.
+  + Jump around matches with `/_CTRL-G` and `/_CTRL-T`.
 
 - `c_CTRL-R_CTRL-W`: insert/complete the word under the cursor. See also
   `/_CTRL-L`
@@ -65,7 +65,7 @@
 
 ## Ranges
 
-- '`//;`': a special offet "search after search":
+- `//;`: a special offet "search after search":
 
    `/test 1/;/test`\
    `/test.*/+1;?ing?`
@@ -84,7 +84,7 @@
 
   + `5;/that line/` from line 5 till match "that line" after line 5.
 
-  '`:;`' when separated with ';' the cursor position will be set to that
+  `:;` when separated with ';' the cursor position will be set to that
   line before interpreting the next line specifier.
 
 - The power of `:g[lobal]` command:
@@ -98,7 +98,7 @@
     will remove two spaces of internal indentation of every fenced code
     block in markdown file.
 
-    `+N`, `-N`: if the `N` is omitted, 1 is used (See '`range`').
+    `+N`, `-N`: if the `N` is omitted, 1 is used (See `range`).
 
     Look back and look forward?
 
@@ -106,13 +106,14 @@
 
 - *Fact*: 'command-line command' = 'ex commands' = 'colon commands'
 
-- Helps: `cmdline`, `cmdline-completion`, `cmdline-special`,
-  `filename-modifiers`, .etc
+- Helps: `:h cmdline<CTRL-D`, `filename-modifiers`.
 
-- Option completion `:set option=<Tab>` (some)
+- `:se[t] opt[?!&<]` (for `opt<` see `undo_ftplugin`)
+
+  + Auto-completion: `:se opt=<Tab>` (some will do).
 
 - Edit *cmdline commands* just like any other buffer:
-  '`cmdline-window`', `c_CTRL-F`, `q:`, `q?` and `q/`.
+  `cmdline-window`, `c_CTRL-F`, `q:`, `q?` and `q/`.
 
   + `o<CR>` to cancel and exit cmdline window (submit a empty line).
 
@@ -127,11 +128,14 @@
   + `fc` (built-in for shells like bash and zsh) will not execute the
     command, etc.
 
-- `:*` as last visual range ('`:star`'). Same as `:'<,'>`.
+- `:*` as last visual range (`:star`). Same as `:'<,'>`.
 
-- `:w !shell_cmd` mean *pipe* the contents of the current buffer to the
+- `:w !shell_cmd` means *pipe* the contents of the current buffer to the
   command `shell_cmd`, e.g. `:w !sudo tee %` (a.k.a. the write with
   *sudo* trick).
+
+- Save and see: `:w !diff % -` (if there is command line instead of a
+  filename vim write the files content to stdin of the shell).
 
 - `:.!sh`: execute the current line (or pipe to external command?).
 
@@ -148,10 +152,10 @@
   :redi[r] END
   ```
 
- - '`more-prompt`' or '`hit-enter`': if you accidentally hit `<Enter>`
+ - `more-prompt` or `hit-enter`: if you accidentally hit `<Enter>`
    or `<Space>` and you want to see the displayed text: `g<`.
 
-   This only works when '`more`' is set.
+   This only works when `more` is set.
 
 - `:e[dit]!`: revert to the latest *saved* version of the current file.
 
@@ -160,18 +164,6 @@
   `:co[py] {address}`\
   `:t {address} " Same as :copy`\
   `:m[ove] {address}`
-
-- Options:
-
-  + `:opt[ions]`
-
-  + `:se[t]`         show all modified options\
-    `:se[t] all`     show all non-termcap options\
-    `:se[t] termcap` show all termcap options
-
-- Save and see the changes: `:w !diff % -` (if there is command line
-  instead of a filename vim write the files content to stdin of the
-  shell).
 
 ## Buffers
 
@@ -182,7 +174,7 @@
 
   Only commands like "`:n[ext]`" and "`:prev[ious]`" do that.
 
-- Buffer name expansion trick ('`:bd[elete]`'):
+- Buffer name expansion trick (`:bd[elete]`):
 
   `:ls [flags]`\
   `:bd 1 2 3`\
@@ -196,8 +188,8 @@
 
 # Normal-mode commands
 
-- '`blockwise-operators`': '`v_b_I`', '`v_b_A`': insert/append the same
-  text in front of/after all the selected lines. Se also '`v_b_>`'.
+- `blockwise-operators`: `v_b_I`, `v_b_A`: insert/append the same
+  text in front of/after all the selected lines. Se also `v_b_>`.
 
   Useful in multi-lines editing: [un]comment, "quoting", .etc
 
@@ -213,7 +205,7 @@
 - Correct way to use `{count}` and text-object: `{count}ap`.
 
   Did not think about count and nested blocks before? `v{count}[ia]b`.
-  See also '`[(`'.
+  See also `[(`.
 
   ```bash
   printf("%3.0f\t%6.1f\n", fahr, ((5.0/9.0) * (fahr-32)));
@@ -231,7 +223,7 @@
     but they leave the cursor positioned at the *end* of the pasted
     text.
 
-- `{count}:` = range ('`N:`'): is translated into `:.,.+(count - 1)`.
+- `{count}:` = range (`N:`): is translated into `:.,.+(count - 1)`.
 
 - Recursive/appended macros:
 
@@ -240,7 +232,7 @@
 
 ## Jumpings
 
-- Just recall, '`wrap`'ed long line:
+- Just recall, `wrap`ed long line:
 
   + `g0` to first visible character in this line.
 
@@ -257,9 +249,9 @@
 - `g_`: to the last non-blank character of the line.
 
 - `ga`: print the ASCII value of the character under the cursor in decimal,
-  hexadecimal and octal. See also the Unicode versions '`g8`'; '`g?`'.
+  hexadecimal and octal. See also the Unicode versions `g8`; `g?`.
 
-- '`changelist`':
+- `changelist`:
 
   + `[count]g;` and `[count]g,` jump backward/forward in the changelist.
 
@@ -335,10 +327,10 @@
   vim --startuptime vim.log
   ```
 
-- '`arglist`': a list of files you give when starting vim.
+- `arglist`: a list of files you give when starting vim.
 
-  '`buffer-list`': every file you open in vim (unless it was deleted
-  with '`:bdel`' or '`:bwipe`').
+  `buffer-list`: every file you open in vim (unless it was deleted
+  with `:bdel` or `:bwipe`).
 
 - Exit with a non-zero exit code: `:cq[uit]`
 
@@ -350,7 +342,7 @@
 
 - `:sf[ind]` and `:vert[ical] sf[ind]`, maybe `:tabf[ind]`
 
-- '`:_##`' mean all files in arglist.
+- `:_##` mean all files in arglist.
 
   ```vim
   :vim[grep] /TODO/ ##
@@ -400,7 +392,7 @@
 
     ... RTFM!
 
-- Learn about '`:terminal`'.
+- Learn about `:terminal`.
 
   + How to "normal-mode" in terminal?
 
@@ -418,7 +410,7 @@
 
   `:set wildmode=list:full`
 
-  See also '`completeopt`'.
+  See also `completeopt`.
 
 - Symbol-based navigation:
 
@@ -428,7 +420,7 @@
 
   + `:tjump /regex`
 
-  + '`g_CTRL_]`': list tag, g]
+  + `g_CTRL_]`: list tag, g]
 
   + `[_CRTL-I`, `:ij[ump] /regex`
 

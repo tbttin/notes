@@ -1,15 +1,15 @@
 PARSER    := /usr/bin/pandoc
 PFLAGS    := \
-             --columns=72\
-             --variable=colorlinks\
+             --columns=72 \
+             --variable=colorlinks \
              --highlight-style=tango
              # --number-sections
              # --from=commonmark
              # --toc
              # --to=ms
 MAKEFLAGS += \
-             --no-builtin-rules\
-             --no-builtin-variables\
+             --no-builtin-rules \
+             --no-builtin-variables \
              --warn-undefined-variables
 
 out_dir     := notes-output
