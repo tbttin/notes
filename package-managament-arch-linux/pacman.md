@@ -22,7 +22,7 @@
 
   + Package description.
 
-- Find which package holds `filename`:
+- Find which package owns `filename`:
 
   ```bash
   pacman --query --owns <filename>
@@ -71,12 +71,14 @@
 - See `HookDir` option in `/etc/pacman.conf`, which defaults to
   `/etc/pacman.d/hooks`
 
-- See `alpm-hooks(5)`
+- See `alpm-hooks(5)` (Arch Linux Package Management library).
 
-- Some recommended hook ideas: ranking mirrors, list installed packages,
-  list system modified files.
+- Some hook ideas:
 
-  Clean up cache (or `paccache.timer` service), remove orphan packages.
+  + Pacman hook: ranking mirrors, list installed packages, list modified
+    system config files.
+
+  + _systemd timers_: clean pacman cache, remove orphan packages.
 
   See [reddit
   post](https://www.reddit.com/r/archlinux/comments/dsnu81/hear_ye_archers_share_your_pacman_hooks)

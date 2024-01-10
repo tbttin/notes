@@ -34,6 +34,10 @@
 - [Clean
   chroot](https://wiki.archlinux.org/title/DeveloperWiki:Building_in_a_clean_chroot)
 
+- [Arch Linux Archive](https://wiki.archlinux.org/title/Arch_Linux_Archive)
+
+- [Kernel live patching](https://wiki.archlinux.org/title/Kernel_live_patching)
+
 # Manuals
 
 - `makepkg(8)`

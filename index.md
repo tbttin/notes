@@ -38,9 +38,9 @@ read, optionally convert to other formats.
 
 # Vims
 
-- [Favourite tips and tricks](vims/favourite-tips-and-tricks.md)
-
 - [Adapting tips and tricks](vims/adapting-tips-and-tricks.md)
+
+- [Favourite tips and tricks](vims/favourite-tips-and-tricks.md)
 
 - TODO: Syntax highlighting
 
@@ -184,6 +184,21 @@ Some of the following sections are available:
 
 - `x` The X Window System
 
+# `systemd`
+
+## Timers
+
+See `systemd.timer(5)` and `systemd.time(7)`.
+
+TODO: systemd user timers
+
+View all started timers: `systemctl list-timers`
+
+`OnCalendar` can be tested with `systemd-analyze calendar weekly` or
+`faketime`.
+
+Timer without `.timer` file: `systemd-run(1)`
+
 # Linux Foundation's Filesystem Hierarchy Standard (FHS)
 
 - See `hier(7)`: typical Linux filesistem hierarchy.
@@ -323,9 +338,11 @@ Where *user-specific executable files* may store there.
 
   + Try to balance between note taking and representation.
 
-- Can not find the (capable) way to preview/view markdown in vim.
+- Markdown is markdown, convert to pdf is necessary?
 
-  Convert from *markdown* to *pdf* with `pandoc`.
+  Can not find the (capable) way to preview/view markdown in vim.
+
+  Convert from *markdown* to *pdf* with `pandoc` (nah `f***` it).
 
   + `make` is a choice.
 
