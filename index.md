@@ -18,7 +18,7 @@ read, optionally convert to other formats.
   + Not related but how awsome is
     [SVG](https://www.w3schools.com/graphics/svg_intro.asp)?
 
-# `groff`
+## `groff`
 
 - What is groff?
 
@@ -34,7 +34,7 @@ read, optionally convert to other formats.
 
 - [makepkg - package build utility](package-managament-arch-linux/makepkg.md)
 
-- [pacman - package manager utility](package-managament-arch-linux/pacman.md)
+- [pacman - binary package manager utility](package-managament-arch-linux/pacman.md)
 
 # Vims
 
@@ -62,6 +62,14 @@ option/thing *every day*).
 
 # Bash
 
+- TODO: `bash(1)` find useful keybinding (e.g. `M-#` (`Alt-Shift-3`)).
+
+  + Testing:
+
+    ```bash
+    bind -m vi -q edit-and-execute-command
+    ```
+
 GNU Bash manual.
 
 ## Pipelines
@@ -69,7 +77,9 @@ GNU Bash manual.
 A pipeline is a sequence of one or more commands separated by one of the
 control operators '|' or '|&'.
 
-## Jobspecs
+## Job control (`jobspecs`)
+
+- See *JOB CONTROL* in `bash(1)`.
 
 - This
 
@@ -186,6 +196,18 @@ Some of the following sections are available:
 
 # `systemd`
 
+- systemd unit file locations (yt@tutorialLinux):
+
+  + `/lib/systemd/system`: std. systemd unit files (distro maintainers).
+
+  + `/usr/lib/systemd/system`: local installed packages (package manager).
+
+  + `/run/systemd/system`: transient unit files.
+
+  + `/etc/systemd/system`: user custom unit files.
+
+  + How 'bout `$HOME/.config/systemd`?
+
 ## Timers
 
 See `systemd.timer(5)` and `systemd.time(7)`.
@@ -208,6 +230,9 @@ Timer without `.timer` file: `systemd-run(1)`
 
 - See `file-hierarchy(7)`, **systemd** system and service manager
   hierarchy.
+
+- [`/bin` link/move/merge to `/usr/bin`
+  ](https://www.freedesktop.org/wiki/Software/systemd/TheCaseForTheUsrMerge/)
 
 ## How to classify?
 
