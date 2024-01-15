@@ -32,7 +32,7 @@ read, optionally convert to other formats.
 
 - [Arch Build System](package-managament-arch-linux/abs.md)
 
-- [makepkg - package build utility](package-managament-arch-linux/makepkg.md)
+- [Creating packages](package-managament-arch-linux/creating-packages.md)
 
 - [pacman - binary package manager utility](package-managament-arch-linux/pacman.md)
 
