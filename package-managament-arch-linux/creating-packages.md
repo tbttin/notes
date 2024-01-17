@@ -1,20 +1,45 @@
 # `PKGBUILD`
 
-- PKGBUILD prototypes can be found in `/usr/share/pacman`.
+- `PKGBUILD` and `.install` prototypes can be found in
+  `/usr/share/pacman`.
 
-- A prototype `.install` is provided at
-  `/usr/share/pacman/proto.install`.
+- `makepkg` supports building multiple packages from a single PKGBUILD:
+  see `/PACKAGE SPLITTING`.
 
-- See `provides` array in `PKGBUILD(5)`
+- See `provides ( array )` in `PKGBUILD(5)`
 
 - When multiple types are available, the strongest checksum is to be
-  preferred: `b2` over `sha512`, `sha512` over `sha384`, `sha384` over
-  `sha256`, `sha256` over `sha224`, `sha224` over `sha1`, `sha1` over
-  `md5`, and `md5` over `ck`.
+  preferred, the later the weaker:
+
+  1. `b2`
+
+  3. `sha512`
+
+  4. `sha384`
+
+  5. `sha256`
+
+  6. `sha224`
+
+  7. `sha1`
+
+  8. `md5`
+
+  9. `ck`.
+
+- Update checksums:
+
+  ```bash
+  makepkg -g >> PKGBUILD
+  # or (from pacman-contrib)
+  updpkgsums PKGBUILD
+  ```
+
+## Options and directives
 
 - If there have not been any upstream changes then increase `pkgrel`.
 
-  + Include patchings?
+  + Include patchings, modifying configure/conpilation flags.
 
 - `options( array )`, when `makepkg` fails, but `make` succeeds:
 
@@ -26,9 +51,10 @@
   + `!debug`, to prevent its default `DEBUG_CFLAGS`, and
     `DEBUG_CXXFLAGS`, in case the `PKGBUILD` is a debug build.
 
-## `PKGBUILD` functions
+## Functions
 
-`makepkg` build order (after the source are fetched, extracted):
+`makepkg` build order (after the source files are
+fetched/downloaded/extracted):
 
 1. `prepare()`
 
@@ -39,9 +65,11 @@
 2. `pkgver()`
 
    + See [VCS package
-     `pkgver()`](https://wiki.archlinux.org/title/VCS_package_guidelines#The_pkgver()function)
+     `pkgver()`](https://wiki.archlinux.org/title/VCS_package_guidelines#The_pkgver()_function)
 
    + See `pacman(8)` for more information on version comparisons.
+
+   + See `vercmp(8)`.
 
 3. `build()`
 
@@ -58,6 +86,12 @@
 
    + See `fakeroot(1)`.
 
+- All of the packaging functions defined above are run starting inside
+  `$srcdir`.
+
+  Predefined variable `srcdir` points to the directory where makepkg
+  extracts or symlinks all files in the source array.
+
 # `makepkg`
 
 - 3-step build cycle:
@@ -68,10 +102,10 @@
 
   + `make install`
 
-## `makepkg` common used options:
+## Common used options
 
 ```bash
-makepkg --cleanbuild --syncdeps --force --iinstall [--clean]
+makepkg --cleanbuild --syncdeps --force --iinstall
 ```
 
 - `--C` clean `${srcdir}` (`man PKGBUILD(5)`) before build.
@@ -93,7 +127,7 @@ makepkg --cleanbuild --syncdeps --force --iinstall [--clean]
 
 - `--nobuild` when patches checking is required.
 
-- `--holdver` when using VSC sources.
+- `--holdver` can be used with VCS packages.
 
 # Packaging
 
@@ -126,13 +160,18 @@ makepkg --cleanbuild --syncdeps --force --iinstall [--clean]
   # or
   namcap pkgname-pkgver.pkg.tar.zst
   ```
+- Where is `$pkgname.install`? It's in
+  `/var/lib/pacman/local/$pkgname/install`.
 
 - About `PREFIX` and `--prefix`:
 
   + `/usr/local` only for manually built and manually installed (`make`,
     and even more manually?) packages (not tracked by `pacman`).
 
-- Find binary's linked library dependency packages:
+  + `/usr/` you know it! And why not `/bin`
+    [here](https://www.freedesktop.org/wiki/Software/systemd/TheCaseForTheUsrMerge)
+
+- Find binary's linked library dependency packages (installed):
 
   ```bash
   readelf -d $1 \

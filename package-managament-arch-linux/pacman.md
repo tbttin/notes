@@ -75,13 +75,14 @@
 
 - Some hook ideas:
 
-  + Pacman hook: ranking mirrors, list installed packages, list modified
-    system config files.
+  + Pacman hook (only doing well with install/upgrage/remove
+    trigger): list installed packages.
 
-  + _systemd timers_: clean pacman cache, remove orphan packages.
+    See [reddit
+    post](https://www.reddit.com/r/archlinux/comments/dsnu81/hear_ye_archers_share_your_pacman_hooks)
 
-  See [reddit
-  post](https://www.reddit.com/r/archlinux/comments/dsnu81/hear_ye_archers_share_your_pacman_hooks)
+  + _systemd timers_: clean pacman cache, remove orphan packages, rank
+    mirrors, list modified system config files.
 
 # Mirror list
 

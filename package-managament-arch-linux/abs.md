@@ -56,11 +56,11 @@
 
 # Manuals
 
+- `PKGBUILD(5)` - Arch Linux build description file.
+
 - `makepkg(8)`
 
 - `makepkg.conf(5)`
-
-- `PKGBUILD(5)`
 
 - `BUILDINFO(5)`
 
@@ -68,5 +68,6 @@
 
 - `zstd(1)`
 
-- See [makepkg.md](package-managament-arch-linux/makepkg.md)
+- See [Creating
+  packages](package-managament-arch-linux/creating-packages.md)
 
