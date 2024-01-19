@@ -4,12 +4,10 @@
   `/usr/share/pacman`.
 
 - `makepkg` supports building multiple packages from a single PKGBUILD:
-  see `/PACKAGE SPLITTING`.
+  see `/^PACKAGE SPLITTING`.
 
-- See `provides ( array )` in `PKGBUILD(5)`
-
-- When multiple types are available, the strongest checksum is to be
-  preferred, the later the weaker:
+- When multiple types are available, the strongest checksum (the first)
+  is to be preferred:
 
   1. `b2`
 
@@ -41,7 +39,9 @@
 
   + Include patchings, modifying configure/conpilation flags.
 
-- `options( array )`, when `makepkg` fails, but `make` succeeds:
+- See `provides ( array )` in `PKGBUILD(5)`
+
+- `options( array )`: when `makepkg` fails, but `make` succeeds:
 
   + `!buildflags`, to prevent its default `CPPFLAGS`, `CFLAGS`,
     `CXXFLAGS`, and `LDFLAGS`.
@@ -53,44 +53,44 @@
 
 ## Functions
 
-`makepkg` build order (after the source files are
-fetched/downloaded/extracted):
-
-1. `prepare()`
-
-   + Steps that run exactly once then put them in here.
-
-   + Skip the extraction and this function with `--noextract`.
-
-2. `pkgver()`
-
-   + See [VCS package
-     `pkgver()`](https://wiki.archlinux.org/title/VCS_package_guidelines#The_pkgver()_function)
-
-   + See `pacman(8)` for more information on version comparisons.
-
-   + See `vercmp(8)`.
-
-3. `build()`
-
-   + Steps that re-run after any manual edits.
-
-4. `check()`
-
-   Make sure the software has built correctly and works fine with its
-   dependencies.
-
-5. `package()` only this function is required, others are optional.
-
-   + `--repackage` create package without building.
-
-   + See `fakeroot(1)`.
-
 - All of the packaging functions defined above are run starting inside
   `$srcdir`.
 
   Predefined variable `srcdir` points to the directory where makepkg
   extracts or symlinks all files in the source array.
+
+- `makepkg` build order (after the source files are
+  fetched/downloaded/extracted):
+
+  1. `prepare()`
+
+     + Steps that run exactly once then put them in here.
+
+     + Skip the extraction and this function with `-e`.
+
+  2. `pkgver()`
+
+     + See [VCS package
+       `pkgver()`](https://wiki.archlinux.org/title/VCS_package_guidelines#The_pkgver()_function)
+
+     + See `pacman(8)` for more information on version comparisons.
+
+     + See `vercmp(8)`.
+
+  3. `build()`
+
+     + Steps that re-run after any manual edits.
+
+  4. `check()`
+
+     Make sure the software has built correctly and works fine with its
+     dependencies.
+
+  5. `package()` only this function is required, others are optional.
+
+     + `--repackage` create package without building.
+
+     + See `fakeroot(1)`.
 
 # `makepkg`
 
@@ -108,24 +108,20 @@ fetched/downloaded/extracted):
 makepkg --cleanbuild --syncdeps --force --iinstall
 ```
 
-- `--C` clean `${srcdir}` (`man PKGBUILD(5)`) before build.
+- `-C` clean `${srcdir}` before build.
 
 - `-s` install missing dependencies.
 
 - `-f` build when built package already exists.
 
-- `-i` install with pacman, or `# pacman -U pkgname.pkg.tar.zst`
-  manually.
-
-- `-c` clean up leftover work files and directories after a successful
-  build.
+- `-i` install successful built package with `pacman`.
 
 - `--noarchive` do not create the archive.
 
 - `--verifysource` download the file if required and perform the
   integrity checks.
 
-- `--nobuild` when patches checking is required.
+- `-o` tweaking the source files.
 
 - `--holdver` can be used with VCS packages.
 
