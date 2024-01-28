@@ -81,7 +81,7 @@
     See [reddit
     post](https://www.reddit.com/r/archlinux/comments/dsnu81/hear_ye_archers_share_your_pacman_hooks)
 
-  + _systemd timers_: clean pacman cache, remove orphan packages, rank
+  + systemd timers: clean pacman cache, remove orphan packages, rank
     mirrors, list modified system config files.
 
 # Mirror list

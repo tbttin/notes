@@ -194,32 +194,59 @@ Some of the following sections are available:
 
 - `x` The X Window System
 
-# `systemd`
+# systemd
 
-- systemd unit file locations (yt@tutorialLinux):
+- systemd unit file locations:
 
-  + `/lib/systemd/system`: std. systemd unit files (distro maintainers).
+  + See `systemd.unit(5)/UNIT FILE LOAD PATH`.
 
-  + `/usr/lib/systemd/system`: local installed packages (package manager).
+  + `/usr/lib/systemd/system`: installed packages (package manager).
 
-  + `/run/systemd/system`: transient unit files.
+  + `/etc/systemd/system`: installed by system administrator.
 
-  + `/etc/systemd/system`: user custom unit files.
+  + Run `systemctl show --property UnitPath`.
 
-  + How 'bout `$HOME/.config/systemd`?
+- `systemctl` is default with `--system`, users use `--user`.
+
+- Edit unit files and avoid conflict with `pacman` see
+  [this](https://wiki.archlinux.org/title/systemd#Editing_provided_units)
+
+  + `systemctl edit --full <unit>`
+
+  + `systemctl edit <unit> --drop-in <drop-in-name>`
+
+- Sandboxing:
+  [Redhat](https://www.redhat.com/sysadmin/mastering-systemd),
+  `systemd-analyze security [unit]`.
+
+- `journalctl(1)` to view unit logs.
+
+## Manuals
+
+- `systemd.unit(5)`
+
+- `systemd.service(5)`
+
+- `systemd.timer(5)`
+
+- `systemd.exec(5)`
+
+- `systemd.directives(7)`
+
+- `systemctl(1)`
+
+- `journalctl(1)`
 
 ## Timers
 
-See `systemd.timer(5)` and `systemd.time(7)`.
+- See `systemd.timer(5)` and `systemd.time(7)`.
 
-TODO: systemd user timers
+- View all started timers: `systemctl list-timers`.
 
-View all started timers: `systemctl list-timers`
+- `OnCalendar` can be tested with `systemd-analyze calendar weekly` or
+  `faketime`.
 
-`OnCalendar` can be tested with `systemd-analyze calendar weekly` or
-`faketime`.
-
-Timer without `.timer` file: `systemd-run(1)`
+- Timer without `.timer` file (transient timers): `systemd-run(1)`.
 
 # Linux Foundation's Filesystem Hierarchy Standard (FHS)
 
@@ -314,6 +341,15 @@ Where *user-specific executable files* may store there.
   + List of directories separated by `:`
 
   + Should default to `/etc/xdg`
+
+# X keyboard
+
+X's modifiers and "mode/meta key" in WM, see
+[this](https://unix.stackexchange.com/a/119219)
+
+Mode_switch [suck](https://unix.stackexchange.com/a/55154)
+
+[Keyboard input](https://wiki.archlinux.org/title/Keyboard_input)
 
 # Organic farming
 
