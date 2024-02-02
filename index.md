@@ -75,11 +75,11 @@ GNU Bash manual.
 ## Pipelines
 
 A pipeline is a sequence of one or more commands separated by one of the
-control operators '|' or '|&'.
+control operators `|` or `|&`.
 
 ## Job control (`jobspecs`)
 
-- See *JOB CONTROL* in `bash(1)`.
+- See `bash(1)/^JOB CONTROL`.
 
 - This
 
@@ -124,7 +124,7 @@ control operators '|' or '|&'.
   into the foreground. Similarly, '`%1 &`' resumes job 1 in the
   background, equivalent to '`bg %1`'.
 
-# Command-line manuals
+# Command manuals
 
 ## Built-in commands
 
@@ -141,7 +141,7 @@ control operators '|' or '|&'.
   What the heck about this regex? Where to find regex library docs in my
   system? Answered in [Searching in manual pages].
 
-## Searching for manpage
+## Searching for manpages
 
 - `whatis <command>` to see sections, short descriptions of the `command`.
 
@@ -157,7 +157,7 @@ control operators '|' or '|&'.
 
   To search `text` in all manpages. Should specify a section number.
 
-## Searching inside manpages
+## Searching inside a manpage
 
 ### `less` as pager
 
@@ -165,12 +165,10 @@ control operators '|' or '|&'.
 
   `ldd "$(which less)"`
 
-  `./configure --with-regex=?` (['`PCRE2`'] in Arch Linux [PKGBUILD])
-
-['`PCRE2`']:
-https://www.pcre.org/current/doc/html/pcre2syntax.html
-[PKGBUILD]:
-https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/less/trunk/PKGBUILD
+  `./configure --with-regex=?` (it's
+  [`PCRE2`](https://www.pcre.org/current/doc/html/pcre2syntax.html) in
+  Arch Linux
+  [PKGBUILD](https://gitlab.archlinux.org/archlinux/packaging/packages/less/-/blob/main/PKGBUILD))
 
 ## Manpage sections
 
@@ -342,7 +340,64 @@ Where *user-specific executable files* may store there.
 
   + Should default to `/etc/xdg`
 
+# Linux booting process
+
+It varies depend on *Unix*-style (or *BSD*) and computer architecture.
+
+1. System startup
+
+  - Firmware (BIOS or UEFI), POST (Power On Self Test).
+
+  - Search/excute bootloader (GRUP 2, systemd-boot).
+
+2. Boot loader stage
+
+  - First stage bootloader (executed by the firmware).
+
+    + Vendor-specific program code, partition table (MBR).
+
+    + Partition scan.
+
+  - Seconde stage bootloader.
+
+    + Locate kernel on the disk.
+
+    + Insert into memory.
+
+    + Execute with the supplied options.
+
+  - In x86 PC, first- and second-stage bootloaders are combined in to
+    GRUP (GRand Unified Bootloader).
+
+3. Kernel stage
+
+  - Decompress itself in place.
+
+  - Perform hardware checks.
+
+  - Gain access to vital peripheral hardware.
+
+  - Run the init process.
+
+4. Init process
+
+  Runlevels:
+
+  - `poweroff.target`, run level 0: turn off (shut down) the computer.
+
+  - `rescue.target`, run level 1: initiate a rescue shell process.
+
+  - `multi-user.target`, run level 3: configure the system as a non-graphical (console) multi-user environment.
+
+  - `graphical.target`, run level 5: establish a graphical multi-user interface with network services.
+
+  - `reboot.target`, run level 6: restart the machine.
+
+  - `emergency.target`: emergency run level.
+
 # X keyboard
+
+TODO: Learn X keyboard extension! Worth it?
 
 X's modifiers and "mode/meta key" in WM, see
 [this](https://unix.stackexchange.com/a/119219)
@@ -420,7 +475,9 @@ Mode_switch [suck](https://unix.stackexchange.com/a/55154)
 
 ## How to take note?
 
-- How to mark what you already know or do not know?
+- Take really short notes, include links to read more.
 
-- Recall
+- How to mark what you already know or do not know??
+
+- Recall method?
 
