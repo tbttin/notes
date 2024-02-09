@@ -151,11 +151,14 @@ control operators `|` or `|&`.
 
   `man -k <text>` or `man --apropos <text>`.
 
-- `man -K <text>` or `man --global-apropos <text>`
+- `man -K <text>` search `text` in all manpages. Should specify a
+  section number.
 
   `man -wK <text>`
 
-  To search `text` in all manpages. Should specify a section number.
+- `whereis` or `man -w -a` locate the binary, source, and manual pages.
+
+- `which` show full path of commands.
 
 ## Searching inside a manpage
 
@@ -221,19 +224,23 @@ Some of the following sections are available:
 
 ## Manuals
 
+- `systemd.directives(7)` Index of configuration directives.
+
 - `systemd.unit(5)`
 
 - `systemd.service(5)`
 
 - `systemd.timer(5)`
 
-- `systemd.exec(5)`
+- `systemd.special(7)` targets.
 
-- `systemd.directives(7)`
+- `systemd.exec(5)`
 
 - `systemctl(1)`
 
 - `journalctl(1)`
+
+- `systemd-system.conf(5)`
 
 ## Timers
 
@@ -246,6 +253,12 @@ Some of the following sections are available:
 
 - Timer without `.timer` file (transient timers): `systemd-run(1)`.
 
+## Targets
+
+- [Network online](https://systemd.io/NETWORK_ONLINE/).
+
+  Network targets do *NOT* need `Requires` or `Wants`.
+
 # Linux Foundation's Filesystem Hierarchy Standard (FHS)
 
 - See `hier(7)`: typical Linux filesistem hierarchy.
@@ -255,6 +268,16 @@ Some of the following sections are available:
 
 - See `file-hierarchy(7)`, **systemd** system and service manager
   hierarchy.
+
+- Header files and static/dynamic libraries (Arch Linux):
+
+  + `/usr/include/`
+
+  + `/usr/lib/`
+
+    * `stdio.o` is part of C standard library `libc.so`.
+
+    * `ld --verbose | grep SEARCH_DIR`
 
 - [`/bin` link/move/merge to `/usr/bin`
   ](https://www.freedesktop.org/wiki/Software/systemd/TheCaseForTheUsrMerge/)
@@ -342,7 +365,7 @@ Where *user-specific executable files* may store there.
 
 # Linux booting process
 
-It varies depend on *Unix*-style (or *BSD*) and computer architecture.
+It varies depend on *Unix*-style and computer architecture.
 
 1. System startup
 
@@ -395,7 +418,36 @@ It varies depend on *Unix*-style (or *BSD*) and computer architecture.
 
   - `emergency.target`: emergency run level.
 
-# X keyboard
+# X Window System
+
+X server <=> X window manager <=> Clients
+    ^
+    |
+User hardware input
+
+## Articles
+
+- [Window system](https://en.wikipedia.org/wiki/Windowing_system).
+
+- [X window system](https://en.wikipedia.org/wiki/X_Window_System)
+
+## Window manager
+
+- Position
+
+- Appearance
+
+- Move, resize
+
+- Handle keystrokes
+
+### Xlib
+
+- [Xlib - C Language X Interface](https://x.z-yx.cc/libX11/libX11) from X docs.
+
+- [Xlib - C Language X Interface Notes](X/xlib-c-language-x-interface.md) from me.
+
+## X keyboard
 
 TODO: Learn X keyboard extension! Worth it?
 
