@@ -219,9 +219,10 @@
   + `]p` (just like "`p`") and `[p` (just like "`P`"), but adjust the
     indent to the current line.
 
-  + `gp` and `gP` also put the text before or after the current line,
-    but they leave the cursor positioned at the *end* of the pasted
-    text.
+  + `gp` and `gP` paste and leave the cursor at the *end* of the pasted
+    text (lines version).
+
+  + `[` and `]` markers, when paste words to the end of the line.
 
 - `{count}:` = range (`N:`): is translated into `:.,.+(count - 1)`.
 
